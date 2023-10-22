@@ -35,18 +35,18 @@ NOTES
 You should consider the following construction details:
 
 URLs:
-POST: /players: Create a player.
-PUT /players: change the name of the player.
-POST /players/{id}/games/ : A specific player rolls the dice.
-DELETE /players/{id}/games: deletes the player's rolls.
-GET /players/: returns the list of all the players in the system with 
+- POST: /players: Create a player.
+- PUT /players: change the name of the player.
+- POST /players/{id}/games/ : A specific player rolls the dice.
+- DELETE /players/{id}/games: deletes the player's rolls.
+- GET /players/: returns the list of all the players in the system with 
   their average success rate.
-GET /players/{id}/games: returns the list of games for a player.
-GET /players/ranking: returns the average ranking of all players in the
+- GET /players/{id}/games: returns the list of games for a player.
+- GET /players/ranking: returns the average ranking of all players in the
   system. That is, the average percentage of successes.
-GET /players/ranking/loser: returns the player with the worst success 
+- GET /players/ranking/loser: returns the player with the worst success 
   rate.
-GET /players/ranking/winner: returns the player with the worst success
+- GET /players/ranking/winner: returns the player with the worst success
   rate.
     
 ### Phase 1
