@@ -1,5 +1,6 @@
 package itacademy.s5t2.diceGame.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,7 @@ public class PlayerDTO {
 	
 	// for fields required?   @Schema(description = "This is the "fieldname" of the Player. If empty, the system will show Anonymous.", example = "Chris", required = false)
 	private long idPlayer;
-	private Date registrationDate;
+	private LocalDateTime registrationDate;
 	private String playerName;
 	private List<DiceGame> playerGames;
 	private double successRate;

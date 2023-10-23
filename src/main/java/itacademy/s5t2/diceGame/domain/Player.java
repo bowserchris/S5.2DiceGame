@@ -1,25 +1,31 @@
 package itacademy.s5t2.diceGame.domain;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 @Document(collection = "players")
 public class Player {
 	
+	//private static final long serialVersionUID = 1L; with implements Serializable on class as well as in dto class
+	@NotBlank
 	@Id
 	private long idPlayer;
 	
-	@CreationTimestamp
-	private Date registrationDate;
+	@NotBlank
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+	private LocalDateTime registrationDate;
 	
+	@NotBlank
 	private String playerName;
 	private List<DiceGame> playerGames;
 	private double successRate;
