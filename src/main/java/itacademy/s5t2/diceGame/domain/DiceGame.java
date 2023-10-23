@@ -21,7 +21,7 @@ public class DiceGame {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int idGame;
+	private long idGame;
 	
 	@ApiModelProperty(notes = "Value of 1st Die",name="dieResult1",required=true,value="test die1")
 	@NotNull(message = "Die value cannot be empty")
@@ -37,19 +37,5 @@ public class DiceGame {
 	@NotNull(message = "Game Result cannot be empty")
 	@Column(name = "game_result")
 	private String gameResult;
-	
-	private static final int WIN_CONDITION = 7;
-	private static final String RESULT_WIN = "Win";
-	private static final String RESULT_LOSE = "Lose";
-	
-	public void playGame() {
-		dieResult1 = Die.roll();
-		dieResult2 = Die.roll();
-		if ((dieResult1 + dieResult2) == WIN_CONDITION) {
-			this.gameResult = RESULT_WIN;
-		} else {
-			this.gameResult = RESULT_LOSE;
-		}
-	}
 
 }

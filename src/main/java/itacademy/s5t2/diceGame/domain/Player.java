@@ -15,7 +15,7 @@ import lombok.Data;
 public class Player {
 	
 	@Id
-	private int idPlayer;
+	private long idPlayer;
 	
 	@CreationTimestamp
 	private Date registrationDate;
