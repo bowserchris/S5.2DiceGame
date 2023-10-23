@@ -1,5 +1,8 @@
 package itacademy.s5t2.diceGame;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +20,7 @@ import itacademy.s5t2.diceGame.domain.Die;
   webEnvironment = SpringBootTest.WebEnvironment.MOCK,
   classes = Die.class)
 @AutoConfigureMockMvc
-@TestPropertySource(locations = "classpath:application-integrationtest.properties")
+@TestPropertySource(locations = "classpath:application.properties")
 class DiceGameApplicationTests {
 
 	@Autowired
@@ -25,9 +28,9 @@ class DiceGameApplicationTests {
 	
 	@Test
 	void dieRoll() {
-		int[] results = {1,2,3,4,5,6};
-		int[] expected = Die.roll();
-		Assertions.assertArrayEquals(results, expected);
+		List<Integer> results = Arrays.asList(1,2,3,4,5,6);
+		int expected = Die.roll();
+		Assertions.assertTrue(results.contains(expected));
 	}
 
 }
