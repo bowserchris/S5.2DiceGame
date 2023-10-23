@@ -5,25 +5,34 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import itacademy.s5t2.diceGame.domain.DiceGame;
 import itacademy.s5t2.diceGame.dto.DiceGameDTO;
 import itacademy.s5t2.diceGame.repository.DiceGameRepository;
-import itacademy.s5t2.diceGame.service.interfaces.PlayerDiceServiceInter;
+import itacademy.s5t2.diceGame.service.interfaces.DiceGameServiceInter;
 import itacademy.s5t2.diceGame.service.mapper.DiceGameDTOMapper;
 
 @Service
-public class PlayerDiceListServiceImpl implements PlayerDiceServiceInter {
+//@Transactional
+public class DiceGameServiceImpl implements DiceGameServiceInter {
 	
 	@Autowired
 	private final DiceGameRepository diceRepo;
 	private final DiceGameDTOMapper dtoMapper;
 	
-	public PlayerDiceListServiceImpl(DiceGameRepository repo, DiceGameDTOMapper map) {
+	// curious to the logger class private static final Logger log = LoggerFactory.getLogger(PlayerServiceImpl.class);
+	
+	public DiceGameServiceImpl(DiceGameRepository repo, DiceGameDTOMapper map) {
 		super();
 		this.diceRepo = repo;
 		this.dtoMapper = map;
+	}
+	
+	public DiceGameDTOMapper getDTOMapper() {
+		return dtoMapper;
 	}
 
 	@Override	//get all games
@@ -41,22 +50,29 @@ public class PlayerDiceListServiceImpl implements PlayerDiceServiceInter {
 
 	@Override	//update dicegame
 	public DiceGame updateDiceGame(long id, DiceGameDTO dtoRequest) {
-		Optional<DiceGame> gameInDB = checkOptional(id);		//need to fix exception if not found
-		DiceGame gameUpdated = gameInDB.get();
-		gameUpdated = dtoMapper.applyToEntity(dtoRequest);
+		//log.info("update player: " + dtoRequest);
+		DiceGameDTO gameInDB = getById(id);		
+		DiceGame gameUpdated = null;
+		if (gameInDB != null) {
+			gameUpdated = dtoMapper.applyToEntity(dtoRequest);
+		}
 		return gameUpdated;
 	}
 
 	@Override	//get game by id
 	public DiceGameDTO getById(long id) {
+		//log.info("Find by Id: " + id);
 		Optional<DiceGame> optional = checkOptional(id);
-		DiceGameDTO game = null;
-		if (optional.isPresent()) {
-			game = dtoMapper.apply(optional.get());
-		} else {
-			throw new RuntimeException ("Game not found with id: " + id);
-		}
+		DiceGameDTO game = dtoMapper.apply(optional.get());
 		return game;
+	}
+
+	public Optional<DiceGame> checkOptional(long id) {
+		Optional<DiceGame> optional = diceRepo.findById(id);
+		if (!optional.isPresent()) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Dice game id " + id + " does not exists.");
+		}
+		return optional;
 	}
 
 	@Override	//delete game by id
@@ -84,10 +100,6 @@ public class PlayerDiceListServiceImpl implements PlayerDiceServiceInter {
 		return diceRepo.findById(id).get().getGameResult();
 	}
 
-	public Optional<DiceGame> checkOptional(long id) {
-		return diceRepo.findById(id);
-	}
-	
 	public void playGame() {
 		DiceGameDTO game = new DiceGameDTO();
 		game.playGame();

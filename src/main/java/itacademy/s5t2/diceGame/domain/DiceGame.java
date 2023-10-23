@@ -16,6 +16,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+/*@JsonIgnoreProperties({
+"hibernateLazyInitializer",
+"handler"
+})
+*/
 @Table(name = "games")
 public class DiceGame {
 	

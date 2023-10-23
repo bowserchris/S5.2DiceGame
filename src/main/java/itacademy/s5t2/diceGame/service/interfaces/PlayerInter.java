@@ -5,7 +5,7 @@ import java.util.List;
 import itacademy.s5t2.diceGame.domain.Player;
 import itacademy.s5t2.diceGame.dto.PlayerDTO;
 
-public interface SoftwarePlayerInter extends ServiceInterface {
+public interface PlayerInter extends ServiceInterface {
 
 	List<PlayerDTO> getAllPlayers();
 	Player savePlayer(Player p);

@@ -5,7 +5,7 @@ import java.util.List;
 import itacademy.s5t2.diceGame.domain.DiceGame;
 import itacademy.s5t2.diceGame.dto.DiceGameDTO;
 
-public interface PlayerDiceServiceInter extends ServiceInterface {
+public interface DiceGameServiceInter extends ServiceInterface {
 	
 	List<DiceGameDTO> getAllDiceGames();
 	DiceGame saveDiceGame(DiceGame dg);

@@ -12,8 +12,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+//@Schema(description = "Player created to play the game.", example = "", required = true)
 public class PlayerDTO {
 	
+	// for fields required?   @Schema(description = "This is the "fieldname" of the Player. If empty, the system will show Anonymous.", example = "Chris", required = false)
 	private long idPlayer;
 	private Date registrationDate;
 	private String playerName;
