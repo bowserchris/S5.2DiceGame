@@ -1,4 +1,4 @@
-package itacademy.s5t2.diceGame.exceptionLayer.response;
+package itacademy.s5t2.diceGame.securityLayer.response;
 
 import lombok.Data;
 

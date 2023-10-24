@@ -29,12 +29,16 @@ import itacademy.s5t2.diceGame.businessLayer.service.PlayerServiceImpl;
 @RestController
 @RequestMapping("/")
 @Validated
+//@SecurityRequirement(name = "Bearer Authentication")
+//@Tag(name = "Spring 5 - Task 2 - Dice Game", description = "This controller contains the methods to play the game")
 public class PlayerDTOController {
 	
 	//private static Logger log = LoggerFactory.getLogger(PlayerController.class);
 	
 			@Autowired
 			PlayerServiceImpl playerService;
+			//also has gameservice here
+			//also has authentication service here
 			
 			public PlayerDTOController(PlayerServiceImpl service) {
 				super();
@@ -145,6 +149,19 @@ public class PlayerDTOController {
 				.collect(Collectors.toList());
 				return ResponseEntity.notFound().build(); //ResponseEntity<>(list, HttpStatus.FOUND);
 			}
+			/*
+			 * @GetMapping("/myskins")
+    public ResponseEntity<List<SkinDTO>> mySkins() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<SkinDTO> skins = skinService.mySkins(user);
+        if(skins.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(skins);
+        }
+    }
+			 */
+			
 			/*
 			 *  @Operation(summary= "List of results of all players", description = "returns the list of all the players in the system\n" +
 		            "  with its average success rate.")

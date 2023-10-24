@@ -51,27 +51,4 @@ public class PlayerDTO {
 		return Math.round(playerResultsWinLossMap.get(WINS) / playerGames.size() * 100);
 	}
 	
-	// are below methods needed?///
-	
-	/*public int searchPlayerGamesList(int id) {
-        int counter = 0;
-        int index = -1;
-
-        while (counter < playerGames.size()) {
-            if (playerGames.get(counter).getIdGame() == id) {
-                index = counter;
-                counter = playerGames.size();
-            }
-            counter++;
-        }
-        return index;
-    }
-	
-	public void printTotalResults() {
-		resultsWinLossMap.forEach((key, value) -> System.out.println("The total amount of "
-                + key + " are: " + value));
-	}*/
-	
-	//playerList.forEach(System.out::println); in case method is needed
-
 }

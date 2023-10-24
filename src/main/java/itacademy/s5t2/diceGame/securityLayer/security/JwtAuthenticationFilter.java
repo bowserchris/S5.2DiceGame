@@ -27,10 +27,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private final HandlerExceptionResolver handlerExceptionResolver;
 
 	@Autowired
-    private JwtService jwtService;
+    private final JwtService jwtService;
 	
 	@Autowired
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 	
 	public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService,
 	        HandlerExceptionResolver handlerExceptionResolver) {
@@ -44,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 									@NonNull HttpServletResponse response, 
 									@NonNull FilterChain filterChain)
 			throws ServletException, IOException {
-		
+		//1
 		final String authHeader = request.getHeader("Authorization");
 		if (authHeader == null || !authHeader.startsWith("Bearer ")) {
 			filterChain.doFilter(request, response);
@@ -53,6 +53,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		
 		try {
 			final String jwt = authHeader.substring(7);
+			//1 de 1 a 1 se separa esto en otr metodo llamada getjwtheader(servletrequest)
+			// despues vuelve a aqui con el dofilter iternal en metodo completo hasta abajo
 			final String userEmail = jwtService.extractUsername(jwt);
 			
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -75,5 +77,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		}
 		filterChain.doFilter(request, response);
 	}
-
+	
 }

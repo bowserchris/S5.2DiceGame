@@ -1,7 +1,6 @@
 package itacademy.s5t2.diceGame.securityLayer.domain;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
@@ -39,14 +38,14 @@ public class User implements UserDetails {
     @NotNull
     private boolean enabled;
     
-   /* @ManyToMany(fetch=FetchType.LAZY)
+    private Collection<? extends GrantedAuthority> authorities;
+
+    /* @ManyToMany(fetch=FetchType.LAZY) if re implement, create role class
     @JoinTable(
         name="users_roles",
         joinColumns= {@JoinColumn(name="user_id")},
         inverseJoinColumns = {@JoinColumn(name="role_id")}
     )*/
-    private List<Role> roles;
-    private Collection<? extends GrantedAuthority> authorities;
     
     @Override //if implment userdetails interace on this class
 	public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -55,6 +55,7 @@ public class DiceGameDTOController {
 	}
 	
 	//Get: /players/{id}/games/ - returns list of games for 1 player
+	//@PreAuthorize("hasAuthority('create:items')") from a permissions tab in a website which doesnt work in this case
 	@PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
 	@GetMapping(value = "/games/", headers = "Accept=application/json")
 	public ResponseEntity<List<DiceGameDTO>> getAllGames(@PathVariable long id) {

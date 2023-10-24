@@ -80,23 +80,15 @@ public class JwtService {
                 .parseClaimsJws(token)
                 .getBody();
     }
+    /*//another possible method to above 
+     *  private <T> T extractClaim(String token, Function<Claims, T> claimResolver){
+        return claimResolver.apply(extractAllClaims(token));
+    }
+     */
     
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-    
-    /*public String generateToken(Authentication authentication) {
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
-
-        return Jwts.builder()
-            .setSubject(userPrincipal.getUsername())
-            .setIssuedAt(new Date())
-            .setExpiration(expiryDate)
-            .signWith(SignatureAlgorithm.HS512, jwtSecret)
-            .compact();
-    }*/
 
 }

@@ -42,5 +42,9 @@ public class DiceGame {
 	@NotNull(message = "Game Result cannot be empty")
 	@Column(name = "game_result")
 	private String gameResult;
+	
+	/*//linking multiple tables, only on this object and not on player
+	 * @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private User user; */
 
 }

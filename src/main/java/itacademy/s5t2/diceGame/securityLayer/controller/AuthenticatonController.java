@@ -6,14 +6,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import itacademy.s5t2.diceGame.exceptionLayer.response.LoginResponse;
 import itacademy.s5t2.diceGame.securityLayer.domain.User;
 import itacademy.s5t2.diceGame.securityLayer.dto.LoginUserDTO;
 import itacademy.s5t2.diceGame.securityLayer.dto.RegisterUserDTO;
+import itacademy.s5t2.diceGame.securityLayer.response.LoginResponse;
 import itacademy.s5t2.diceGame.securityLayer.service.AuthenticationService;
 import itacademy.s5t2.diceGame.securityLayer.service.JwtService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor	//creates constructor & other fields required, without instantiating all
 @RequestMapping("/auth")
 public class AuthenticatonController {
 	
@@ -21,16 +23,27 @@ public class AuthenticatonController {
 	
 	private final AuthenticationService authenticationService;
 	
-	public AuthenticatonController(JwtService jwtService, AuthenticationService authenticationService) {
-        this.jwtService = jwtService;
-        this.authenticationService = authenticationService;
-    }
-	
 	@PostMapping("/signup")
 	public ResponseEntity<User> register(@RequestBody RegisterUserDTO registerDTO) {
 		User registeredUser = authenticationService.signup(registerDTO);
 		return ResponseEntity.ok(registeredUser);
 	}
+	
+	/*
+	 * @RequestMapping("/register")
+    public ResponseEntity<?> register(@RequestBody AuthRequest ar){
+        if(!RequestValidator.validateNotNullFields(ar)){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request");
+        }
+
+        Optional<String> token = authService.register(ar);
+        if(token.isEmpty()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already registered");
+        }
+
+        return ResponseEntity.ok(new AuthResponse(token.get()));
+    }
+	 */
 	
 	@PostMapping
 	public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDTO loginDTO) {

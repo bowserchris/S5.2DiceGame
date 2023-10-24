@@ -22,7 +22,7 @@ public class UserController {
 		this.userService = service;
 	}
 	
-	@GetMapping("/me")
+	@GetMapping("/player")	//or "/me"
     public ResponseEntity<User> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

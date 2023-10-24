@@ -14,7 +14,7 @@ import lombok.Data;
 
 @Data
 @Document(collection = "players")
-public class Player {
+public class Player {	//implements userdetails and relevant fields methods here
 	
 	//private static final long serialVersionUID = 1L; with implements Serializable on class as well as in dto class
 	@NotBlank
@@ -24,6 +24,11 @@ public class Player {
 	@NotBlank
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
 	private LocalDateTime registrationDate;
+	
+	/*@Enumerated(EnumType.STRING)
+    private Role role;
+	 * 
+	 */
 	
 	@NotBlank
 	private String playerName;
@@ -56,27 +61,4 @@ public class Player {
 		return Math.round(playerResultsWinLossMap.get(WINS) / playerGames.size() * 100);
 	}
 	
-	// are below methods needed?///
-	
-	/*public int searchPlayerGamesList(int id) {
-        int counter = 0;
-        int index = -1;
-
-        while (counter < playerGames.size()) {
-            if (playerGames.get(counter).getIdGame() == id) {
-                index = counter;
-                counter = playerGames.size();
-            }
-            counter++;
-        }
-        return index;
-    }
-	
-	public void printTotalResults() {
-		resultsWinLossMap.forEach((key, value) -> System.out.println("The total amount of "
-                + key + " are: " + value));
-	}*/
-	
-	//playerList.forEach(System.out::println); in case method is needed
-
 }

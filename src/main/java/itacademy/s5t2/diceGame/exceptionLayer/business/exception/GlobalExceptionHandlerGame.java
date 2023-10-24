@@ -20,7 +20,7 @@ import itacademy.s5t2.diceGame.exceptionLayer.response.ApiError;
 import jakarta.validation.ConstraintViolationException;
 
 @ControllerAdvice
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
+public class GlobalExceptionHandlerGame extends ResponseEntityExceptionHandler{
 
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
     								HttpHeaders headers, 
@@ -74,7 +74,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
         List<String> details = new ArrayList<>();
         details.add(ex.getMessage());
         ApiError err = new ApiError(LocalDateTime.now(), 
-        							"Employee Not Found" ,
+        							"Dice Game Not Found" ,
         							details);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
     }

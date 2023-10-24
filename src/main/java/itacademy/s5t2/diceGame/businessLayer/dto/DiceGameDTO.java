@@ -29,5 +29,12 @@ public class DiceGameDTO {
 			this.gameResult = RESULT_LOSE;
 		}
 	}
+	
+	/*
+	 * @Schema(description = "The id of the player")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    //@JoinColumn(name="playerId")
+    private Userdto userdto;
+	 */
 
 }

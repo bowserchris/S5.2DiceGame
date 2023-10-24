@@ -16,13 +16,13 @@ import itacademy.s5t2.diceGame.businessLayer.service.interfaces.DiceGameServiceI
 import itacademy.s5t2.diceGame.businessLayer.service.mapper.DiceGameDTOMapper;
 
 @Service
-//@Transactional
 public class DiceGameServiceImpl implements DiceGameServiceInter {
 	
 	@Autowired
 	private final DiceGameRepository diceRepo;
 	private final DiceGameDTOMapper dtoMapper;
-	
+	//// private final SecurityConfiguration securityConfiguration;
+	//implements playerservice @autowired
 	// curious to the logger class private static final Logger log = LoggerFactory.getLogger(PlayerServiceImpl.class);
 	
 	public DiceGameServiceImpl(DiceGameRepository repo, DiceGameDTOMapper map) {
