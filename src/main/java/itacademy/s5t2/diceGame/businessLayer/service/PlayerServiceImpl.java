@@ -14,6 +14,7 @@ import itacademy.s5t2.diceGame.businessLayer.dto.PlayerDTO;
 import itacademy.s5t2.diceGame.businessLayer.repository.PlayerRepository;
 import itacademy.s5t2.diceGame.businessLayer.service.interfaces.PlayerInter;
 import itacademy.s5t2.diceGame.businessLayer.service.mapper.PlayerDTOMapper;
+import itacademy.s5t2.diceGame.constants.CommonConstants;
 
 @Service
 //@Transactional
@@ -22,7 +23,7 @@ public class PlayerServiceImpl implements PlayerInter {
 	@Autowired
 	private final PlayerRepository playerRepo;
 	
-	//@Bean needed here?
+	@Autowired
 	private final PlayerDTOMapper dtoMapper;
 	
 	// curious to the logger class private static final Logger log = LoggerFactory.getLogger(PlayerServiceImpl.class);
@@ -52,11 +53,11 @@ public class PlayerServiceImpl implements PlayerInter {
 	
 	public boolean checkIfPlayerNameExists(Player p) {
 		boolean exists = true;
-		if (!p.getPlayerName().equals("ANONYMOUS")) {
+		if (!p.getPlayerName().equals(CommonConstants.ANONYMOUS)) {
 			if (checkForUniqueName(p)) {
 				exists = false;
 			} else {
-				System.out.println("Player already exists in Database.");
+				System.out.println(CommonConstants.PLAYER_EXISTS);
                // need to implement exception here throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Te player with name " + playerToSave.getName() + " exists.");
 			}
 		} else {
@@ -81,6 +82,7 @@ public class PlayerServiceImpl implements PlayerInter {
 		Player playerUpdated = null;
 		if (playerInDB != null) {
 			playerUpdated = dtoMapper.applyToEntity(dtoRequest);
+			playerRepo.save(playerUpdated);
 		}
 		return playerUpdated;
 	}
@@ -101,12 +103,13 @@ public class PlayerServiceImpl implements PlayerInter {
 	@Override	//get player by name
 	public PlayerDTO getByName(String name) {
 		//log.info("Find by Id: " + id);
-		Optional<Player> optional = playerRepo.findByName(name);
+		Optional<Player> optional = playerRepo.findByPlayerName(name);
 		PlayerDTO player = null;
 		if (optional.isPresent()) {
 			player = dtoMapper.apply(optional.get());
 		} else {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Player name " + name + " does not exists.");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, 
+					CommonConstants.returnNameDoesNotExistMSG(name));
 		}
 		return player;
 	}
@@ -114,7 +117,8 @@ public class PlayerServiceImpl implements PlayerInter {
 	public Optional<Player> checkOptional(long id) {
 		Optional<Player> optional = playerRepo.findById(id);
 		if (!optional.isPresent()) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Player id " + id + " does not exists.");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, 
+					CommonConstants.returnPlayerIdDoesNotExistMSG(id));
 		}
 		return optional;
 	}
@@ -126,18 +130,20 @@ public class PlayerServiceImpl implements PlayerInter {
 
 	@Override
 	public double getOneSuccessRateByName(String name) {
-		return playerRepo.findByName(name).get().getSuccessRate();
+		return playerRepo.findByPlayerName(name).get().getSuccessRate();
 	}
 	
+	
+	/// maybe in controller
 	public double calculateAverageSuccessRate() {
 		List<Player> list = playerRepo.findAll();
-		double totalWins = 0;
-		double totalGames = 0;
+		int totalWins = 0;
+		int totalGames = 0;
 		for (int i = 0; i < list.size(); i++) {
-			totalWins += (list.get(i).getSuccessRate()/100) * list.get(i).getPlayerGames().size();
+			totalWins += list.get(i).getPlayerResultsWinLossMap().get(CommonConstants.WINS); //(list.get(i).getSuccessRate()/100) * list.get(i).getPlayerGames().size();
 			totalGames += list.get(i).getPlayerGames().size();
 		}
-		return Math.round((totalWins /totalGames) * 100);
+		return Math.round(CommonConstants.calculateAverageSuccessRate(totalWins, totalGames));
 		//above code is a reverse engineerd formula to get the new total value, below should call directly from repo
 		//return Math.round(software.getTotalResultsWinLossMap().get("Win") / playerRepo.findAll().size() * 100);
 	}

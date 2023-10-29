@@ -1,28 +1,18 @@
 package itacademy.s5t2.diceGame.securityLayer.config;
 
-import java.io.IOException;
-import java.util.List;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import itacademy.s5t2.diceGame.config.ApplicationConfiguration;
+import itacademy.s5t2.diceGame.constants.CommonConstants;
 import itacademy.s5t2.diceGame.securityLayer.security.JwtAuthenticationFilter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.websocket.Session;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -30,55 +20,71 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 	
-	private final AuthenticationProvider authenticationProvider;
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 	
-	private final String originLink = "http://localhost:8080";
+	private final ApplicationConfiguration appConfig;
 	
-	public SecurityConfiguration(JwtAuthenticationFilter filter, 
-								AuthenticationProvider provider) {
-		this.authenticationProvider = provider;
-		this.jwtAuthenticationFilter = filter;
+	// *1 this might cause problems with swagger, yeah so this is the starting off point
+	@Bean
+	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		return http
+			.csrf(AbstractHttpConfigurer::disable)
+			.authorizeHttpRequests((requests) -> {		//THIS CAUSED ISSUES WITH SWAGGER NOT WORKING make sure its one full linked chain, as split it wont recognise the urls and return blank
+				requests.requestMatchers(CommonConstants.AUTH_WHITELIST)	//list of urls to match with incoming http request
+										.permitAll()						//all are permitted to be seen
+										.anyRequest()						//any of the requests made in before list
+										.authenticated();})					//is then authenticated and given approval here
+			/*.formLogin((formLogin) ->
+				formLogin
+					.usernameParameter("username")
+					.passwordParameter("password")
+					.loginPage("/auth/login")
+					.failureUrl("/auth/login?failed")
+					.loginProcessingUrl("/auth/login/process"))*/
+			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+			//.sessionManagement((session) -> session.sessionFixation().none())
+			.authenticationProvider(appConfig.authenticationProvider())
+			//or split this with http.addfilter....
+			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+			.build();
 	}
 	
 	/*WARNING: Never disable CSRF protection while leaving 
 	session management enabled! Doing so will open you up 
 	to a Cross-Site Request Forgery attack. */
 	
-	@Bean
+	/*	//below is a method found on a website that does a cors configuration instead
+	 * 
+	 * @Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		
-		//below method works but not sure if its handled correctly
+	 ///below method works but not sure if its handled correctly
 		CookieCsrfTokenRepository tokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
 	    CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
 	    // set the name of the attribute the CsrfToken will be populated on
-	    requestHandler.setCsrfRequestAttributeName("_csrf");
-	    http
-	        .csrf((csrf) -> csrf
+	    requestHandler.setCsrfRequestAttributeName(CommonConstants.CSRF_NAME);
+	    return http
+	        	.csrf((csrf) -> csrf
 	            .csrfTokenRepository(tokenRepository)
 	            .csrfTokenRequestHandler(requestHandler)
 	        )//head to jwtauthenticationfilter class and implement dofilterinternal method with csrf to
 	        .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class);
-
-	    return http.build();
-	}
-	
-	@Bean
+	 * 
+	 * @Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 		
-		configuration.setAllowedOrigins(List.of(originLink));
-		configuration.setAllowedMethods(List.of("GET", "POST"));		// can add "DELETE" AND "PUT" AS WELL
-		configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+		configuration.setAllowedOrigins(List.of(originLink));		//originLink
+		configuration.setAllowedMethods(List.of(CommonConstants.CRUD_METHOD_GET, CommonConstants.CRUD_METHOD_POST));	//CommonConstants.CRUD_METHOD_GET, CommonConstants.CRUD_METHOD_POST	// can add "DELETE" AND "PUT" AS WELL
+		configuration.setAllowedHeaders(List.of(CommonConstants.AUTHORIZATION, CommonConstants.CONTENT_TYPE));	//CommonConstants.AUTHORIZATION, CommonConstants.CONTENT_TYPE
 		
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		
-		source.registerCorsConfiguration("/**/", configuration);
+		source.registerCorsConfiguration("/*//*.css", configuration);	// replace with /**/ /*if still not working or /*//*.css
 		
 		return source;
 	}
 	
-	private static final class CsrfCookieFilter extends OncePerRequestFilter {
+	 * private static final class CsrfCookieFilter extends OncePerRequestFilter {
 		
 		@Override
 		protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -90,47 +96,6 @@ public class SecurityConfiguration {
 			filterChain.doFilter(request, response);
 		}
 	}
-	
-	/*///////////from pau sansa hackathon
-	 * 
-	 * private final JwtAuthFilter jwtAuthFilter;
-    private final UserDetailsService userDetailsService;
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests((requests) -> {
-                    requests.requestMatchers("/auth/**").permitAll();
-                    requests.anyRequest().authenticated();
-                })
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement((session) -> session.sessionFixation().none())
-                .authenticationProvider(authenticationProvider());
-
-        http.addFilterBefore(jwtAuthFilter, BasicAuthenticationFilter.class);
-        return http.build();
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setPasswordEncoder(passwordEncoder());
-        authProvider.setUserDetailsService(userDetailsService);
-        return authProvider;
-
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
-	 * 
-	 * 
 	 */
 	
 }

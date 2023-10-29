@@ -12,7 +12,6 @@ public interface DiceGameServiceInter extends ServiceInterface {
 	DiceGame updateDiceGame(long id, DiceGameDTO dg);
 	DiceGameDTO getById(long id);
 	
-	void deleteAllRolls();
 	int getDieValue1(long id);
 	int getDieValue2(long id);
 	String getResult(long id);

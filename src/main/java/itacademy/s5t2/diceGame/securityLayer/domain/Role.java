@@ -1,5 +1,5 @@
 package itacademy.s5t2.diceGame.securityLayer.domain;
 
-public enum RoleName {
+public enum Role {
 	USER, ADMIN
 }

@@ -5,35 +5,25 @@ import java.util.HashMap;
 import java.util.List;
 
 import itacademy.s5t2.diceGame.businessLayer.domain.DiceGame;
+import itacademy.s5t2.diceGame.constants.CommonConstants;
+import itacademy.s5t2.diceGame.securityLayer.dto.RegisterUserDTO;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-//@Schema(description = "Player created to play the game.", example = "", required = true)
 public class PlayerDTO {
 	
-	// for fields required?   @Schema(description = "This is the "fieldname" of the Player. If empty, the system will show Anonymous.", example = "Chris", required = false)
 	private long idPlayer;
 	private LocalDateTime registrationDate;
 	private String playerName;
-	private List<DiceGame> playerGames;
 	private double successRate;
-	private HashMap<String, Integer> playerResultsWinLossMap = createPlayerMap();
-	private static String WINS = "Win";
-	private static String LOSSES = "Lose";
-	
-	
-	////are below meethods needed here in dto or in entity?
-	
-	private HashMap<String, Integer> createPlayerMap() {
-		HashMap<String, Integer> map = new HashMap<>();
-		map.put(WINS, 0);
-		map.put(LOSSES, 0);
-		return map;
-	}
+	private List<DiceGame> playerGames;
+	private HashMap<String, Integer> playerResultsWinLossMap = createPlayerMap();	
 	
 	public void addGameToList(DiceGame game) {
 		playerGames.add(game);
@@ -48,7 +38,14 @@ public class PlayerDTO {
 	}
 		
 	public double calculateAverageSuccessRate() {
-		return Math.round(playerResultsWinLossMap.get(WINS) / playerGames.size() * 100);
+		return Math.round(playerResultsWinLossMap.get(CommonConstants.WINS) / playerGames.size() * 100);
+	}
+	
+	private HashMap<String, Integer> createPlayerMap() {
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put(CommonConstants.WINS, 0);
+		map.put(CommonConstants.LOSSES, 0);
+		return map;
 	}
 	
 }

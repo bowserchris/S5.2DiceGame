@@ -1,6 +1,8 @@
 package itacademy.s5t2.diceGame.businessLayer.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,229 +19,112 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import itacademy.s5t2.diceGame.businessLayer.domain.DiceGame;
 import itacademy.s5t2.diceGame.businessLayer.domain.Player;
 import itacademy.s5t2.diceGame.businessLayer.dto.PlayerDTO;
+import itacademy.s5t2.diceGame.businessLayer.service.DiceGameServiceImpl;
 import itacademy.s5t2.diceGame.businessLayer.service.PlayerServiceImpl;
+import itacademy.s5t2.diceGame.constants.CommonConstants;
+import itacademy.s5t2.diceGame.securityLayer.service.AuthenticationService;
 
-@CrossOrigin(origins = "http://localhost:8080")
+//@CrossOrigin(origins = CommonConstants.ORIGIN, allowCredentials = "true")
+//@RequestMapping(CommonConstants.) // "players/{id}"
+//@Validated
 @RestController
-@RequestMapping("/")
-@Validated
 //@SecurityRequirement(name = "Bearer Authentication")
-//@Tag(name = "Spring 5 - Task 2 - Dice Game", description = "This controller contains the methods to play the game")
+@RequestMapping(CommonConstants.INDEX)
+@Tag(name = "Welcome to " + CommonConstants.SOFTWARE_NAME + "! "
+			+ "You feeling lucky? Well? Do ya Punk!?", 
+			description = "This controller contains the methods to play the game")
 public class PlayerDTOController {
 	
 	//private static Logger log = LoggerFactory.getLogger(PlayerController.class);
 	
 			@Autowired
 			PlayerServiceImpl playerService;
-			//also has gameservice here
+			
+			@Autowired
+			DiceGameServiceImpl diceService;
+			
+			@Autowired
+			AuthenticationService authService;
+			
 			//also has authentication service here
 			
-			public PlayerDTOController(PlayerServiceImpl service) {
+			public PlayerDTOController(PlayerServiceImpl ps, DiceGameServiceImpl dgs,AuthenticationService authService) {
 				super();
-				this.playerService = service;
+				this.playerService = ps;
+				this.diceService = dgs;
+				this.authService = authService;
+			}
+			
+			@PostMapping(value = "demo")
+			public String welcome() {
+				return "howdy";
 			}
 			
 			
-			/*
-			 * @PostMapping(value="/add")
-		    @Operation(summary= "" +
-		            "Adds a new Player", description = "Creates a new player and saves it in the database")
-		    @ApiResponse(responseCode = "200", description = "Player created correctly", content = {@Content(mediaType = "application/json",
-		            schema = @Schema(implementation = PlayerToSave.class))})
-		    @ApiResponse(responseCode = "403", description = "The player already exists", content = @Content)
-		    public ResponseEntity<?> createPlayer(@RequestBody PlayerToSave playerToSave){
-		        log.info("create player: " + playerToSave);
-		        try {
-		            playerServiceMongo.create(playerToSave);
-		            return ResponseEntity.ok(playerToSave);
-		        }catch (ResponseStatusException e){
-		            return new ResponseEntity<Map<String,Object>>(this.message(e), HttpStatus.FORBIDDEN);
-		        }
-		    }
-			 */
 			//Post: /players - creates a player
-			@PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
-			@PostMapping(value = "players", headers = "Accept=application/json")
-			public ResponseEntity<Player> addPlayer(@RequestBody Player player, UriComponentsBuilder ucBuilder) {
-				try {
-					if (!playerService.checkIfPlayerNameExists(player)) {
-						Player newPlayer = playerService.savePlayer(player);
-						/*URI location = ServletUriComponentsBuilder
-						.fromCurrentRequest()
-						.path("/{id}")
-						.buildAndExpand(savedPlayer.getId())
-						.toUri();
-						return ResponseEntity.created(location).build();*/
-						HttpHeaders headers = new HttpHeaders();
-						headers.setLocation(ucBuilder.path("/players/{id}").buildAndExpand(newPlayer.getIdPlayer()).toUri());
-						return new ResponseEntity<>(headers , HttpStatus.CREATED);
-					}
-				} catch (Exception e) {
-					return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-				return null;
-						//new ResponseEntity<Void> (null, HttpStatus.CREATED);
-				//return new ResponseEntity<>(null , HttpStatus.CREATED);
-			}
-			
-			/* @Operation(summary= "Update Player", description = "Updates the name of an existing player")
-			    @ApiResponse(responseCode = "201", description = "Player updated correctly", content = {@Content(mediaType = "application/json",
-			            schema = @Schema(implementation = PlayerToSave.class))})
-			    @ApiResponse(responseCode = "404", description = "Player not found", content = @Content)
-			    @PutMapping(value="/update/")
-			    public ResponseEntity<?> updatePlayer(@RequestBody PlayerToSave playerToSave){
-			        log.info("update player: " + playerToSave);
-			        try {
-
-			            playerServiceMongo.update(playerToSave);
-			            return ResponseEntity.ok(playerToSave);
-			        }catch (ResponseStatusException e){
-			            return new ResponseEntity<Map<String,Object>>(this.message(e), HttpStatus.NOT_FOUND);
-			        }
-			    }*/
-			
-		//Put: /players - updates player name
-			@PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
-			@PutMapping(value = "players", headers = "Accept=application/json")
-			public ResponseEntity<PlayerDTO> updatePlayer(@RequestBody Player player) {
-				PlayerDTO playerRequest = playerService.getByName(player.getPlayerName());
+			@Operation(summary= "Add a new Player", 
+					description = "Checks if name isn´t already taken, then creates new player in the database")
+			@ApiResponses(value = { 
+					@ApiResponse(responseCode = CommonConstants.CODE_200, description = CommonConstants.PLAYER_CREATED, content = { 
+							@Content(mediaType = CommonConstants.MEDIA_TYPE_JSON, schema = @Schema(implementation = Player.class))
+							}),
+					@ApiResponse(responseCode = CommonConstants.CODE_403, description = CommonConstants.PLAYER_EXISTS, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_404, description = CommonConstants.PLAYER_NOT_FOUND, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_500, description = CommonConstants.INTERNAL_SERVER_ERR, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_1001, description = CommonConstants.APPLICATION_ERROR, content = @Content)
+					})
+			@PostMapping(value = CommonConstants.SAVE_PLAYER) 		//headers = CommonConstants.HEADER_TYPE_OBJECT
+			public ResponseEntity<?> addPlayer(@Parameter(description = "Player details needed to create Player object", required = true)
+											@RequestBody Player player, UriComponentsBuilder ucBuilder) {
 				Player newPlayer = null;
 				try {
-					newPlayer = playerService.updatePlayer(player.getIdPlayer(), playerRequest);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
-				if (newPlayer != null) {
-					PlayerDTO playerResponseDto = playerService.getDTOMapper().apply(newPlayer);
-					return ResponseEntity.ok().body(playerResponseDto);
-				}
-				return ResponseEntity.notFound().build();
-			}
-
-			/*
-			 *  @Operation(summary= "List all dice rolls for a player", description = "Returns the complete list of each player and the result of their dice rolls.")
-		    @ApiResponse(responseCode = "200", description = "List of rolls", content = {@Content(mediaType = "application/json",
-		            schema = @Schema(implementation = Playerdto.class))})
-		    @ApiResponse(responseCode = "404", description = "Player not found", content = @Content)
-		    @GetMapping("/{id}/games/")
-		    public ResponseEntity<?> findAllGames(@PathVariable String id) {
-		        try {
-		            Playerdto playerdto = playerServiceMongo.findById(id);
-		            return ResponseEntity.ok(playerdto);
-		        } catch (ResponseStatusException e) {
-		            return new ResponseEntity<Map<String,Object>>(this.message(e), HttpStatus.NOT_FOUND);
-		        }
-		    }
-			 */
-		//Get: /players/ - returns all players with average success rate
-			@PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
-			@GetMapping(value = "players/", headers = "Accept=application/json")
-			public ResponseEntity<List<PlayerDTO>> getAllPlayersAndSuccessRate(@RequestParam(required = false) String name) {
-				List<PlayerDTO> list = playerService.getAllPlayers();
-				list
-				.stream()
-				.map(player -> playerService.savePlayer(playerService.getDTOMapper().applyToEntity(player)))		//modelMapper.map(flower,FlowerDTO.class)
-				.collect(Collectors.toList());
-				return ResponseEntity.notFound().build(); //ResponseEntity<>(list, HttpStatus.FOUND);
-			}
-			/*
-			 * @GetMapping("/myskins")
-    public ResponseEntity<List<SkinDTO>> mySkins() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<SkinDTO> skins = skinService.mySkins(user);
-        if(skins.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(skins);
-        }
-    }
-			 */
-			
-			/*
-			 *  @Operation(summary= "List of results of all players", description = "returns the list of all the players in the system\n" +
-		            "  with its average success rate.")
-		    @ApiResponse(responseCode = "200", description = "List of results of all players", content = {@Content(mediaType = "application/json",
-		            schema = @Schema(implementation = Ranking.class))})
-		    @ApiResponse(responseCode = "500", description = "Server error", content = @Content)
-		    @GetMapping("/players/")
-		    public ResponseEntity<?> findAllRanking() {
-		        return ResponseEntity.ok(playerServiceMongo.listAllRanking());
-		    }
-		    
-		     @Operation(summary= "Average of players rankings", description = "Returns the average success rate of all players")
-		    @ApiResponse(responseCode = "200", description = "Average", content = @Content)
-		    @ApiResponse(responseCode = "500", description = "Server error", content = @Content)
-		    @GetMapping("/players/ranking")
-		    public ResponseEntity<Integer> rankgingAvg(){
-		        return ResponseEntity.ok(playerServiceMongo.rankingAvg());
-		    }
-			 */
-		//Get: /players/ranking - returns the average ranking of all players in the system. That is, the average percentage of successes
-			@PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
-			@GetMapping("players/ranking")
-			public ResponseEntity<Player> getTotalAverageSuccessRate() {
-				double totalRate = playerService.calculateAverageSuccessRate();
-				return ResponseEntity.notFound().build();
-			}
-			/*
-			 * 
-			 * @Operation(summary= "Player with the worst ranking", description = "Returns the player with the lowest success rate")
-		    @ApiResponse(responseCode = "200", description = "Player id and games results", content = {@Content(mediaType = "application/json",
-		            schema = @Schema(implementation = Ranking.class))})
-		    @ApiResponse(responseCode = "204", description = "No content. There are no games saved in the database", content = @Content)
-		    @ApiResponse(responseCode = "500", description = "Server error", content = @Content)
-		    @GetMapping("/ranking/looser")
-		    public ResponseEntity<?> worstPlayer(){
-		        Ranking worstPlayer;
-		        try {
-		            worstPlayer = playerServiceMongo.worstPlayer();
-		        } catch (ResponseStatusException e) {
-		            return new ResponseEntity<Map<String,Object>>(this.message(e), HttpStatus.NO_CONTENT);
-		        }
-		        return ResponseEntity.ok(worstPlayer);
-		    }
-			 */
-		//Get: /players/ranking/loser - return player with worst success rate
-			@PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
-			@GetMapping("players/ranking/loser")
-			public ResponseEntity<Player> getWorstPlayerSuccessRate() {
-				Player player = playerService.getWorstSuccessRate();
-				return ResponseEntity.notFound().build();
-			}
-			/*
-			 * 
-			 *  @Operation(summary= "Player with the best ranking", description = "Returns the player with the highest success rate")
-		    @ApiResponse(responseCode = "200", description = "Player id and games results", content = {@Content(mediaType = "application/json",
-		            schema = @Schema(implementation = Ranking.class))})
-		    @ApiResponse(responseCode = "204", description = "No content. There are no games saved in the database", content = @Content)
-		    @ApiResponse(responseCode = "500", description = "Server error", content = @Content)
-		    @GetMapping("ranking/winner")
-		    public ResponseEntity<?> bestPlayer(){
-		        Ranking bestPlayer;
-		        try {
-		            bestPlayer = playerServiceMongo.bestPlayer();
-		        } catch (ResponseStatusException e) {
-		            return new ResponseEntity<Map<String,Object>>(this.message(e), HttpStatus.NO_CONTENT);
-		        }
-		        return ResponseEntity.ok(bestPlayer);
-		    }
-			 */
-		//Get: /players/ranking/winner - return player with best success rate
-			@PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
-			@GetMapping("players/ranking/winner")
-			public ResponseEntity<Player> getBestPlayerSuccessRate() {
-				Player player = playerService.getBestSuccessRate();
-				return ResponseEntity.notFound().build();
+					if (!playerService.checkIfPlayerNameExists(player)) {
+						newPlayer = playerService.savePlayer(player);
+						HttpHeaders headers = new HttpHeaders();
+						headers.setLocation(ucBuilder.path(CommonConstants.PLAYER_ID_PATH).buildAndExpand(newPlayer.getIdPlayer()).toUri());
+					}
+				} catch (ResponseStatusException rse) {
+					return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+				} //ResponseStatusException is implemented here with a return of return new ResponseEntity<Map<String,Object>>(error, HttpStatus.NOT_FOUND);
+				return ResponseEntity.ok(newPlayer);
 			}
 			
-			@PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
-			@GetMapping(value = "/players/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-			public ResponseEntity<PlayerDTO> getOnePlayerById(@PathVariable("id") long id) {
+			/* this method was used within creating a new player. 
+			 * URI location = ServletUriComponentsBuilder
+			.fromCurrentRequest()
+			.path("/{id}")
+			.buildAndExpand(savedPlayer.getId())
+			.toUri();
+			return ResponseEntity.created(location).build();*/
+			
+			
+			@Operation(summary= "Returns player by id", 
+					description = "Finds and returns player by their id")
+			@ApiResponses(value = { 
+					@ApiResponse(responseCode = CommonConstants.CODE_200, description = CommonConstants.SUCCESSFUL, content = { 
+							@Content(mediaType = CommonConstants.MEDIA_TYPE_JSON, schema = @Schema(implementation = PlayerDTO.class))
+							}),//implementation might be a double here
+					@ApiResponse(responseCode = CommonConstants.CODE_404, description = CommonConstants.PLAYER_NOT_FOUND, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_500, description = CommonConstants.INTERNAL_SERVER_ERR, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_1001, description = CommonConstants.APPLICATION_ERROR, content = @Content)
+					})
+			@GetMapping(value = CommonConstants.PLAYER_ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
+			public ResponseEntity<PlayerDTO> getOnePlayerById(@Parameter(description = "Player id needed to return player object", required = true)
+													@PathVariable("id") long id) {
 				PlayerDTO player = playerService.getById(id);
 						//.orElseThrow(() -> new EmployeeNotFoundException("Employee with ID :" + id)); custom exception made
 				if (player == null) {
@@ -249,58 +132,178 @@ public class PlayerDTOController {
 				}
 				return new ResponseEntity<PlayerDTO> (player, HttpStatus.OK);
 				//return ResponseEntity.ok().body(player);
+			} //ResponseStatusException is implemented here with a return of return new ResponseEntity<Map<String,Object>>(error, HttpStatus.NOT_FOUND);
+			
+			
+			//Post: /players/{id}/games/ - specific player roles the dice
+			@Operation(summary= "ROLL OR DIE!", 
+					description = "Selected player rolls a die, then results are saved in DB")
+			@ApiResponses(value = { 
+					@ApiResponse(responseCode = CommonConstants.CODE_200, description = CommonConstants.GAME_CREATED, content = { 
+							@Content(mediaType = CommonConstants.MEDIA_TYPE_JSON, schema = @Schema(implementation = DiceGame.class))
+							}),//implementation might be a double here
+					@ApiResponse(responseCode = CommonConstants.CODE_403, description = CommonConstants.USER_UNAUTHENTICATED, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_404, description = CommonConstants.PLAYER_NOT_FOUND, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_500, description = CommonConstants.INTERNAL_SERVER_ERR, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_1001, description = CommonConstants.APPLICATION_ERROR, content = @Content)
+					})
+			@PostMapping(value = CommonConstants.GAMES_ALL_OR_PLAY, headers = CommonConstants.HEADER_TYPE_OBJECT)
+			public ResponseEntity<?> playGame(@PathVariable long id) {
+				DiceGame game = diceService.playGame();
+				if (game.getDieResult1() == 1 && game.getDieResult2() == 1) {
+					System.out.println(CommonConstants.SNAKE_EYES);
+				}
+				playerService.getById(id).addGameToList(game);
+				diceService.saveDiceGame(game);
+				return ResponseEntity.ok(game);
+			} //ResponseStatusException is implemented here with a return of return new ResponseEntity<Map<String,Object>>(error, HttpStatus.NOT_FOUND);
+			
+		
+			//Delete: /players/{id}/games - deletes all players rolls
+			@Operation(summary= "Delete all game rolls", 
+					description = "Selected player deletes their game history")
+			@ApiResponses(value = { 
+					@ApiResponse(responseCode = CommonConstants.CODE_200, description = CommonConstants.GAME_DELETED, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_403, description = CommonConstants.USER_UNAUTHENTICATED, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_404, description = CommonConstants.GAME_NOT_FOUND, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_500, description = CommonConstants.INTERNAL_SERVER_ERR, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_1001, description = CommonConstants.APPLICATION_ERROR, content = @Content)
+			})
+			@DeleteMapping(value = CommonConstants.GAMES_DELETE, headers = CommonConstants.HEADER_TYPE_OBJECT)
+			public ResponseEntity<?> deleteAllRoles(@PathVariable long id) {
+				List<DiceGame> deleteList = playerService.getById(id).getPlayerGames();
+				playerService.getById(id).deleteListOfGames();
+				for (DiceGame diceGame : deleteList) {
+					diceService.deleteById(diceGame.getGameId());
+				}
+				return ResponseEntity.ok(id);
+			} //ResponseStatusException is implemented here with a return of return new ResponseEntity<Map<String,Object>>(error, HttpStatus.NOT_FOUND);
+			
+		
+			//Get: /players/{id}/games/ - returns list of games for 1 player
+			@Operation(summary= "Returns list of games", 
+					description = "Returns the game history of the selected player")
+			@ApiResponses(value = { 
+					@ApiResponse(responseCode = CommonConstants.CODE_200, description = CommonConstants.LIST_RETURNED, content = { 
+							@Content(mediaType = CommonConstants.MEDIA_TYPE_JSON, schema = @Schema(implementation = DiceGame.class))
+					}),//implementation might be a double here
+					@ApiResponse(responseCode = CommonConstants.CODE_403, description = CommonConstants.USER_UNAUTHENTICATED, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_404, description = CommonConstants.PLAYER_NOT_FOUND, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_500, description = CommonConstants.INTERNAL_SERVER_ERR, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_1001, description = CommonConstants.APPLICATION_ERROR, content = @Content)
+			})
+			@GetMapping(value = CommonConstants.GAMES_ALL_OR_PLAY, headers = CommonConstants.HEADER_TYPE_OBJECT)
+			public ResponseEntity<?> getAllGames(@Parameter(description = "Id of Player needed in order to retrieve their games", 
+			required = true)
+			@PathVariable long id) {
+				List<DiceGame> list = playerService.getById(id).getPlayerGames();
+				list
+				.stream()
+				.map(game -> diceService.getDTOMapper().apply(game))
+				.collect(Collectors.toList());
+				return ResponseEntity.ok(list); 
+			} //ResponseStatusException is implemented here with a return of return new ResponseEntity<Map<String,Object>>(error, HttpStatus.NOT_FOUND);
+			
+			
+			//Get: /players/ - returns all players with average success rate
+			@Operation(summary= "Gets a list of players", 
+					description = "Gets a list of all players and their respective success rate")
+			@ApiResponses(value = { 
+					@ApiResponse(responseCode = CommonConstants.CODE_200, description = CommonConstants.LIST_RETURNED, 
+							content = { @Content(mediaType = CommonConstants.MEDIA_TYPE_JSON, 
+							schema = @Schema(implementation = PlayerDTO.class))}),
+					@ApiResponse(responseCode = CommonConstants.CODE_404, description = CommonConstants.PLAYER_NOT_FOUND, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_500, description = CommonConstants.INTERNAL_SERVER_ERR, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_1001, description = CommonConstants.APPLICATION_ERROR, content = @Content)
+			})
+			@GetMapping(value = CommonConstants.GET_ALL_PLAYERS) //headers = CommonConstants.HEADER_TYPE_OBJECT
+			public ResponseEntity<?> getAllPlayersAndSuccessRate(@Parameter(description = "Player name as an option, "
+					+ "in case need to search specific player", 
+					required = false)
+			@RequestParam(required = false) String name) {
+				List<PlayerDTO> list = playerService.getAllPlayers();
+				Map<String, Double> map = new HashMap<>();
+				list.forEach(k -> map.put(k.getPlayerName(), k.getSuccessRate()));
+				return ResponseEntity.ok(map); 
 			}
 			
-			/* @DeleteMapping(value = "/{id}", headers = "Accept=application/json")
-		 public ResponseEntity<PlayerDTO> deletePlayer(@PathVariable("id") long id) {
-		  Optional<PlayerDTO> optPlayer = playerService.findById(id);
-		  PlayerDTO player = optPlayer.get();
-		  if (player == null) {
-		   return new ResponseEntity<PlayerDTO> (HttpStatus.NOT_FOUND);
-		  }
-		  playerService.deletePlayerById(id);
-		  return new ResponseEntity<PlayerDTO> (HttpStatus.NO_CONTENT);
-		 }
-			 */
 			
-			/* belowe methods are for dice controller
-		//Post: /players/{id}/games/ - specific player roles the dice
-		//Delete: /players/{id}/games - deletes all players rolls
-		//Get: /players/{id}/games/ - returns list of games for 1 player
-		 * 
-		 * @Operation(summary= "Delete selected games", description = "deletes all games of selected player.")
-		    @ApiResponse(responseCode = "200", description = "Games deleted", content = @Content)
-		    @ApiResponse(responseCode = "404", description = "Player not found", content = @Content)
-		    @DeleteMapping("/{id}/games/")
-		    public ResponseEntity<?> deleteGamesByPlayerId(@PathVariable String id){
-		        try {
-		            playerServiceMongo.deleteGamesByPlayerId(id);
-		            return ResponseEntity.ok(HttpStatus.OK);
-		        }catch(ResponseStatusException e){
-		            return new ResponseEntity<Map<String,Object>>(this.message(e), HttpStatus.NOT_FOUND);
-		        }
-		    }
-		    
-		    @Operation(summary= "Roll dices", description = "If dice 1 + dice 2 = 7, then the player wins. The result is saved in the database")
-		    @ApiResponse(responseCode = "200", description = "Game added to the database", content = {@Content(mediaType = "application/json",
-		            schema = @Schema(implementation = Playerdto.class))})
-		    @ApiResponse(responseCode = "404", description = "Player not found", content = @Content)
-		    @PostMapping("/{id}/games/")
-		    public ResponseEntity<?> rollDice(@PathVariable String id){
-
-		        try {
-		            Playerdto playerdto = playerServiceMongo.playGame(id);
-		            return ResponseEntity.ok(playerdto);
-		        } catch (ResponseStatusException e){
-		            return new ResponseEntity<Map<String,Object>>(this.message(e), HttpStatus.NOT_FOUND);
-		        }
-		    }
-		    private Map<String, Object> message(ResponseStatusException e) {
-		        Map<String, Object> error = new HashMap<>();
-		        error.put("Message", e.getMessage());
-		        error.put("Reason", e.getReason());
-		        return error;
-		    }
-			 */
-	
+			//Get: /players/ranking - returns the average ranking of all players in the system. That is, the average percentage of successes
+			@Operation(summary= "Returns average ranking of all players", 
+					description = "Returns an average success rate of all players in the DB")
+			@ApiResponses(value = { 
+					@ApiResponse(responseCode = CommonConstants.CODE_200, description = CommonConstants.SUCCESSFUL, content = { 
+							@Content(mediaType = CommonConstants.MEDIA_TYPE_JSON, schema = @Schema(implementation = Double.class))
+							}),//implementation might be a double here
+					@ApiResponse(responseCode = CommonConstants.CODE_404, description = CommonConstants.PLAYER_NOT_FOUND, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_500, description = CommonConstants.INTERNAL_SERVER_ERR, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_1001, description = CommonConstants.APPLICATION_ERROR, content = @Content)
+					})
+			@GetMapping(CommonConstants.RANKINGS)
+			public ResponseEntity<Double> getTotalAverageSuccessRate() {
+				return ResponseEntity.ok(playerService.calculateAverageSuccessRate());
+			}
+			
+			
+			//Get: /players/ranking/loser - return player with worst success rate
+			@Operation(summary= "Returns worst ranking", 
+					description = "Returns the player with the worst sucess rate")
+			@ApiResponses(value = { 
+					@ApiResponse(responseCode = CommonConstants.CODE_200, description = CommonConstants.SUCCESSFUL, content = { 
+							@Content(mediaType = CommonConstants.MEDIA_TYPE_JSON, schema = @Schema(implementation = Player.class))
+							}),//implementation might be a double here
+					@ApiResponse(responseCode = CommonConstants.CODE_204, description = CommonConstants.LIST_IS_EMPTY, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_404, description = CommonConstants.PLAYER_NOT_FOUND, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_500, description = CommonConstants.INTERNAL_SERVER_ERR, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_1001, description = CommonConstants.APPLICATION_ERROR, content = @Content)
+					})
+			@GetMapping(CommonConstants.RANKINGS_LOSER)
+			public ResponseEntity<Player> getWorstPlayerSuccessRate() {
+				return ResponseEntity.ok(playerService.getWorstSuccessRate());
+			}		//has try catch around search with responsestatusexception
+			
+			
+			//Get: /players/ranking/winner - return player with best success rate
+			@Operation(summary= "Returns best ranking", 
+					description = "Returns the player with the best sucess rate")
+			@ApiResponses(value = { 
+					@ApiResponse(responseCode = CommonConstants.CODE_200, description = CommonConstants.SUCCESSFUL, content = { 
+							@Content(mediaType = CommonConstants.MEDIA_TYPE_JSON, schema = @Schema(implementation = Player.class))
+							}),//implementation might be a double here
+					@ApiResponse(responseCode = CommonConstants.CODE_204, description = CommonConstants.LIST_IS_EMPTY, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_404, description = CommonConstants.PLAYER_NOT_FOUND, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_500, description = CommonConstants.INTERNAL_SERVER_ERR, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_1001, description = CommonConstants.APPLICATION_ERROR, content = @Content)
+					})
+			@GetMapping(CommonConstants.RANKINGS_WINNER)
+			public ResponseEntity<Player> getBestPlayerSuccessRate() {
+				return ResponseEntity.ok(playerService.getBestSuccessRate());
+			}		//has try catch around search with responsestatusexception
+			
+			
+			//Put: /players - updates player name
+			@Operation(summary= "Update the Player", 
+				description = "Finds player by name and updates them in the DB")
+			@ApiResponses(value = { 
+					@ApiResponse(responseCode = CommonConstants.CODE_201, description = CommonConstants.PLAYER_UPDATED, content = { 
+							@Content(mediaType = CommonConstants.MEDIA_TYPE_JSON, schema = @Schema(implementation = PlayerDTO.class))
+							}),
+					@ApiResponse(responseCode = CommonConstants.CODE_403, description = CommonConstants.UNAUTHORIZED, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_404, description = CommonConstants.PLAYER_NOT_FOUND, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_500, description = CommonConstants.INTERNAL_SERVER_ERR, content = @Content),
+					@ApiResponse(responseCode = CommonConstants.CODE_1001, description = CommonConstants.APPLICATION_ERROR, content = @Content)
+					})
+			@PutMapping(value = CommonConstants.SAVE_PLAYER, headers = CommonConstants.HEADER_TYPE_OBJECT)
+			public ResponseEntity<?> updatePlayer(@Parameter(description = "Player details needed to update Player object", required = true)
+													@RequestBody PlayerDTO player) {	//
+				Player newP = null;
+				try {
+					newP = playerService.updatePlayer(player.getIdPlayer(), player);
+				} catch (ResponseStatusException rse) {
+					rse.printStackTrace();
+				}
+				return ResponseEntity.ok(newP);
+			} //ResponseStatusException is implemented here with a return of return new ResponseEntity<Map<String,Object>>(error, HttpStatus.NOT_FOUND);
+			
+			
 }

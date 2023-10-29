@@ -1,36 +1,39 @@
 package itacademy.s5t2.diceGame.businessLayer.dto;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+
+import itacademy.s5t2.diceGame.businessLayer.domain.DiceGame;
 import itacademy.s5t2.diceGame.businessLayer.domain.Die;
+import itacademy.s5t2.diceGame.constants.CommonConstants;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class DiceGameDTO {
 	
-	private long idGame;
+	private long gameId;
 	private int dieResult1;
 	private int dieResult2;
 	private String gameResult;
 	
-	///DTO only fields & methods
-	private static final int WIN_CONDITION = 7;
-	private static final String RESULT_WIN = "Win";
-	private static final String RESULT_LOSE = "Lose";
-	
 	public void playGame() {
 		dieResult1 = Die.roll();
 		dieResult2 = Die.roll();
-		if ((dieResult1 + dieResult2) == WIN_CONDITION) {
-			this.gameResult = RESULT_WIN;
+		if ((dieResult1 + dieResult2) == CommonConstants.WIN_CONDITION) {
+			this.gameResult = CommonConstants.WINS;
 		} else {
-			this.gameResult = RESULT_LOSE;
+			this.gameResult = CommonConstants.LOSSES;
 		}
 	}
 	
-	/*
+	/*for mysql only tables
 	 * @Schema(description = "The id of the player")
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     //@JoinColumn(name="playerId")

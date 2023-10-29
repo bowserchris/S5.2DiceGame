@@ -1,42 +1,37 @@
 package itacademy.s5t2.diceGame.securityLayer.service;
 
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import java.util.HashMap;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import itacademy.s5t2.diceGame.securityLayer.domain.User;
 import itacademy.s5t2.diceGame.securityLayer.dto.LoginUserDTO;
 import itacademy.s5t2.diceGame.securityLayer.dto.RegisterUserDTO;
-import itacademy.s5t2.diceGame.securityLayer.repository.UserRepository;
 
 @Service
 public class AuthenticationService {
 	
-	private final UserRepository userRepository;
-	private final PasswordEncoder passwordEncoder;
-	private final AuthenticationManager authenticationManager;
+	@Autowired
+	private final UserService userService;
 	
-	public AuthenticationService (UserRepository userRepository,
-									AuthenticationManager authenticationManager, 
-									PasswordEncoder passwordEncoder) {
-		this.authenticationManager = authenticationManager;
-		this.userRepository = userRepository;
-		this.passwordEncoder = passwordEncoder;		
-	}
-
-	public User signup(RegisterUserDTO input) {
-		User user = new User();
-		user.setUsername(input.getUserName());
-		user.setPassword(passwordEncoder.encode(input.getPassword()));
-		return userRepository.save(user);
+	@Autowired
+	private final JwtService jwtService;
+	
+	public AuthenticationService (JwtService jwt, UserService user) {
+		this.jwtService = jwt;
+		this.userService = user;
 	}
 	
-	public User authenticate(LoginUserDTO input) {
-		authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(
-				input.getUserName(), input.getPassword()));
-		return userRepository.findByUsername(input.getUserName()).orElseThrow();
+	public Optional<String> signup(RegisterUserDTO input) {
+		Optional<User> user = userService.createUser(input);
+		return user.map(value -> jwtService.generateToken(new HashMap<>(), value));
+	}
+	
+	public Optional<String> authenticate(LoginUserDTO input) {
+		Optional<User> user = userService.getUser(input);
+		return user.map(value -> jwtService.generateToken(new HashMap<>(), value));
 	}
 	
 }

@@ -13,7 +13,7 @@ import java.util.Date;
 @Repository
 public interface PlayerRepository extends MongoRepository<Player, Long>{
 	
-	Optional<Player> findByName(String name);
+	Optional<Player> findByPlayerName(String name);
 	List<Player> findByRegistrationDate(Date registrationDate);
 
 }

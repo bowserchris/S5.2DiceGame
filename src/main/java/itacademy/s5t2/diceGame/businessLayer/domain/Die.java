@@ -1,11 +1,11 @@
 package itacademy.s5t2.diceGame.businessLayer.domain;
 
-public interface Die {
+import itacademy.s5t2.diceGame.constants.CommonConstants;
 
-	static final int SIDES = 6;
+public interface Die {
 	
 	public static int roll() {
-		return (int)(Math.random()*SIDES+1);
+		return (int)(Math.random()*CommonConstants.SIDES+1); //remove 1?
 	}
 
 }

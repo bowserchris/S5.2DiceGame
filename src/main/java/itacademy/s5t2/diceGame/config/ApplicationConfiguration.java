@@ -1,4 +1,4 @@
-package itacademy.s5t2.diceGame.securityLayer.config;
+package itacademy.s5t2.diceGame.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,21 +10,20 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import itacademy.s5t2.diceGame.constants.CommonConstants;
 import itacademy.s5t2.diceGame.securityLayer.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 
 @Configuration
+@RequiredArgsConstructor
 public class ApplicationConfiguration {
 	
 	private final UserRepository userRepo;
 	
-	public ApplicationConfiguration(UserRepository userRepo) {
-		this.userRepo = userRepo;
-	}
-	
 	@Bean
 	UserDetailsService userDetailsService() {
 		return userName -> userRepo.findByUsername(userName)
-				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+				.orElseThrow(() -> new UsernameNotFoundException(CommonConstants.PLAYER_NOT_FOUND));
 	}
 	
 	@Bean
@@ -37,8 +36,8 @@ public class ApplicationConfiguration {
 		return config.getAuthenticationManager();
 	}
 	
-	@Bean
-	AuthenticationProvider authenticationProvider() {
+	@Bean //keep public, even though ide complains this needs to be kept public for it to work or spring boot crashes
+	public AuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 		authProvider.setUserDetailsService(userDetailsService());
 		authProvider.setPasswordEncoder(passwordEncoder());

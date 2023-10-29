@@ -14,15 +14,16 @@ import itacademy.s5t2.diceGame.businessLayer.dto.DiceGameDTO;
 import itacademy.s5t2.diceGame.businessLayer.repository.DiceGameRepository;
 import itacademy.s5t2.diceGame.businessLayer.service.interfaces.DiceGameServiceInter;
 import itacademy.s5t2.diceGame.businessLayer.service.mapper.DiceGameDTOMapper;
+import itacademy.s5t2.diceGame.constants.CommonConstants;
 
 @Service
 public class DiceGameServiceImpl implements DiceGameServiceInter {
 	
 	@Autowired
 	private final DiceGameRepository diceRepo;
+	@Autowired
 	private final DiceGameDTOMapper dtoMapper;
-	//// private final SecurityConfiguration securityConfiguration;
-	//implements playerservice @autowired
+	
 	// curious to the logger class private static final Logger log = LoggerFactory.getLogger(PlayerServiceImpl.class);
 	
 	public DiceGameServiceImpl(DiceGameRepository repo, DiceGameDTOMapper map) {
@@ -70,7 +71,8 @@ public class DiceGameServiceImpl implements DiceGameServiceInter {
 	public Optional<DiceGame> checkOptional(long id) {
 		Optional<DiceGame> optional = diceRepo.findById(id);
 		if (!optional.isPresent()) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Dice game id " + id + " does not exists.");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, 
+					CommonConstants.returnDiceGameIdDoesNotExistMSG(id));
 		}
 		return optional;
 	}
@@ -80,11 +82,6 @@ public class DiceGameServiceImpl implements DiceGameServiceInter {
 		diceRepo.deleteById(id);
 	}
 
-	@Override	//delete all rolls within 
-	public void deleteAllRolls() {
-		diceRepo.deleteAll();
-	}
-	
 	@Override
 	public int getDieValue1(long id) {
 		return diceRepo.findById(id).get().getDieResult1();
@@ -100,10 +97,10 @@ public class DiceGameServiceImpl implements DiceGameServiceInter {
 		return diceRepo.findById(id).get().getGameResult();
 	}
 
-	public void playGame() {
+	public DiceGame playGame() {
 		DiceGameDTO game = new DiceGameDTO();
 		game.playGame();
-		saveDiceGame(dtoMapper.applyToEntity(game));
+		return dtoMapper.applyToEntity(game);
 	}
 
 }
