@@ -28,18 +28,19 @@
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>
 		<!-- to access authorization for security -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-authorization-server</artifactId>
-		</dependency>
-		<dependency>
+		</dependency> -->
+		
+		<!-- <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-client</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-		</dependency>
+		</dependency> -->
 		<!-- use security resources -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -79,8 +80,13 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- i <dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>2.2.17</version>
+		</dependency>  -->
 		<!-- implement api testing to view easier -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
 			<version>3.0.0</version>
@@ -90,43 +96,59 @@
 			<artifactId>springfox-boot-starter</artifactId>
 			<version>3.0.0</version>
 		</dependency>
-		<!-- <dependency> maybe not needed?
+		<dependency> 
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-bean-validators</artifactId>
 			<version>2.9.2</version>
-		</dependency> -->
-		<!-- <dependency> 
+		</dependency>
+		<dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations-jakarta</artifactId>
+            <version>2.2.7</version>
+        </dependency>
+		<dependency>
 		<groupId>org.modelmapper</groupId>
 		<artifactId>modelmapper</artifactId>
 		<version>3.1.0</version>
 		 </dependency>-->  <!-- in case custom mapper doesnt work -->
+		<!-- <dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-security</artifactId>
+			<version>1.6.11</version>
+		</dependency> -->
 		 <dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.2.0</version>
 		</dependency>
-		<dependency> 
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.7.0</version>
+		</dependency>
+		<!-- <version>1.2.32</version> -->
+		<!-- <dependency> 
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>4.0.1</version>
             <scope>provided</scope>
-        </dependency>
-        <!-- for jwt authorization tokens -->
+        </dependency> -->
+		<!-- for jwt authorization tokens -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>
-			<version>0.11.2</version>
+			<version>0.11.5</version>
 		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
-			<version>0.11.2</version>
+			<version>0.11.5</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-jackson</artifactId>
-			<version>0.11.2</version>
+			<version>0.11.5</version>
 			<scope>runtime</scope>
 		</dependency>
 		<!-- for testing -->
@@ -141,7 +163,14 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-	</dependencies>
+		<!-- <dependency> 		WHEN THE FUCK DID THIS GET IN!?
+			<groupId>
+				cat.itacademy.barcelonactiva.cognoms.nom.s04.t02.n01
+			</groupId>
+			<artifactId>S04T02N01GognomsNom</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency> -->
+	</dependencies> 
 
 	<build>
 		<plugins>

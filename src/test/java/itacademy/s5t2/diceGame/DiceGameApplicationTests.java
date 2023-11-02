@@ -13,7 +13,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import itacademy.s5t2.diceGame.domain.Die;
+import itacademy.s5t2.diceGame.businessLayer.domain.Die;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(
