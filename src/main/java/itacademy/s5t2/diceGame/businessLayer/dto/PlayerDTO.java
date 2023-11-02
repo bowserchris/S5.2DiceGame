@@ -1,9 +1,15 @@
 package itacademy.s5t2.diceGame.businessLayer.dto;
 
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.media.Schema;
 import itacademy.s5t2.diceGame.businessLayer.domain.DiceGame;
 import itacademy.s5t2.diceGame.constants.CommonConstants;
 import itacademy.s5t2.diceGame.securityLayer.dto.RegisterUserDTO;
@@ -23,29 +29,14 @@ public class PlayerDTO {
 	private String playerName;
 	private double successRate;
 	private List<DiceGame> playerGames;
-	private HashMap<String, Integer> playerResultsWinLossMap = createPlayerMap();	
+	//private HashMap<String, Integer> playerResultsWinLossMap;
 	
-	public void addGameToList(DiceGame game) {
-		playerGames.add(game);
-		playerResultsWinLossMap.put(game.getGameResult(), (int)playerResultsWinLossMap.get(game.getGameResult()) + 1);
-		successRate = calculateAverageSuccessRate();
-	}
+	@Builder.Default
+	@Schema(description = "Player win/loss ratio", name="playerResultsWinLossMap")
+	private Map<String, Integer> playerResultsWinLossMap = createPlayerMap;
 	
-	public void deleteListOfGames() {
-		successRate = 0.0;
-		playerResultsWinLossMap.clear();
-		playerGames.clear();
-	}
-		
-	public double calculateAverageSuccessRate() {
-		return Math.round(playerResultsWinLossMap.get(CommonConstants.WINS) / playerGames.size() * 100);
-	}
-	
-	private HashMap<String, Integer> createPlayerMap() {
-		HashMap<String, Integer> map = new HashMap<>();
-		map.put(CommonConstants.WINS, 0);
-		map.put(CommonConstants.LOSSES, 0);
-		return map;
-	}
+	@Autowired
+	@Hidden
+	private static Map<String, Integer> createPlayerMap;
 	
 }

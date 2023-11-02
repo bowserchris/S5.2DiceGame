@@ -23,16 +23,6 @@ public class DiceGameDTO {
 	private int dieResult2;
 	private String gameResult;
 	
-	public void playGame() {
-		dieResult1 = Die.roll();
-		dieResult2 = Die.roll();
-		if ((dieResult1 + dieResult2) == CommonConstants.WIN_CONDITION) {
-			this.gameResult = CommonConstants.WINS;
-		} else {
-			this.gameResult = CommonConstants.LOSSES;
-		}
-	}
-	
 	/*for mysql only tables
 	 * @Schema(description = "The id of the player")
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)

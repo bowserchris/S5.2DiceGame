@@ -32,15 +32,11 @@ public class DiceGameServiceImpl implements DiceGameServiceInter {
 		this.dtoMapper = map;
 	}
 	
-	public DiceGameDTOMapper getDTOMapper() {
-		return dtoMapper;
-	}
-
 	@Override	//get all games
 	public List<DiceGameDTO> getAllDiceGames() {
 		return diceRepo.findAll()
 				.stream()
-				.map(d -> dtoMapper.apply(d))
+				.map(d -> mapToDiceGameDTO(d))
 				.collect(Collectors.toList());
 	}
 
@@ -55,16 +51,24 @@ public class DiceGameServiceImpl implements DiceGameServiceInter {
 		DiceGameDTO gameInDB = getById(id);		
 		DiceGame gameUpdated = null;
 		if (gameInDB != null) {
-			gameUpdated = dtoMapper.applyToEntity(dtoRequest);
+			gameUpdated = mapToDiceGame(dtoRequest);
 		}
 		return gameUpdated;
+	}
+	
+	public DiceGameDTO mapToDiceGameDTO(DiceGame dg) {
+		return dtoMapper.apply(dg);
+	}
+	
+	public DiceGame mapToDiceGame(DiceGameDTO dg) {
+		return dtoMapper.applyToEntity(dg);
 	}
 
 	@Override	//get game by id
 	public DiceGameDTO getById(long id) {
 		//log.info("Find by Id: " + id);
 		Optional<DiceGame> optional = checkOptional(id);
-		DiceGameDTO game = dtoMapper.apply(optional.get());
+		DiceGameDTO game = mapToDiceGameDTO(optional.get());
 		return game;
 	}
 
@@ -98,9 +102,9 @@ public class DiceGameServiceImpl implements DiceGameServiceInter {
 	}
 
 	public DiceGame playGame() {
-		DiceGameDTO game = new DiceGameDTO();
+		DiceGame game = new DiceGame();		//id is not being returned but rest is;
 		game.playGame();
-		return dtoMapper.applyToEntity(game);
+		return game;
 	}
 
 }

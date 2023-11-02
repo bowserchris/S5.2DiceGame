@@ -7,6 +7,7 @@ import com.mongodb.Function;
 
 import itacademy.s5t2.diceGame.businessLayer.domain.Player;
 import itacademy.s5t2.diceGame.businessLayer.dto.PlayerDTO;
+import itacademy.s5t2.diceGame.constants.CommonConstants;
 
 @Service
 @Component
@@ -20,6 +21,7 @@ public class PlayerDTOMapper implements Function<Player, PlayerDTO>{
 		dto.setPlayerName(player.getPlayerName());
 		dto.setSuccessRate(player.getSuccessRate());
 		dto.setPlayerGames(player.getPlayerGames());
+		dto.setPlayerResultsWinLossMap(CommonConstants.createPlayerMap());
 		dto.setPlayerResultsWinLossMap(player.getPlayerResultsWinLossMap());
 		return dto;
 	}
@@ -31,8 +33,9 @@ public class PlayerDTOMapper implements Function<Player, PlayerDTO>{
 		player.setPlayerName(dto.getPlayerName());
 		player.setSuccessRate(dto.getSuccessRate());
 		player.setPlayerGames(dto.getPlayerGames());
+		player.setPlayerResultsWinLossMap(CommonConstants.createPlayerMap());
 		player.setPlayerResultsWinLossMap(dto.getPlayerResultsWinLossMap());
-		return null;
+		return player;
 	}
 
 }

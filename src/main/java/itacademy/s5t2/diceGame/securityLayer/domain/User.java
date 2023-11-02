@@ -7,8 +7,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.core.sym.Name;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import itacademy.s5t2.diceGame.securityLayer.dto.RegisterUserDTO;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -29,14 +32,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "Details of User object")
-@Entity
-@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
+@Entity(name = "User")
+@Table(name = "_user")
+		//uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
 public class User implements UserDetails {
 
 	//@NotNull
 	@Schema(description = "Unique id of the User for Database", name="id")
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name = "id", updatable = false)
 	private int userId;
 	
 	/*@NotNull
@@ -46,11 +51,13 @@ public class User implements UserDetails {
 	private static final long serialVersionUID = 1L;*/
 
 	@Schema(description = "User name", name="username")
-    @NotNull
+    //@NotNull
+    @Column(name = "user_name", nullable = false)
     private String username;
     
 	@Schema(description = "User password", name="password")
-    @NotNull
+    //@NotNull
+    @Column(name = "password", nullable = false)
     private String password;
     
 	@Schema(description = "If account is enabled or not", name="enabled")
@@ -59,6 +66,7 @@ public class User implements UserDetails {
     
 	@Schema(description = "Role given to account", name="enabled")
     //@NotNull
+	@Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
     

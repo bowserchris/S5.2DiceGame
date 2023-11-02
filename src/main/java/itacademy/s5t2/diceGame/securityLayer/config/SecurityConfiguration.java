@@ -1,5 +1,6 @@
 package itacademy.s5t2.diceGame.securityLayer.config;
 
+import org.hibernate.query.NativeQuery.ReturnableResultNode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,7 +31,7 @@ public class SecurityConfiguration {
 		return http
 			.csrf(AbstractHttpConfigurer::disable)
 			.authorizeHttpRequests((requests) -> {		//THIS CAUSED ISSUES WITH SWAGGER NOT WORKING make sure its one full linked chain, as split it wont recognise the urls and return blank
-				requests.requestMatchers(CommonConstants.AUTH_WHITELIST)	//list of urls to match with incoming http request
+									requests.requestMatchers(CommonConstants.AUTH_WHITELIST)	//list of urls to match with incoming http request
 										.permitAll()						//all are permitted to be seen
 										.anyRequest()						//any of the requests made in before list
 										.authenticated();})					//is then authenticated and given approval here
@@ -41,6 +42,7 @@ public class SecurityConfiguration {
 					.loginPage("/auth/login")
 					.failureUrl("/auth/login?failed")
 					.loginProcessingUrl("/auth/login/process"))*/
+			//any other requests afterwards need to be authenticated.... but is this happening or does it need to be a separate object?
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			//.sessionManagement((session) -> session.sessionFixation().none())
 			.authenticationProvider(appConfig.authenticationProvider())

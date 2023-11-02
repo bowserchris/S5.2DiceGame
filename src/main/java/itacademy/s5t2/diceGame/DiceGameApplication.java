@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.servers.Server;
 import itacademy.s5t2.diceGame.constants.CommonConstants;
 
 // for swagger localhost:8080/swagger-ui/index.html  or localhost:8080/v3/api-docs/
@@ -27,15 +28,17 @@ import itacademy.s5t2.diceGame.constants.CommonConstants;
 								termsOfService = "Free to use",
 								contact = @Contact(name = "Christian", email = "email.com"),
 								license = @License(name = "API License", 
-											url = "Affiliated " + CommonConstants.SOFTWARE_NAME + " website to be placed here")))
-/*@SecurityScheme(name = "jwtopenapi", 
+											url = "Affiliated " + CommonConstants.SOFTWARE_NAME + " website to be placed here"))
+					) //servers = {@Server(url = "http://localhost:9003"), @Server(url = "http://localhost:8080")}
+@SecurityScheme(name = "jwtopenapi", 
 				scheme = "basic", 
 				type = SecuritySchemeType.HTTP, 
 				in = SecuritySchemeIn.HEADER) //type = )
 @SecurityScheme(name = "Bearer Authentication",
+				scheme = "bearer",
 				type = SecuritySchemeType.HTTP,
 				bearerFormat = "JWT",
-				scheme = "bearer")*/
+				in = SecuritySchemeIn.HEADER)
 @EnableJpaRepositories(basePackages = {"itacademy.s5t2.diceGame.businessLayer.repository", "itacademy.s5t2.diceGame.securityLayer.repository"})
 @EnableAutoConfiguration
 @EnableMongoRepositories("itacademy.s5t2.diceGame.businessLayer.repository")

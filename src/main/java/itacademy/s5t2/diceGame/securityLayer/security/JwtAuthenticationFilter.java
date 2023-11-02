@@ -73,16 +73,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	public Optional<String> getJwtHeader(HttpServletRequest request) {
 		final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION); 		//CommonConstants.AUTHORIZATION
 		
-		/*//pau sansa method below
+		//pau sansa method below
 		if (authHeader == null || !authHeader.startsWith(CommonConstants.BEARER)) {
+			return Optional.empty();
+		}
+		
+		/*if (StringUtils.hasText(authHeader) && authHeader.startsWith(CommonConstants.BEARER)) {
 			return Optional.empty();
 		}*/
 		
-		if (StringUtils.hasText(authHeader) && authHeader.startsWith(CommonConstants.BEARER)) {
-			return Optional.of(authHeader.substring(7));		//if pau sansa method is used, swap around to empty here
-		}
-		
-		return Optional.empty();
+		return Optional.of(authHeader.substring(7));		//if pau sansa method is used, swap around to empty here
     }
 	
 	public Optional<String> getJwtCookie(HttpServletRequest request){

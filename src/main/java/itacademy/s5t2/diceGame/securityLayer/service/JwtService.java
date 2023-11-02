@@ -43,7 +43,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration)) //even putting numbers here i see expires in class empty
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

@@ -27,7 +27,7 @@ import itacademy.s5t2.diceGame.securityLayer.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 
 @Tag(name = "Authentication", description = "This controller allows to register, update or authenticate the player and generates the access token to play the game")
-//@SecurityRequirement(name = "jwtopenapi")
+@SecurityRequirement(name = "jwtopenapi")
 @RestController
 @RequiredArgsConstructor	//creates constructor & other fields required, without instantiating all
 //@CrossOrigin(origins = CommonConstants.ORIGIN, allowCredentials = "true")	//"http://localhost:8080"
@@ -43,6 +43,7 @@ public class AuthenticatonController {
 	@ApiResponses(value = { 
 			@ApiResponse(responseCode = CommonConstants.CODE_200, description = CommonConstants.SUCCESSFUL, content = { 
 					@Content(mediaType = CommonConstants.MEDIA_TYPE_JSON, schema = @Schema(implementation = LoginResponse.class))}),
+			@ApiResponse(responseCode = CommonConstants.CODE_403, description = CommonConstants.USER_UNAUTHENTICATED, content = @Content),
 			@ApiResponse(responseCode = CommonConstants.CODE_500, description = CommonConstants.INTERNAL_SERVER_ERR, content = @Content),
 			@ApiResponse(responseCode = CommonConstants.CODE_1001, description = CommonConstants.APPLICATION_ERROR, content = @Content)})
 	@PostMapping(CommonConstants.SIGNUP)	//"/signup" as /auth/signup
@@ -65,6 +66,8 @@ public class AuthenticatonController {
 			@ApiResponse(responseCode = CommonConstants.CODE_200, description = CommonConstants.SUCCESSFUL, content = { 
 					@Content(mediaType = CommonConstants.MEDIA_TYPE_JSON, schema = @Schema(implementation = LoginResponse.class))
 					}),
+			@ApiResponse(responseCode = CommonConstants.CODE_401, description = CommonConstants.INVALID_USER, content = @Content),
+			@ApiResponse(responseCode = CommonConstants.CODE_403, description = CommonConstants.USER_UNAUTHENTICATED, content = @Content),
 			@ApiResponse(responseCode = CommonConstants.CODE_404, description = CommonConstants.PLAYER_NOT_FOUND, content = @Content),
 			@ApiResponse(responseCode = CommonConstants.CODE_500, description = CommonConstants.INTERNAL_SERVER_ERR, content = @Content),
 			@ApiResponse(responseCode = CommonConstants.CODE_1001, description = CommonConstants.APPLICATION_ERROR, content = @Content)

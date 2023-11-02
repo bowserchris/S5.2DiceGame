@@ -1,5 +1,6 @@
 package itacademy.s5t2.diceGame.businessLayer.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import itacademy.s5t2.diceGame.businessLayer.domain.DiceGame;
 import itacademy.s5t2.diceGame.businessLayer.domain.Player;
 import itacademy.s5t2.diceGame.businessLayer.dto.PlayerDTO;
 import itacademy.s5t2.diceGame.businessLayer.repository.PlayerRepository;
@@ -34,20 +36,18 @@ public class PlayerServiceImpl implements PlayerInter {
 		this.dtoMapper = map;
 	}
 	
-	public PlayerDTOMapper getDTOMapper() {
-		return dtoMapper;
-	}
-
 	@Override	//get list of players
 	public List<PlayerDTO> getAllPlayers() {
 		return playerRepo.findAll()
 				.stream()
-				.map(p -> dtoMapper.apply(p))
+				.map(p -> mapToPlayerDto(p))
 				.collect(Collectors.toList());
 	}
 
 	@Override	//save player with casting
 	public Player savePlayer(Player p) {
+		p.setPlayerGames(new ArrayList<DiceGame>());
+		p.setPlayerResultsWinLossMap(CommonConstants.createPlayerMap());
 		return playerRepo.save(p);
 	}
 	
@@ -68,11 +68,21 @@ public class PlayerServiceImpl implements PlayerInter {
 
 	public boolean checkForUniqueName(Player p) {
 		boolean uniqueName = true;
-		Player player = dtoMapper.applyToEntity(getByName(p.getPlayerName()));
-		if (player.getPlayerName().equalsIgnoreCase(p.getPlayerName())) {
+		PlayerDTO player = getByName(p.getPlayerName());
+		if (player == null) {
+			return uniqueName; //leave blank so it skips
+		} else if (p.getPlayerName().equalsIgnoreCase(player.getPlayerName())) {
 			uniqueName = false;
 		}
 		return uniqueName;
+	}
+	
+	public Player mapToPlayer(PlayerDTO p) {
+		return dtoMapper.applyToEntity(p);
+	}
+	
+	public PlayerDTO mapToPlayerDto(Player p) {
+		return dtoMapper.apply(p);
 	}
 
 	@Override	// update player
@@ -81,7 +91,8 @@ public class PlayerServiceImpl implements PlayerInter {
 		PlayerDTO playerInDB = getById(id);		//need to fix exception if not found
 		Player playerUpdated = null;
 		if (playerInDB != null) {
-			playerUpdated = dtoMapper.applyToEntity(dtoRequest);
+			playerUpdated = mapToPlayer(playerInDB);
+			playerUpdated.setPlayerName(dtoRequest.getPlayerName());
 			playerRepo.save(playerUpdated);
 		}
 		return playerUpdated;
@@ -91,7 +102,7 @@ public class PlayerServiceImpl implements PlayerInter {
 	public PlayerDTO getById(long id) {
 		//log.info("Find by Id: " + id);
 		Optional<Player> optional = checkOptional(id);
-		PlayerDTO player = dtoMapper.apply(optional.get());
+		PlayerDTO player = mapToPlayerDto(optional.get());
 		return player;
 	}
 
@@ -106,11 +117,11 @@ public class PlayerServiceImpl implements PlayerInter {
 		Optional<Player> optional = playerRepo.findByPlayerName(name);
 		PlayerDTO player = null;
 		if (optional.isPresent()) {
-			player = dtoMapper.apply(optional.get());
-		} else {
+			player = mapToPlayerDto(optional.get());
+		} /*else {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, 
 					CommonConstants.returnNameDoesNotExistMSG(name));
-		}
+		}*/
 		return player;
 	}
 	
@@ -169,6 +180,25 @@ public class PlayerServiceImpl implements PlayerInter {
 		}
 		return worstPlayer;
 	}
+	
+	public boolean addGameToPlayerList(DiceGame dg, long playerId) {
+		Player player = dtoMapper.applyToEntity(getById(playerId));
+		if (player.getPlayerGames() == null) {
+			player.setPlayerGames(new ArrayList<DiceGame>());
+		}	
+		player.addGameToList(dg);		//return true or false to check update correctly?
+		playerRepo.save(player);
+		return true;
+	}
+	
+	public boolean deletePlayerGames(long playerId) {
+		Player player = dtoMapper.applyToEntity(getById(playerId));
+		player.deleteListOfGames();
+		playerRepo.save(player);
+		return true;
+	}
+	
+	
 	
 	//public <T> Product createProduct(T value) {
 

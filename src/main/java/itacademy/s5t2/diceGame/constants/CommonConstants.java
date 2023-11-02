@@ -1,5 +1,7 @@
 package itacademy.s5t2.diceGame.constants;
 
+import java.util.HashMap;
+
 public class CommonConstants {	//perhaps make various classes, one constantstring/constantmessages and one with methods, to distinguish what is being called
 	
 	private CommonConstants() {
@@ -27,19 +29,22 @@ public class CommonConstants {	//perhaps make various classes, one constantstrin
 	        "/configuration/ui",
 	        "/configuration/security",
 	        "/swagger-ui.html",
+	       // "/index.html",
 	        "/webjars/**",
 	        "/v3/api-docs/**",
 	        "/swagger-ui/**",
-	        "/v3/api-docs/**",
-	        //"/**",			
+	      //  "/v2/api-docs",
+	      //  "/**",
+	     //   "/login/**",
+	    //    "/signup/**",
 			"/auth/**",			//*1
-			"/api/v1/auth/**", 
+		//	"/api/v1/auth/**", 
 			"/dicegame-V-sql-openapi",
 	};
 	
 	//URL mappings for authentication controller
 	//start with /auth
-	public static final String INDEX = "/api/v1/";
+	public static final String INDEX = "/";
 	public static final String AUTH_INDEX = "/auth";
 	public static final String SIGNUP = "/signup"; 	//goes like /auth/signup
 	public static final String LOGIN = "/login";
@@ -47,7 +52,7 @@ public class CommonConstants {	//perhaps make various classes, one constantstrin
 	//URL mappings for UserController
 	//start with /users
 	public static final String USER_INDEX = "/users";
-	public static final String AUTHENTICATED = "/player"; // or "/me" goes like /users/player
+	public static final String AUTHENTICATED = "/home"; // or "/me" goes like /users/player
 	public static final String GET_ALL_USERS = USER_INDEX + "/"; //get all users goes like /users/
 	
 	//URL mappings for player controller IS CROSSORIGINS NEEDED?
@@ -96,7 +101,7 @@ public class CommonConstants {	//perhaps make various classes, one constantstrin
 	public static final String CONSTRAINT_VIOLATION = "Constraint Violation";
 	public static final String PLAYER_NOT_FOUND = "Player Not Found";	//also used for user NOT FOUND
 	public static final String GAME_NOT_FOUND = "Dice Game Not Found";
-	public static final String INVALID_USER = "Invalid user";
+	public static final String INVALID_USER = "Invalid user or password";
 	public static final String INTERNAL_SERVER_ERR = "Internal Server Error";
 	public static final String APPLICATION_ERROR = "Application specific error";
 	public static final String LIST_IS_EMPTY = "The list is empty. There are no games in the Database";
@@ -119,11 +124,11 @@ public class CommonConstants {	//perhaps make various classes, one constantstrin
 	public static final String CODE_201 = "201";
 	public static final String CODE_204 = "204";
 	public static final String CODE_400 = "400";
+	public static final String CODE_401 = "401";
 	public static final String CODE_403 = "403";
 	public static final String CODE_404 = "404";
 	public static final String CODE_500 = "500";
 	public static final String CODE_1001 = "1001";
-	
 	
 	
 	//calculates average success rate in various classes
@@ -144,6 +149,12 @@ public class CommonConstants {	//perhaps make various classes, one constantstrin
 		return DICE_GAME_ID + id + DOES_NOT_EXIST;
 	}
 	
+	public static HashMap<String, Integer> createPlayerMap() {
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put(CommonConstants.WINS, 0);
+		map.put(CommonConstants.LOSSES, 0);
+		return map;
+	}
 	/// can annotations be called in as constants?? apireponse is too much and very cluttered
 	// saw a record object/type/class used instead of a dto. is it like lombok without importing? has its own getters and setters
 

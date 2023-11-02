@@ -1,5 +1,8 @@
 package itacademy.s5t2.diceGame.config;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -42,6 +45,14 @@ public class ApplicationConfiguration {
 		authProvider.setUserDetailsService(userDetailsService());
 		authProvider.setPasswordEncoder(passwordEncoder());
 		return authProvider;
+	}
+	
+	@Bean
+	Map<String, Integer> createPlayerMap() {
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put(CommonConstants.WINS, 0);
+		map.put(CommonConstants.LOSSES, 0);
+		return map;
 	}
 
 }
