@@ -27,21 +27,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>
-		<!-- to access authorization for security -->
-		<!-- <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-oauth2-authorization-server</artifactId>
-		</dependency> -->
-		
-		<!-- <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-oauth2-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-		</dependency> -->
-		<!-- use security resources -->
+		<!-- use security resources from spring boot -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
@@ -80,42 +66,7 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- i <dependency>
-			<groupId>io.swagger.core.v3</groupId>
-			<artifactId>swagger-annotations</artifactId>
-			<version>2.2.17</version>
-		</dependency>  -->
-		<!-- implement api testing to view easier -->
-		<!-- <dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>3.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-boot-starter</artifactId>
-			<version>3.0.0</version>
-		</dependency>
-		<dependency> 
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-bean-validators</artifactId>
-			<version>2.9.2</version>
-		</dependency>
-		<dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-annotations-jakarta</artifactId>
-            <version>2.2.7</version>
-        </dependency>
-		<dependency>
-		<groupId>org.modelmapper</groupId>
-		<artifactId>modelmapper</artifactId>
-		<version>3.1.0</version>
-		 </dependency>-->  <!-- in case custom mapper doesnt work -->
-		<!-- <dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-security</artifactId>
-			<version>1.6.11</version>
-		</dependency> -->
+		<!-- < to use swagger and implemnet the ui with both dependencies > -->
 		 <dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
@@ -126,13 +77,7 @@
 			<artifactId>springdoc-openapi-ui</artifactId>
 			<version>1.7.0</version>
 		</dependency>
-		<!-- <version>1.2.32</version> -->
-		<!-- <dependency> 
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>4.0.1</version>
-            <scope>provided</scope>
-        </dependency> -->
+		<!-- aboce was applied at some point <version>1.2.32</version> -->
 		<!-- for jwt authorization tokens -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
@@ -163,14 +108,71 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!-- <dependency> 		WHEN THE FUCK DID THIS GET IN!?
+		</dependencies> 
+		<!-- below dependencies are redundant or outdated, but shows amount tested to see what works -->
+		<!-- <dependency> oauth thought was needed to create authentication
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-authorization-server</artifactId>
+		</dependency> -->
+		
+		<!-- <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency> -->
+		<!-- alot of old swagger dependencies <dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>2.2.17</version>
+		</dependency>  -->
+		<!-- implement api testing to view easier -->
+		<!-- <dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-boot-starter</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency> 
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-bean-validators</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+		<dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations-jakarta</artifactId>
+            <version>2.2.7</version>
+        </dependency>
+		<dependency>
+		<groupId>not needed if creating own mapper org.modelmapper</groupId>
+		<artifactId>modelmapper</artifactId>
+		<version>3.1.0</version>
+		 </dependency>-->  <!-- in case custom mapper doesnt work -->
+		<!-- <dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-security</artifactId>
+			<version>1.6.11</version>
+		</dependency> -->
+		<!-- <dependency> 
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency> -->
+		<!-- <dependency> 		WHEN THE FUCK DID THIS GET IN!? dont know how is was added when its not even related
 			<groupId>
 				cat.itacademy.barcelonactiva.cognoms.nom.s04.t02.n01
 			</groupId>
 			<artifactId>S04T02N01GognomsNom</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency> -->
-	</dependencies> 
+	
 
 	<build>
 		<plugins>
