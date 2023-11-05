@@ -27,7 +27,8 @@ public class GlobalExceptionHandlerGame extends ResponseEntityExceptionHandler{
     								HttpHeaders headers, 
     								HttpStatus status, 
     								WebRequest request) {
-        List<String> fieldErrors = ex.getBindingResult()
+      
+    	List<String> fieldErrors = ex.getBindingResult()
             .getFieldErrors()
             .stream()
             .map(field -> field.getField() + ", " + field.getDefaultMessage())
@@ -38,6 +39,7 @@ public class GlobalExceptionHandlerGame extends ResponseEntityExceptionHandler{
             .stream()
             .map(field -> field.getObjectName() + ", " + field.getDefaultMessage())
             .collect(Collectors.toList());
+      
         List<String> errors = new ArrayList<>();
         errors.addAll(globalErrors);
         errors.addAll(fieldErrors);

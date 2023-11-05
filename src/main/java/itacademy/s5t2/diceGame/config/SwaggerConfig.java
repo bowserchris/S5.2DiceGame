@@ -2,7 +2,6 @@ package itacademy.s5t2.diceGame.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -12,7 +11,7 @@ import itacademy.s5t2.diceGame.constants.CommonConstants;
 
 //for swagger localhost:8080/swagger-ui/index.html
 //or 			localhost:8080/v3/api-docs/
-//				line 26 1. or as listed within the pathselector of the docket? or check application.properties
+//				line 37 1. or as listed within the pathselector of the docket? or check application.properties
 
 @Configuration
 //@Profile({"!prod && swagger"})

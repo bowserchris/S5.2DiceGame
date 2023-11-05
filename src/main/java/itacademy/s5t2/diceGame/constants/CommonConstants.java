@@ -39,7 +39,6 @@ public class CommonConstants {	//perhaps make various classes, one constantstrin
 	    //    "/signup/**",
 			"/auth/**",			//*1
 		//	"/api/v1/auth/**", 
-			"/dicegame-V-sql-openapi",
 	};
 	
 	//URL mappings for authentication controller
@@ -61,7 +60,7 @@ public class CommonConstants {	//perhaps make various classes, one constantstrin
 	public static final String PLAYER = "players";
 	public static final String ID = "/{id}";
 	public static final String SAVE_PLAYER = PLAYER;					//Post "/players" same as update
-	public static final String GET_ALL_PLAYERS = PLAYER + INDEX; //Get: /players/
+	public static final String GET_ALL_PLAYERS = PLAYER + INDEX; 		//Get: /players/
 	public static final String RANKINGS = PLAYER + "/ranking"; 			//Get: /players/ranking
 	public static final String RANKINGS_LOSER = RANKINGS + "/loser";	//Get: /players/ranking/loser
 	public static final String RANKINGS_WINNER = RANKINGS + "/winner";	//Get: /players/ranking/winner 
@@ -96,14 +95,14 @@ public class CommonConstants {	//perhaps make various classes, one constantstrin
 	public static final String UNAUTHORIZED = "You are not authorized to access this resource";
 	public static final String JWT_INVALID = "The JWT signature is invalid";
 	public static final String JWT_EXPIRED = "The JWT token has expired";
-	public static final String UNKNOWN_INTERNAL_ERROR = "Unknown internal server error";
-	public static final String VALIDATION_ERROR = "Validation Errors";
+	public static final String UNKNOWN_INTERNAL_ERROR = "Unknown internal server error, check current business logic";
+	public static final String VALIDATION_ERROR = "Validation Errors, try with different input";
 	public static final String CONSTRAINT_VIOLATION = "Constraint Violation";
 	public static final String PLAYER_NOT_FOUND = "Player Not Found";	//also used for user NOT FOUND
 	public static final String GAME_NOT_FOUND = "Dice Game Not Found";
 	public static final String INVALID_USER = "Invalid user or password";
-	public static final String INTERNAL_SERVER_ERR = "Internal Server Error";
-	public static final String APPLICATION_ERROR = "Application specific error";
+	public static final String INTERNAL_SERVER_ERR = "Internal Server Error, check current operation";
+	public static final String APPLICATION_ERROR = "Application specific error, check current operation";
 	public static final String LIST_IS_EMPTY = "The list is empty. There are no games in the Database";
 	public static final String USER_UNAUTHENTICATED = "User is not authenticated";
 	
@@ -129,6 +128,8 @@ public class CommonConstants {	//perhaps make various classes, one constantstrin
 	public static final String CODE_404 = "404";
 	public static final String CODE_500 = "500";
 	public static final String CODE_1001 = "1001";
+	
+	public static final String PROPERTY_DESCRIPTION = "description";
 	
 	
 	//calculates average success rate in various classes
