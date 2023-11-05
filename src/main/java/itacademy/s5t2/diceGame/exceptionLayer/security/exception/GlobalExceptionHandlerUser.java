@@ -23,35 +23,35 @@ public class GlobalExceptionHandlerUser {
 		
 		ex.printStackTrace();
 		
-		if (ex instanceof BadCredentialsException) {
+		if (ex instanceof BadCredentialsException) {		//commonconstants valueof is int not string, so not using error code here
 			errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(401), ex.getMessage());
-			errorDetail.setProperty("description", CommonConstants.NAME_PASSWORD_INCORRECT);
+			errorDetail.setProperty(CommonConstants.PROPERTY_DESCRIPTION, CommonConstants.NAME_PASSWORD_INCORRECT);
 			return errorDetail;
 		}
 
 		if (ex instanceof AccountStatusException) {
 			errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), ex.getMessage());
-			errorDetail.setProperty("description", CommonConstants.LOCKED);
+			errorDetail.setProperty(CommonConstants.PROPERTY_DESCRIPTION, CommonConstants.LOCKED);
 		}
 
 		if (ex instanceof AccessDeniedException) {
 			errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), ex.getMessage());
-			errorDetail.setProperty("description", CommonConstants.UNAUTHORIZED);
+			errorDetail.setProperty(CommonConstants.PROPERTY_DESCRIPTION, CommonConstants.UNAUTHORIZED);
 		}
 
 		if (ex instanceof SignatureException) {
 			errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), ex.getMessage());
-			errorDetail.setProperty("description", CommonConstants.JWT_INVALID);	
+			errorDetail.setProperty(CommonConstants.PROPERTY_DESCRIPTION, CommonConstants.JWT_INVALID);	
 		}
 
 		if (ex instanceof ExpiredJwtException) {
 			errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), ex.getMessage());
-			errorDetail.setProperty("description", CommonConstants.JWT_EXPIRED);
+			errorDetail.setProperty(CommonConstants.PROPERTY_DESCRIPTION, CommonConstants.JWT_EXPIRED);
 		}
 
 		if (errorDetail == null) {
 			errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), ex.getMessage());
-			errorDetail.setProperty("description", CommonConstants.UNKNOWN_INTERNAL_ERROR);
+			errorDetail.setProperty(CommonConstants.PROPERTY_DESCRIPTION, CommonConstants.UNKNOWN_INTERNAL_ERROR);
 		}
 		return errorDetail;
 	}
