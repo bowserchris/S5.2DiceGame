@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PlayerDTO {
 	
-	@Schema(description = "Unique id of the Player", name="idPlayer")
+	@Schema(description = "Unique id of the Player", name="idPlayer", example = "1")
 	@Indexed(unique = true)
 	private long idPlayer;
 	
@@ -39,15 +39,15 @@ public class PlayerDTO {
 	@Indexed
 	private double successRate;
 	
-	@Schema(description = "List of games a player has played", name="Game List", example = "[]")
-	//@Hidden
-	@Indexed
-	private List<DiceGame> playerGames;
-	
 	@Builder.Default
 	@Schema(description = "Player win/loss ratio", name="Win/Loss Ratio", example = "{}")
 	@Indexed
 	private Map<String, Integer> playerResultsWinLossMap = createPlayerMap;
+	
+	@Schema(description = "List of games a player has played", name="Game List", example = "[]")
+	//@Hidden
+	@Indexed
+	private List<DiceGame> playerGames;
 	
 	@Autowired		//function bean from app configuration to inject the hashmap on creation of the player object. 
 	@Hidden

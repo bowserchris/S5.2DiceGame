@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,9 +31,12 @@ public class DiceGame {
 	
 	@Schema(description = "Unique id of the DiceGame", example = "1")
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "game_id")
 	private long gameId;
+	
+	@Transient //for mongodb
+    public static final String SEQUENCE_NAME = "dice_sequence";
 	
 	@Schema(description = "Value of 1st Die",name="dieResult1")
 	@NotNull(message = "Die value cannot be empty")

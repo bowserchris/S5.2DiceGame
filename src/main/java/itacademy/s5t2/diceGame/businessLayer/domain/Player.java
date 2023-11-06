@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import itacademy.s5t2.diceGame.constants.CommonConstants;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,10 +30,13 @@ public class Player {	//implements userdetails and relevant fields methods here
 	//private static final long serialVersionUID = 1L; with implements Serializable on class as well as in dto class
 	//@MongoId
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Schema(description = "Unique id of the Player", name="idPlayer")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Schema(description = "Unique id of the Player", name="idPlayer", example = "1")
 	@Indexed(unique = true)
 	private long idPlayer;
+	
+	@Transient
+    public static final String SEQUENCE_NAME = "players_sequence";
 	
 	
 	//@Value("${spring.jackson.date-format}")
@@ -50,16 +54,16 @@ public class Player {	//implements userdetails and relevant fields methods here
 	@Indexed
 	private double successRate;
 	
-	@Schema(description = "List of games a player has played", name="Game List", example = "[]")
-	//@Hidden
-	@Indexed
-	private List<DiceGame> playerGames;
-
 	//@Builder.Default
 	@Schema(description = "Player win/loss ratio", name="Win/Loss Ratio", example = "{}")
 	@Indexed
 	private Map<String, Integer> playerResultsWinLossMap;
 	
+	@Schema(description = "List of games a player has played", name="Game List", example = "[]")
+	//@Hidden
+	@Indexed
+	private List<DiceGame> playerGames;
+
 	public void addGameToList(DiceGame game) {
 		playerGames.add(game);
 		playerResultsWinLossMap.put(game.getGameResult(), playerResultsWinLossMap.getOrDefault(game.getGameResult(), 0) + 1); ///here is where sucess rate might not be gettting correctly
@@ -75,11 +79,11 @@ public class Player {	//implements userdetails and relevant fields methods here
 	}
 	
 	public double calculateAverageSuccessRate() {
-		double result = 0.0;
-		if (playerResultsWinLossMap.get(CommonConstants.WINS) != null) {
-			Math.round(playerResultsWinLossMap.get(CommonConstants.WINS) / playerGames.size() * 100);
-		}
-		return result;
+		//double result = 0.0;
+		
+	//	if (playerResultsWinLossMap.get(CommonConstants.WINS) != null) {
+		//}
+		return Math.round(playerResultsWinLossMap.get(CommonConstants.WINS) / playerGames.size() * 100);
 	}
 	
 	/*// alternatives for creating the hashmap for mongo, not implemented or attempted correctly

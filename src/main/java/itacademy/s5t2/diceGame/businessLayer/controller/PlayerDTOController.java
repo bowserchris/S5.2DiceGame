@@ -50,6 +50,9 @@ public class PlayerDTOController {
 	
 	//private static Logger log = LoggerFactory.getLogger(PlayerController.class);
 	
+	//probably best to implement a parent service that will autowire both playerservice and diceservice, then the controller here would call it
+	//this would reduce the clutter in this controller and leave it as a modular space between this controller and the 2 separate services
+	
 	@Autowired
 	PlayerServiceImpl playerService;
 
@@ -94,7 +97,7 @@ public class PlayerDTOController {
 				return new ResponseEntity<>(CommonConstants.PLAYER_EXISTS, HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		} catch (ResponseStatusException rse) {
-			return new ResponseEntity<>(CommonConstants.APPLICATION_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(CommonConstants.PLAYER_EXISTS, HttpStatus.INTERNAL_SERVER_ERROR);
 		} //ResponseStatusException is implemented here with a return of return new ResponseEntity<Map<String,Object>>(error, HttpStatus.NOT_FOUND);
 		return ResponseEntity.ok(newPlayer);
 	}

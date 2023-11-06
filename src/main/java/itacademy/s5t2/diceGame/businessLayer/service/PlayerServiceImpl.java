@@ -28,12 +28,16 @@ public class PlayerServiceImpl implements PlayerInter {
 	@Autowired
 	private final PlayerDTOMapper dtoMapper;
 	
+	@Autowired
+	private final SequenceGeneratorService sequenceService;
+	
 	// curious to the logger class private static final Logger log = LoggerFactory.getLogger(PlayerServiceImpl.class);
 	
-	public PlayerServiceImpl(PlayerRepository repo, PlayerDTOMapper map) {
+	public PlayerServiceImpl(PlayerRepository repo, PlayerDTOMapper map, SequenceGeneratorService sequence) {
 		super();
 		this.playerRepo = repo;
 		this.dtoMapper = map;
+		this.sequenceService = sequence;
 	}
 	
 	@Override	//get list of players
@@ -48,6 +52,7 @@ public class PlayerServiceImpl implements PlayerInter {
 	public Player savePlayer(Player p) {
 		p.setPlayerGames(new ArrayList<DiceGame>());
 		p.setPlayerResultsWinLossMap(CommonConstants.createPlayerMap());
+		p.setIdPlayer(sequenceService.generateSequence(Player.SEQUENCE_NAME));
 		return playerRepo.save(p);
 	}
 	
@@ -179,7 +184,9 @@ public class PlayerServiceImpl implements PlayerInter {
 		Player player = dtoMapper.applyToEntity(getById(playerId));
 		if (player.getPlayerGames() == null) {
 			player.setPlayerGames(new ArrayList<DiceGame>());
-		}	
+		}	//here i could just have an array list with id numbers and save to mongo within the player db 
+			//then from mysql i pull out a game id and then have the service call the dice repo and return the dice id from there
+		dg.setGameId(sequenceService.generateSequence(DiceGame.SEQUENCE_NAME));
 		player.addGameToList(dg);		//return true or false to check update correctly?
 		playerRepo.save(player);
 		return true;
