@@ -1,14 +1,9 @@
 package itacademy.s5t2.diceGame.businessLayer.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.hibernate.internal.build.AllowSysOut;
-import org.hibernate.query.NativeQuery.ReturnableResultNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -44,14 +39,12 @@ import itacademy.s5t2.diceGame.constants.CommonConstants;
 import itacademy.s5t2.diceGame.securityLayer.service.AuthenticationService;
 
 //@CrossOrigin(origins = CommonConstants.ORIGIN, allowCredentials = "true")
-//@RequestMapping(CommonConstants.) // "players/{id}"
 //@Validated
 @RestController
 @CrossOrigin(origins ="http://localhost:27017")
 @SecurityRequirement(name = "Bearer Authentication")
 @RequestMapping(CommonConstants.INDEX)
-@Tag(name = "Welcome to " + CommonConstants.SOFTWARE_NAME + "! "
-			+ "You feeling lucky? Well? Do ya Punk!?", 
+@Tag(name = "Player controller options", 
 			description = "This controller contains the methods to play the game")
 public class PlayerDTOController {
 	
@@ -66,8 +59,6 @@ public class PlayerDTOController {
 	@Autowired
 	AuthenticationService authService;
 			
-			//also has authentication service here
-			
 	public PlayerDTOController(PlayerServiceImpl ps, DiceGameServiceImpl dgs,AuthenticationService authService) {
 		super();
 		this.playerService = ps;
@@ -75,12 +66,7 @@ public class PlayerDTOController {
 		this.authService = authService;
 	}
 
-	@GetMapping(value = "/demo")
-	public String welcome() {
-		return "howdy";
-	}
-
-			
+	
 			//Post: /players - creates a player
 	@Operation(summary= "Add a new Player", 
 			description = "Checks if name isn´t already taken, then creates new player in the database")
@@ -94,7 +80,7 @@ public class PlayerDTOController {
 			@ApiResponse(responseCode = CommonConstants.CODE_1001, description = CommonConstants.APPLICATION_ERROR, content = @Content)
 	})
 	@PostMapping(value = CommonConstants.SAVE_PLAYER, headers = CommonConstants.HEADER_TYPE_OBJECT) 		//
-	public ResponseEntity<?> addPlayer(
+	public ResponseEntity<?> addPlayer(		//is generic response entity safe?
 			@Parameter(description = "Player details needed to create Player object", required = true)
 			@RequestBody Player player, UriComponentsBuilder ucBuilder) 
 	{
@@ -105,10 +91,10 @@ public class PlayerDTOController {
 				HttpHeaders headers = new HttpHeaders();
 				headers.setLocation(ucBuilder.path(CommonConstants.PLAYER_ID_PATH).buildAndExpand(newPlayer.getIdPlayer()).toUri());
 			} else {
-				return new ResponseEntity<>("Player already exists.", HttpStatus.INTERNAL_SERVER_ERROR);
+				return new ResponseEntity<>(CommonConstants.PLAYER_EXISTS, HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		} catch (ResponseStatusException rse) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(CommonConstants.APPLICATION_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		} //ResponseStatusException is implemented here with a return of return new ResponseEntity<Map<String,Object>>(error, HttpStatus.NOT_FOUND);
 		return ResponseEntity.ok(newPlayer);
 	}
@@ -133,15 +119,14 @@ public class PlayerDTOController {
 			@ApiResponse(responseCode = CommonConstants.CODE_1001, description = CommonConstants.APPLICATION_ERROR, content = @Content)
 	})
 	@GetMapping(value = CommonConstants.PLAYER_ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PlayerDTO> getOnePlayerById(@Parameter(description = "Player id needed to return player object", required = true)
+	public ResponseEntity<?> getOnePlayerById(@Parameter(description = "Player id needed to return player object", required = true)
 	@PathVariable("id") long id) {
 		PlayerDTO player = playerService.getById(id);
-		//.orElseThrow(() -> new EmployeeNotFoundException("Employee with ID :" + id)); custom exception made
+		//.orElseThrow(() -> new PlayerNotFoundException(Player with ID :" + id)); custom exception made
 		if (player == null) {
-			return new ResponseEntity<PlayerDTO> (HttpStatus.NOT_FOUND);
+			return new ResponseEntity<> (CommonConstants.PLAYER_NOT_FOUND,HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<PlayerDTO> (player, HttpStatus.OK);
-		//return ResponseEntity.ok().body(player);
 	} //ResponseStatusException is implemented here with a return of return new ResponseEntity<Map<String,Object>>(error, HttpStatus.NOT_FOUND);
 			
 			
@@ -166,7 +151,6 @@ public class PlayerDTOController {
 			System.out.println(CommonConstants.SNAKE_EYES);
 		}
 		playerService.addGameToPlayerList(game, playerId);
-		//playerService.updatePlayer(id, playerService.getById(id));
 		diceService.saveDiceGame(game);
 		return ResponseEntity.ok(game);
 	} //ResponseStatusException is implemented here with a return of return new ResponseEntity<Map<String,Object>>(error, HttpStatus.NOT_FOUND);
@@ -184,14 +168,10 @@ public class PlayerDTOController {
 	})
 	@DeleteMapping(value = CommonConstants.GAMES_DELETE, headers = CommonConstants.HEADER_TYPE_OBJECT)
 	public ResponseEntity<?> deleteAllRolls(@PathVariable long id) {
-		//List<DiceGame> deleteList = playerService.getById(id).getPlayerGames();
-		String resultString = "Player wasn´t deleted.";
+		String resultString = CommonConstants.NO_GAME_DELETE;
 		if (playerService.deletePlayerGames(id)) {
-			resultString = "Player was deleted successfully";
+			resultString = CommonConstants.GAME_DELETED;
 		}
-		/*for (DiceGame diceGame : deleteList) {		//needed or not needed the for loop?
-			diceService.deleteById(diceGame.getGameId());
-		}*/
 		return ResponseEntity.ok(resultString);
 	} //ResponseStatusException is implemented here with a return of return new ResponseEntity<Map<String,Object>>(error, HttpStatus.NOT_FOUND);
 			
@@ -218,7 +198,7 @@ public class PlayerDTOController {
 		.map(game -> diceService.mapToDiceGameDTO(game))
 		.collect(Collectors.toList());
 		if (list.size() == 0) {
-			return ResponseEntity.ok("There are no games in the list");
+			return ResponseEntity.ok(CommonConstants.LIST_IS_EMPTY);
 		}
 		return ResponseEntity.ok(list); 
 	} //ResponseStatusException is implemented here with a return of return new ResponseEntity<Map<String,Object>>(error, HttpStatus.NOT_FOUND);
@@ -250,7 +230,7 @@ public class PlayerDTOController {
 			//map = new HashMap<>();
 			//map.put("The amount of current players is at: ", 0.0);
 			List<String> emptyList = new ArrayList<>();
-			emptyList.add("There are no players within the database");
+			emptyList.add(CommonConstants.EMPTY_PLAYER_DB);
 			return ResponseEntity.ok(emptyList);
 			
 		}
@@ -272,7 +252,7 @@ public class PlayerDTOController {
 	@GetMapping(CommonConstants.RANKINGS)
 	public ResponseEntity<?> getTotalAverageSuccessRate() {
 		if (playerService.getAllPlayers().size() == 0) {
-			return ResponseEntity.ok("There are no players in the database");
+			return ResponseEntity.ok(CommonConstants.EMPTY_PLAYER_DB);
 		} else {
 			return ResponseEntity.ok(playerService.calculateAverageSuccessRate());
 		}
@@ -294,7 +274,7 @@ public class PlayerDTOController {
 	@GetMapping(CommonConstants.RANKINGS_LOSER)
 	public ResponseEntity<?> getWorstPlayerSuccessRate() {
 		if (playerService.getAllPlayers().size() == 0) {
-			return ResponseEntity.ok("There are no players in the database");
+			return ResponseEntity.ok(CommonConstants.EMPTY_PLAYER_DB);
 		} else {
 			return ResponseEntity.ok(playerService.getWorstSuccessRate());
 		}
@@ -316,7 +296,7 @@ public class PlayerDTOController {
 	@GetMapping(CommonConstants.RANKINGS_WINNER)
 	public ResponseEntity<?> getBestPlayerSuccessRate() {
 		if (playerService.getAllPlayers().size() == 0) {
-			return ResponseEntity.ok("There are no players in the database");
+			return ResponseEntity.ok(CommonConstants.EMPTY_PLAYER_DB);
 		} else {
 			return ResponseEntity.ok(playerService.getBestSuccessRate());
 		}

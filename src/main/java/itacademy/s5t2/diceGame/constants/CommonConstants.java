@@ -114,6 +114,8 @@ public class CommonConstants {	//perhaps make various classes, one constantstrin
 	public static final String GAME_CREATED = "Were ya lucky punk?";
 	public static final String SNAKE_EYES = "SNAKE (*) (*) EYES ";
 	public static final String GAME_DELETED = "Games were deleted correctly";
+	public static final String NO_GAME_DELETE = "No games were deleted.";
+	public static final String EMPTY_PLAYER_DB = "There are no players within the database";
 	
 	//security error messages
 	public static final String NOT_SET_USER_AUTHENTICATION = "Could not set user authentication in security context";
