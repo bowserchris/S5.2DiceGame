@@ -47,7 +47,7 @@ public class ApplicationConfiguration {
 		return authProvider;
 	}
 	
-	@Bean
+	@Bean		//this creates the player map on initializing the player, otherwise its empty and gives null pointer error
 	Map<String, Integer> createPlayerMap() {
 		HashMap<String, Integer> map = new HashMap<>();
 		map.put(CommonConstants.WINS, 0);

@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import itacademy.s5t2.diceGame.constants.CommonConstants;
@@ -78,7 +77,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			return Optional.empty();
 		}
 		
-		/*if (StringUtils.hasText(authHeader) && authHeader.startsWith(CommonConstants.BEARER)) {
+		/*if (StringUtils.hasText(authHeader) && authHeader.startsWith(CommonConstants.BEARER)) {		//ivana video method here
 			return Optional.empty();
 		}*/
 		

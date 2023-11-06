@@ -1,28 +1,17 @@
 package itacademy.s5t2.diceGame.businessLayer.domain;
 
 import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import itacademy.s5t2.diceGame.constants.CommonConstants;
-import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,19 +27,18 @@ import lombok.NoArgsConstructor;
 public class Player {	//implements userdetails and relevant fields methods here
 	
 	//private static final long serialVersionUID = 1L; with implements Serializable on class as well as in dto class
-	@MongoId
+	//@MongoId
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Schema(description = "Unique id of the Player", name="idPlayer")
 	@Indexed(unique = true)
 	private long idPlayer;
 	
-	/*
-	//@Value("${spring.jackson.date-format}")
 	
-	private LocalDateTime registrationDate;*/
+	//@Value("${spring.jackson.date-format}")
 	//@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Schema(description = "Player's registration date", name="registrationDate")
+	@Indexed
     private LocalDateTime registrationDate;
 	
 	@Schema(description = "Player name", name="playerName", example = "ANONYMOUS")
@@ -62,19 +50,15 @@ public class Player {	//implements userdetails and relevant fields methods here
 	@Indexed
 	private double successRate;
 	
-	@Schema(description = "List of games a player has played", name="playerGames", example = "[]")
+	@Schema(description = "List of games a player has played", name="Game List", example = "[]")
 	//@Hidden
 	@Indexed
 	private List<DiceGame> playerGames;
 
 	//@Builder.Default
-	@Schema(description = "Player win/loss ratio", name="playerResultsWinLossMap", example = "{}")
+	@Schema(description = "Player win/loss ratio", name="Win/Loss Ratio", example = "{}")
 	@Indexed
 	private Map<String, Integer> playerResultsWinLossMap;
-	
-	/*@Autowired
-	@Hidden
-	private static Map<String, Integer> createPlayerMap;*/
 	
 	public void addGameToList(DiceGame game) {
 		playerGames.add(game);
