@@ -67,7 +67,22 @@ public class Player {	//implements userdetails and relevant fields methods here
 			successRate = calculateAverageSuccessRate();
 		//}
 	}
-	/*
+	public void deleteListOfGames() {
+		successRate = 0.0;
+		playerResultsWinLossMap.put(CommonConstants.WINS, 0);
+		playerResultsWinLossMap.put(CommonConstants.LOSSES, 0);
+		playerGames.clear();
+	}
+	
+	public double calculateAverageSuccessRate() {
+		double result = 0.0;
+		if (playerResultsWinLossMap.get(CommonConstants.WINS) != null) {
+			Math.round(playerResultsWinLossMap.get(CommonConstants.WINS) / playerGames.size() * 100);
+		}
+		return result;
+	}
+	
+	/*// alternatives for creating the hashmap for mongo, not implemented or attempted correctly
 	 * words.computeIfPresent("hello", (k, v) -> v + 1);
 System.out.println(words.get("hello"));
 
@@ -91,18 +106,4 @@ HashMap with updated value: {Second=4, First=1}
     System.out.println("HashMap with updated value: " + numbers);
 	 */
 	
-	public void deleteListOfGames() {
-		successRate = 0.0;
-		playerResultsWinLossMap.put(CommonConstants.WINS, 0);
-		playerResultsWinLossMap.put(CommonConstants.LOSSES, 0);
-		playerGames.clear();
-	}
-		
-	public double calculateAverageSuccessRate() {
-		double result = 0.0;
-		if (playerResultsWinLossMap.get(CommonConstants.WINS) != null) {
-			Math.round(playerResultsWinLossMap.get(CommonConstants.WINS) / playerGames.size() * 100);
-		}
-		return result;
-	}
 }

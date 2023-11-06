@@ -23,7 +23,8 @@ import itacademy.s5t2.diceGame.constants.CommonConstants;
 //swagger annotations below, as well as any @Opertion, apiresponses, apiresponse are also swagger annotations
 @OpenAPIDefinition(info = @Info(title = CommonConstants.SOFTWARE_NAME + " API", 
 								version = "1.3", 
-								description = "API documentation for Sprint 5.2 Dice Game Project",
+								description = "Welcome to " + CommonConstants.SOFTWARE_NAME + "! "
+										+ "You feeling lucky? Well? Do ya Punk!?",
 								termsOfService = "Free to use",
 								contact = @Contact(name = "Christian", email = "email.com"),
 								license = @License(name = "API License", 

@@ -53,12 +53,11 @@ public class PlayerServiceImpl implements PlayerInter {
 	
 	public boolean checkIfPlayerNameExists(Player p) {
 		boolean exists = true;
-		if (!p.getPlayerName().equals(CommonConstants.ANONYMOUS)) {
+		if (!p.getPlayerName().equalsIgnoreCase(CommonConstants.ANONYMOUS)) {
 			if (checkForUniqueName(p)) {
 				exists = false;
 			} else {
-				System.out.println(CommonConstants.PLAYER_EXISTS);
-               // need to implement exception here throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Te player with name " + playerToSave.getName() + " exists.");
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, CommonConstants.PLAYER_EXISTS);
 			}
 		} else {
 			exists = false;
@@ -70,7 +69,7 @@ public class PlayerServiceImpl implements PlayerInter {
 		boolean uniqueName = true;
 		PlayerDTO player = getByName(p.getPlayerName());
 		if (player == null) {
-			return uniqueName; //leave blank so it skips
+			return uniqueName; //leave blank that its true so it skips
 		} else if (p.getPlayerName().equalsIgnoreCase(player.getPlayerName())) {
 			uniqueName = false;
 		}
@@ -118,10 +117,7 @@ public class PlayerServiceImpl implements PlayerInter {
 		PlayerDTO player = null;
 		if (optional.isPresent()) {
 			player = mapToPlayerDto(optional.get());
-		} /*else {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, 
-					CommonConstants.returnNameDoesNotExistMSG(name));
-		}*/
+		} 
 		return player;
 	}
 	
@@ -144,8 +140,6 @@ public class PlayerServiceImpl implements PlayerInter {
 		return playerRepo.findByPlayerName(name).get().getSuccessRate();
 	}
 	
-	
-	/// maybe in controller
 	public double calculateAverageSuccessRate() {
 		List<Player> list = playerRepo.findAll();
 		int totalWins = 0;
@@ -198,8 +192,4 @@ public class PlayerServiceImpl implements PlayerInter {
 		return true;
 	}
 	
-	
-	
-	//public <T> Product createProduct(T value) {
-
 }
