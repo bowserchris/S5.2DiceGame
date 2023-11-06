@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegisterUserDTO {
 	
-	@Schema(description = "This is the name of the player. If left empty ANONYMOUS will be chosen", 
+	@Schema(description = "This is the name of the player.", 
 			example = "Chris")
 	@NotNull
 	private String userName;

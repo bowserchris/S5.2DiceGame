@@ -33,14 +33,14 @@ public class UserController {
 		this.userService = service;
 	}
 	
-	@Operation(summary= "Sign in successful", 	// is the space before "" needed?
-			description = "Player signed in successfully and is sent to their homepage")
+	@Operation(summary= "Sign in successful", description = "Player signed in successfully and is sent to their homepage")
 	@ApiResponses(value = { 
 			@ApiResponse(responseCode = CommonConstants.CODE_200, description = CommonConstants.SUCCESSFUL, content = { 
 					@Content(mediaType = CommonConstants.MEDIA_TYPE_JSON, schema = @Schema(implementation = User.class))
 					}),
 			@ApiResponse(responseCode = CommonConstants.CODE_400, description = CommonConstants.INVALID_USER, content = @Content),
-			@ApiResponse(responseCode = CommonConstants.CODE_403, description = CommonConstants.USER_UNAUTHENTICATED, content = @Content),@ApiResponse(responseCode = CommonConstants.CODE_404, description = CommonConstants.PLAYER_NOT_FOUND, content = @Content),
+			@ApiResponse(responseCode = CommonConstants.CODE_403, description = CommonConstants.USER_UNAUTHENTICATED, content = @Content),
+			@ApiResponse(responseCode = CommonConstants.CODE_404, description = CommonConstants.PLAYER_NOT_FOUND, content = @Content),
 			@ApiResponse(responseCode = CommonConstants.CODE_500, description = CommonConstants.INTERNAL_SERVER_ERR, content = @Content),
 			@ApiResponse(responseCode = CommonConstants.CODE_1001, description = CommonConstants.APPLICATION_ERROR, content = @Content)
 			})
@@ -59,7 +59,8 @@ public class UserController {
 			@ApiResponse(responseCode = CommonConstants.CODE_200, description = CommonConstants.SUCCESSFUL, content = { 
 					@Content(mediaType = CommonConstants.MEDIA_TYPE_JSON, schema = @Schema(implementation = User.class))
 					}),
-			@ApiResponse(responseCode = CommonConstants.CODE_403, description = CommonConstants.USER_UNAUTHENTICATED, content = @Content),@ApiResponse(responseCode = CommonConstants.CODE_404, description = CommonConstants.PLAYER_NOT_FOUND, content = @Content),
+			@ApiResponse(responseCode = CommonConstants.CODE_403, description = CommonConstants.USER_UNAUTHENTICATED, content = @Content),
+			@ApiResponse(responseCode = CommonConstants.CODE_404, description = CommonConstants.PLAYER_NOT_FOUND, content = @Content),
 			@ApiResponse(responseCode = CommonConstants.CODE_500, description = CommonConstants.INTERNAL_SERVER_ERR, content = @Content),
 			@ApiResponse(responseCode = CommonConstants.CODE_1001, description = CommonConstants.APPLICATION_ERROR, content = @Content)
 			})

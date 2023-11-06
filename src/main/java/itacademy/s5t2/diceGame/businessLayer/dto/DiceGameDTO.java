@@ -1,12 +1,5 @@
 package itacademy.s5t2.diceGame.businessLayer.dto;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-
-import itacademy.s5t2.diceGame.businessLayer.domain.DiceGame;
-import itacademy.s5t2.diceGame.businessLayer.domain.Die;
-import itacademy.s5t2.diceGame.constants.CommonConstants;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

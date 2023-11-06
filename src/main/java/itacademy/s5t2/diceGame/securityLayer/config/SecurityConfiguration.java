@@ -1,6 +1,5 @@
 package itacademy.s5t2.diceGame.securityLayer.config;
 
-import org.hibernate.query.NativeQuery.ReturnableResultNode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +12,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import itacademy.s5t2.diceGame.config.ApplicationConfiguration;
 import itacademy.s5t2.diceGame.constants.CommonConstants;
 import itacademy.s5t2.diceGame.securityLayer.security.JwtAuthenticationFilter;
-import jakarta.websocket.Session;
 import lombok.RequiredArgsConstructor;
 
 @Configuration

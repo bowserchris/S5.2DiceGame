@@ -1,13 +1,7 @@
 package itacademy.s5t2.diceGame.businessLayer.domain;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-
 import io.swagger.v3.oas.annotations.media.Schema;
-import itacademy.s5t2.diceGame.businessLayer.dto.PlayerDTO;
 import itacademy.s5t2.diceGame.constants.CommonConstants;
-import jakarta.annotation.Nonnull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,7 +30,7 @@ public class DiceGame {
 	
 	@Schema(description = "Unique id of the DiceGame", example = "1")
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "game_id")
 	private long gameId;
 	
