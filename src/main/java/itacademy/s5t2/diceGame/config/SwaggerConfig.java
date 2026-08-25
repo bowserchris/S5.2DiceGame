@@ -1,5 +1,7 @@
 package itacademy.s5t2.diceGame.config;
 
+import static itacademy.s5t2.diceGame.constants.CommonConstants.SOFTWARE_NAME;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -7,7 +9,6 @@ import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
-import itacademy.s5t2.diceGame.constants.CommonConstants;
 
 //for swagger localhost:8080/swagger-ui/index.html
 //or 			localhost:8080/v3/api-docs/
@@ -16,20 +17,19 @@ import itacademy.s5t2.diceGame.constants.CommonConstants;
 @Configuration
 //@Profile({"!prod && swagger"})
 public class SwaggerConfig {
-	
+
 	@Bean
 	OpenAPI openAPI() {
 		return new OpenAPI()
 				.info(new Info()
-						.title(CommonConstants.SOFTWARE_NAME + " API")
-						.description(CommonConstants.SOFTWARE_NAME + " demo application")
+						.title(SOFTWARE_NAME + " API").description(SOFTWARE_NAME + " demo application")
 						.version("v1.0.3")
 						.license(new License().name("Apache 2.0").url("http://springdoc.org")))
 				.externalDocs(new ExternalDocumentation()
-						.description(CommonConstants.SOFTWARE_NAME + " Wiki Documentation")
+						.description(SOFTWARE_NAME + " Wiki Documentation")
 						.url("website"));
 	}
-	
+
 	/*@Bean
 	Docket api() {
 		return new Docket(DocumentationType.SWAGGER_2)
@@ -38,5 +38,5 @@ public class SwaggerConfig {
 					.apis(RequestHandlerSelectors.basePackage("itacademy.s5t2.diceGame"))
 					.build();
 	}*/
-	
+
 }

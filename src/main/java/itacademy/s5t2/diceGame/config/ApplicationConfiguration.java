@@ -1,5 +1,9 @@
 package itacademy.s5t2.diceGame.config;
 
+import static itacademy.s5t2.diceGame.constants.CommonConstants.LOSSES;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.PLAYER_NOT_FOUND;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.WINS;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +17,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import itacademy.s5t2.diceGame.constants.CommonConstants;
 import itacademy.s5t2.diceGame.securityLayer.repository.UserRepository;
 
 @Configuration
@@ -28,7 +31,7 @@ public class ApplicationConfiguration {
 	@Bean
 	UserDetailsService userDetailsService() {
 		return userName -> this.userRepo.findByUsername(userName)
-				.orElseThrow(() -> new UsernameNotFoundException(CommonConstants.PLAYER_NOT_FOUND));
+				.orElseThrow(() -> new UsernameNotFoundException(PLAYER_NOT_FOUND));
 	}
 
 	@Bean
@@ -52,8 +55,8 @@ public class ApplicationConfiguration {
 	@Bean		//this creates the player map on initializing the player, otherwise its empty and gives null pointer error
 	Map<String, Integer> createPlayerMap() {
 		HashMap<String, Integer> map = new HashMap<>();
-		map.put(CommonConstants.WINS, 0);
-		map.put(CommonConstants.LOSSES, 0);
+		map.put(WINS, 0);
+		map.put(LOSSES, 0);
 		return map;
 	}
 
