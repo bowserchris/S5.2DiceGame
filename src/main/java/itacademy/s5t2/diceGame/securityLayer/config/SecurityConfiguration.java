@@ -12,47 +12,50 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import itacademy.s5t2.diceGame.config.ApplicationConfiguration;
 import itacademy.s5t2.diceGame.constants.CommonConstants;
 import itacademy.s5t2.diceGame.securityLayer.security.JwtAuthenticationFilter;
-import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfiguration {
-	
+
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
-	
+
 	private final ApplicationConfiguration appConfig;
-	
+
+	public SecurityConfiguration(JwtAuthenticationFilter jwtAuthenticationFilter, ApplicationConfiguration appConfig) {
+		this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+		this.appConfig = appConfig;
+	}
+
 	// *1 this might cause problems with swagger, yeah so this is the starting off point
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http
-			.csrf(AbstractHttpConfigurer::disable)
-			.authorizeHttpRequests((requests) -> {		//THIS CAUSED ISSUES WITH SWAGGER NOT WORKING make sure its one full linked chain, as split it wont recognise the urls and return blank
-									requests.requestMatchers(CommonConstants.AUTH_WHITELIST)	//list of urls to match with incoming http request
-										.permitAll()						//all are permitted to be seen
-										.anyRequest()						//any of the requests made in before list
-										.authenticated();})					//is then authenticated and given approval here
-			/*.formLogin((formLogin) ->
+				.csrf(AbstractHttpConfigurer::disable)
+				.authorizeHttpRequests((requests) -> {		//THIS CAUSED ISSUES WITH SWAGGER NOT WORKING make sure its one full linked chain, as split it wont recognise the urls and return blank
+					requests.requestMatchers(CommonConstants.AUTH_WHITELIST)	//list of urls to match with incoming http request
+					.permitAll()						//all are permitted to be seen
+					.anyRequest()						//any of the requests made in before list
+					.authenticated();})					//is then authenticated and given approval here
+				/*.formLogin((formLogin) ->
 				formLogin
 					.usernameParameter("username")
 					.passwordParameter("password")
 					.loginPage("/auth/login")
 					.failureUrl("/auth/login?failed")
 					.loginProcessingUrl("/auth/login/process"))*/
-			//any other requests afterwards need to be authenticated.... but is this happening or does it need to be a separate object?
-			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-			//.sessionManagement((session) -> session.sessionFixation().none())
-			.authenticationProvider(appConfig.authenticationProvider())
-			//or split this with http.addfilter....
-			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-			.build();
+				//any other requests afterwards need to be authenticated.... but is this happening or does it need to be a separate object?
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				//.sessionManagement((session) -> session.sessionFixation().none())
+				.authenticationProvider(this.appConfig.authenticationProvider())
+				//or split this with http.addfilter....
+				.addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+				.build();
 	}
-	
-	/*WARNING: Never disable CSRF protection while leaving 
-	session management enabled! Doing so will open you up 
+
+	/*WARNING: Never disable CSRF protection while leaving
+	session management enabled! Doing so will open you up
 	to a Cross-Site Request Forgery attack. */
-	
+
 	/*	//below is a method found on a website that does a cors configuration instead
 	 * 
 	 * @Bean
@@ -72,30 +75,30 @@ public class SecurityConfiguration {
 	 * @Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		
+
 		configuration.setAllowedOrigins(List.of(originLink));		//originLink
 		configuration.setAllowedMethods(List.of(CommonConstants.CRUD_METHOD_GET, CommonConstants.CRUD_METHOD_POST));	//CommonConstants.CRUD_METHOD_GET, CommonConstants.CRUD_METHOD_POST	// can add "DELETE" AND "PUT" AS WELL
 		configuration.setAllowedHeaders(List.of(CommonConstants.AUTHORIZATION, CommonConstants.CONTENT_TYPE));	//CommonConstants.AUTHORIZATION, CommonConstants.CONTENT_TYPE
-		
+
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		
+
 		source.registerCorsConfiguration("/*//*.css", configuration);	// replace with /**/ /*if still not working or /*//*.css
-		
+
 		return source;
 	}
-	
-	 * private static final class CsrfCookieFilter extends OncePerRequestFilter {
-		
+
+		 * private static final class CsrfCookieFilter extends OncePerRequestFilter {
+
 		@Override
 		protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 				throws ServletException, IOException {
 			CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
 			// Render the token value to a cookie by causing the deferred token to be loaded
 			csrfToken.getToken();
-			
+
 			filterChain.doFilter(request, response);
 		}
 	}
-	 */
-	
+		 */
+
 }

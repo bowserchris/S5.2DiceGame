@@ -23,79 +23,82 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 
 @Component
-@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-	
+
 	@Autowired
-    private final JwtService jwtService;
-	
+	private final JwtService jwtService;
+
 	@Autowired
-    private final UserDetailsService userService;
-	
+	private final UserDetailsService userService;
+
+	public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userService) {
+		this.jwtService = jwtService;
+		this.userService = userService;
+	}
+
 	@Override
-	protected void doFilterInternal(@NonNull HttpServletRequest request, 
-									@NonNull HttpServletResponse response, 
-									@NonNull FilterChain filterChain)
-									throws ServletException, IOException {
+	protected void doFilterInternal(@NonNull HttpServletRequest request,
+			@NonNull HttpServletResponse response,
+			@NonNull FilterChain filterChain)
+					throws ServletException, IOException {
 		final String jwtToken;
 		final String userName;
-		
-		jwtToken = getJwtCookie(request).orElseGet(() -> getJwtHeader(request).orElse(null));
+
+		jwtToken = this.getJwtCookie(request).orElseGet(() -> this.getJwtHeader(request).orElse(null));
 
 		if (jwtToken == null) {
 			filterChain.doFilter(request, response);
 			return;
 		}
-		
-		userName = jwtService.extractUsername(jwtToken);
-		
-			if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-				
-				UserDetails userDetails = userService.loadUserByUsername(userName);
-				
-				if (jwtService.isTokenValid(jwtToken, userDetails)) {
-					UsernamePasswordAuthenticationToken authToken = new	UsernamePasswordAuthenticationToken(
-																		userDetails, 
-																		null, 
-																		userDetails.getAuthorities());
-					authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-					SecurityContextHolder.getContext().setAuthentication(authToken);
-				}
+
+		userName = this.jwtService.extractUsername(jwtToken);
+
+		if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+			UserDetails userDetails = this.userService.loadUserByUsername(userName);
+
+			if (this.jwtService.isTokenValid(jwtToken, userDetails)) {
+				UsernamePasswordAuthenticationToken authToken = new	UsernamePasswordAuthenticationToken(
+						userDetails,
+						null,
+						userDetails.getAuthorities());
+				authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+				SecurityContextHolder.getContext().setAuthentication(authToken);
 			}
-			filterChain.doFilter(request, response);			
+		}
+		filterChain.doFilter(request, response);
 	}
-	
+
 	//gettokenfromrequest method in ivana video
 	public Optional<String> getJwtHeader(HttpServletRequest request) {
 		final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION); 		//CommonConstants.AUTHORIZATION
-		
+
 		//pau sansa method below
 		if (authHeader == null || !authHeader.startsWith(CommonConstants.BEARER)) {
 			return Optional.empty();
 		}
-		
+
 		/*if (StringUtils.hasText(authHeader) && authHeader.startsWith(CommonConstants.BEARER)) {		//ivana video method here
 			return Optional.empty();
 		}*/
-		
-		return Optional.of(authHeader.substring(7));		//if pau sansa method is used, swap around to empty here
-    }
-	
-	public Optional<String> getJwtCookie(HttpServletRequest request){
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null){
-            return Optional.empty();
-        }
 
-        for(Cookie cookie : cookies){
-            if(cookie.getName().equals(HttpHeaders.AUTHORIZATION)){
-                return Optional.of(URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8));
-            }
-        }
-        return Optional.empty();
-    }
-	
+		return Optional.of(authHeader.substring(7));		//if pau sansa method is used, swap around to empty here
+	}
+
+	public Optional<String> getJwtCookie(HttpServletRequest request){
+		Cookie[] cookies = request.getCookies();
+		if (cookies == null){
+			return Optional.empty();
+		}
+
+		for(Cookie cookie : cookies){
+			if(cookie.getName().equals(HttpHeaders.AUTHORIZATION)){
+				return Optional.of(URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8));
+			}
+		}
+		return Optional.empty();
+	}
+
 }
