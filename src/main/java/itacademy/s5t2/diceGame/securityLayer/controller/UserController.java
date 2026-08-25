@@ -1,5 +1,22 @@
 package itacademy.s5t2.diceGame.securityLayer.controller;
 
+import static itacademy.s5t2.diceGame.constants.CommonConstants.APPLICATION_ERROR;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.AUTHENTICATED;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.CODE_1001;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.CODE_200;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.CODE_400;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.CODE_403;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.CODE_404;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.CODE_500;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.INDEX;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.INTERNAL_SERVER_ERR;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.INVALID_USER;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.MEDIA_TYPE_JSON;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.PLAYER_NOT_FOUND;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.SUCCESSFUL;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.USER_INDEX;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.USER_UNAUTHENTICATED;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,58 +33,57 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import itacademy.s5t2.diceGame.constants.CommonConstants;
 import itacademy.s5t2.diceGame.securityLayer.domain.User;
 import itacademy.s5t2.diceGame.securityLayer.service.UserService;
 
 @SecurityRequirement(name = "Bearer Authentication")
 //@CrossOrigin(origins = CommonConstants.ORIGIN, allowCredentials = "true")
-@RequestMapping(CommonConstants.USER_INDEX)		// "/users"
+@RequestMapping(USER_INDEX) // "/users"
 @RestController
 public class UserController {
-	
+
 	@Autowired
 	private final UserService userService;
-	
+
 	public UserController(UserService service) {
 		this.userService = service;
 	}
-	
+
 	@Operation(summary= "Sign in successful", description = "Player signed in successfully and is sent to their homepage")
-	@ApiResponses(value = { 
-			@ApiResponse(responseCode = CommonConstants.CODE_200, description = CommonConstants.SUCCESSFUL, content = { 
-					@Content(mediaType = CommonConstants.MEDIA_TYPE_JSON, schema = @Schema(implementation = User.class))
-					}),
-			@ApiResponse(responseCode = CommonConstants.CODE_400, description = CommonConstants.INVALID_USER, content = @Content),
-			@ApiResponse(responseCode = CommonConstants.CODE_403, description = CommonConstants.USER_UNAUTHENTICATED, content = @Content),
-			@ApiResponse(responseCode = CommonConstants.CODE_404, description = CommonConstants.PLAYER_NOT_FOUND, content = @Content),
-			@ApiResponse(responseCode = CommonConstants.CODE_500, description = CommonConstants.INTERNAL_SERVER_ERR, content = @Content),
-			@ApiResponse(responseCode = CommonConstants.CODE_1001, description = CommonConstants.APPLICATION_ERROR, content = @Content)
-			})
-	@GetMapping(CommonConstants.AUTHENTICATED)	//or "/me"
-    public ResponseEntity<User> authenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = CODE_200, description = SUCCESSFUL, content = {
+					@Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(implementation = User.class))
+			}),
+			@ApiResponse(responseCode = CODE_400, description = INVALID_USER, content = @Content),
+			@ApiResponse(responseCode = CODE_403, description = USER_UNAUTHENTICATED, content = @Content),
+			@ApiResponse(responseCode = CODE_404, description = PLAYER_NOT_FOUND, content = @Content),
+			@ApiResponse(responseCode = CODE_500, description = INTERNAL_SERVER_ERR, content = @Content),
+			@ApiResponse(responseCode = CODE_1001, description = APPLICATION_ERROR, content = @Content)
+	})
+	@GetMapping(AUTHENTICATED) // or "/me"
+	public ResponseEntity<User> authenticatedUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        User currentUser = (User) authentication.getPrincipal();
+		User currentUser = (User) authentication.getPrincipal();
 
-        return ResponseEntity.ok(currentUser);
-    }
+		return ResponseEntity.ok(currentUser);
+	}
 
-	@Operation(summary= "Gets all users", 
+	@Operation(summary= "Gets all users",
 			description = "Returns all users/players in DB")
-	@ApiResponses(value = { 
-			@ApiResponse(responseCode = CommonConstants.CODE_200, description = CommonConstants.SUCCESSFUL, content = { 
-					@Content(mediaType = CommonConstants.MEDIA_TYPE_JSON, schema = @Schema(implementation = User.class))
-					}),
-			@ApiResponse(responseCode = CommonConstants.CODE_403, description = CommonConstants.USER_UNAUTHENTICATED, content = @Content),
-			@ApiResponse(responseCode = CommonConstants.CODE_404, description = CommonConstants.PLAYER_NOT_FOUND, content = @Content),
-			@ApiResponse(responseCode = CommonConstants.CODE_500, description = CommonConstants.INTERNAL_SERVER_ERR, content = @Content),
-			@ApiResponse(responseCode = CommonConstants.CODE_1001, description = CommonConstants.APPLICATION_ERROR, content = @Content)
-			})
-    @GetMapping(CommonConstants.INDEX)
-    public ResponseEntity<List<User>> allUsers() {
-        List <User> users = userService.allUsers();
-        return ResponseEntity.ok(users);
-    }
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = CODE_200, description = SUCCESSFUL, content = {
+					@Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(implementation = User.class))
+			}),
+			@ApiResponse(responseCode = CODE_403, description = USER_UNAUTHENTICATED, content = @Content),
+			@ApiResponse(responseCode = CODE_404, description = PLAYER_NOT_FOUND, content = @Content),
+			@ApiResponse(responseCode = CODE_500, description = INTERNAL_SERVER_ERR, content = @Content),
+			@ApiResponse(responseCode = CODE_1001, description = APPLICATION_ERROR, content = @Content)
+	})
+	@GetMapping(INDEX)
+	public ResponseEntity<List<User>> allUsers() {
+		List <User> users = this.userService.allUsers();
+		return ResponseEntity.ok(users);
+	}
 
 }

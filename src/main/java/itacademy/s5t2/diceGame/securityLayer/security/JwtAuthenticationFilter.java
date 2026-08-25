@@ -1,5 +1,7 @@
 package itacademy.s5t2.diceGame.securityLayer.security;
 
+import static itacademy.s5t2.diceGame.constants.CommonConstants.BEARER;
+
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -16,7 +18,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import itacademy.s5t2.diceGame.constants.CommonConstants;
 import itacademy.s5t2.diceGame.securityLayer.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -76,7 +77,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION); 		//CommonConstants.AUTHORIZATION
 
 		//pau sansa method below
-		if (authHeader == null || !authHeader.startsWith(CommonConstants.BEARER)) {
+		if (authHeader == null || !authHeader.startsWith(BEARER)) {
 			return Optional.empty();
 		}
 

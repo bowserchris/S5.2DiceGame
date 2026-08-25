@@ -1,8 +1,12 @@
 package itacademy.s5t2.diceGame.securityLayer.service;
 
+import static itacademy.s5t2.diceGame.constants.CommonConstants.PLAYER_EXISTS;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.PLAYER_NOT_FOUND;
+
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,13 +15,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import itacademy.s5t2.diceGame.constants.CommonConstants;
 import itacademy.s5t2.diceGame.securityLayer.domain.Role;
 import itacademy.s5t2.diceGame.securityLayer.domain.User;
 import itacademy.s5t2.diceGame.securityLayer.dto.LoginUserDTO;
 import itacademy.s5t2.diceGame.securityLayer.dto.RegisterUserDTO;
 import itacademy.s5t2.diceGame.securityLayer.repository.UserRepository;
-
 @Service
 public class UserService implements UserDetailsService {	//implements UserDetailsService if implemented override method is needed, with below code implementing a custom map class and user principal class with userdetails
 
@@ -59,10 +61,10 @@ public class UserService implements UserDetailsService {	//implements UserDetail
 	}
 
 	public Optional<User> createUser(RegisterUserDTO input) {
-		if (!input.getUserName().equals("")) {
+		if (!input.getUserName().equals(StringUtils.EMPTY)) {
 			Optional<User> dbName = this.userRepo.findByUsername(input.getUserName());
 			if (dbName.isPresent()) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, CommonConstants.PLAYER_EXISTS);
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, PLAYER_EXISTS);
 			}
 		}
 		User user = new User();
@@ -86,7 +88,7 @@ public class UserService implements UserDetailsService {	//implements UserDetail
 	@Override
 	public User loadUserByUsername(String username) throws UsernameNotFoundException {
 		return this.userRepo.findByUsername(username)
-				.orElseThrow(() -> new UsernameNotFoundException(CommonConstants.PLAYER_NOT_FOUND));
+				.orElseThrow(() -> new UsernameNotFoundException(PLAYER_NOT_FOUND));
 	}
 
 }

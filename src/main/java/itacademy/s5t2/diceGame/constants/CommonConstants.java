@@ -3,57 +3,56 @@ package itacademy.s5t2.diceGame.constants;
 import java.util.HashMap;
 
 public class CommonConstants {	//perhaps make various classes, one constantstring/constantmessages and one with methods, to distinguish what is being called
-	
+
 	private CommonConstants() {
-		
 	}
-	
+
 	//Software INFO
 	public static final String SOFTWARE_NAME = "Roll or Die\u2122";
-	
+
 	//Die constant sides
 	public static final int SIDES = 6;
-	
+
 	//DiceGame constant win results & condition
 	public static final String WINS = "Win";
 	public static final String LOSSES = "Lose";
 	public static final int WIN_CONDITION = 7;
-	
+
 	//Player name constant
 	public static final String ANONYMOUS = "ANONYMOUS";
-	
+
 	//requesthandlers for swagger
 	public static final String[] AUTH_WHITELIST = {
-	        "/swagger-resources",
-	        "/swagger-resources/**",
-	        "/configuration/ui",
-	        "/configuration/security",
-	        "/swagger-ui.html",
-	       // "/index.html",
-	        "/webjars/**",
-	        "/v3/api-docs/**",
-	        "/swagger-ui/**",
-	      //  "/v2/api-docs",
-	      //  "/**",
-	     //   "/login/**",
-	    //    "/signup/**",
+			"/swagger-resources",
+			"/swagger-resources/**",
+			"/configuration/ui",
+			"/configuration/security",
+			"/swagger-ui.html",
+			// "/index.html",
+			"/webjars/**",
+			"/v3/api-docs/**",
+			"/swagger-ui/**",
+			//  "/v2/api-docs",
+			//  "/**",
+			//   "/login/**",
+			//    "/signup/**",
 			"/auth/**",			//*1
-		//	"/api/v1/auth/**", 
+			//	"/api/v1/auth/**",
 	};
-	
+
 	//URL mappings for authentication controller
 	//start with /auth
 	public static final String INDEX = "/";
 	public static final String AUTH_INDEX = "/auth";
 	public static final String SIGNUP = "/signup"; 	//goes like /auth/signup
 	public static final String LOGIN = "/login";
-	
+
 	//URL mappings for UserController
 	//start with /users
 	public static final String USER_INDEX = "/users";
 	public static final String AUTHENTICATED = "/home"; // or "/me" goes like /users/player
 	public static final String GET_ALL_USERS = USER_INDEX + "/"; //get all users goes like /users/
-	
+
 	//URL mappings for player controller IS CROSSORIGINS NEEDED?
 	//START WITH "/"
 	public static final String ORIGIN = "http://localhost:8080";
@@ -63,14 +62,14 @@ public class CommonConstants {	//perhaps make various classes, one constantstrin
 	public static final String GET_ALL_PLAYERS = PLAYER + INDEX; 		//Get: /players/
 	public static final String RANKINGS = PLAYER + "/ranking"; 			//Get: /players/ranking
 	public static final String RANKINGS_LOSER = RANKINGS + "/loser";	//Get: /players/ranking/loser
-	public static final String RANKINGS_WINNER = RANKINGS + "/winner";	//Get: /players/ranking/winner 
+	public static final String RANKINGS_WINNER = RANKINGS + "/winner";	//Get: /players/ranking/winner
 	public static final String PLAYER_ID_PATH = PLAYER + ID;
-	
+
 	//URL mappings for game controller
 	//START WITH "/players/{id}"
 	public static final String GAMES_ALL_OR_PLAY = PLAYER_ID_PATH + "/games/";
 	public static final String GAMES_DELETE = PLAYER_ID_PATH +  "/games";
-	
+
 	//Security constants
 	public static final String BEARER = "Bearer ";
 	public static final String HEADER_TYPE_OBJECT = "Accept=application/json";
@@ -87,7 +86,7 @@ public class CommonConstants {	//perhaps make various classes, one constantstrin
 	public static final String PLAYER_ID = "Player id "; // id value goes in between
 	public static final String DICE_GAME_ID = "Dice game id ";
 	public static final String DOES_NOT_EXIST = " does not exist.";
-	
+
 	//error messages
 	public static final String PLAYER_EXISTS = "Player already exists.";
 	public static final String NAME_PASSWORD_INCORRECT = "The username or password is incorrect";
@@ -105,7 +104,7 @@ public class CommonConstants {	//perhaps make various classes, one constantstrin
 	public static final String APPLICATION_ERROR = "Application specific error, check current operation";
 	public static final String LIST_IS_EMPTY = "The list is empty. There are no games in the Database";
 	public static final String USER_UNAUTHENTICATED = "User is not authenticated";
-	
+
 	//response messages
 	public static final String SUCCESSFUL = "Request successfuly made";
 	public static final String PLAYER_CREATED = "The player was created successfully";
@@ -116,10 +115,10 @@ public class CommonConstants {	//perhaps make various classes, one constantstrin
 	public static final String GAME_DELETED = "Games were deleted correctly";
 	public static final String NO_GAME_DELETE = "No games were deleted.";
 	public static final String EMPTY_PLAYER_DB = "There are no players within the database";
-	
+
 	//security error messages
 	public static final String NOT_SET_USER_AUTHENTICATION = "Could not set user authentication in security context";
-	
+
 	//swagger api code responses
 	public static final String CODE_200 = "200";
 	public static final String CODE_201 = "201";
@@ -130,28 +129,31 @@ public class CommonConstants {	//perhaps make various classes, one constantstrin
 	public static final String CODE_404 = "404";
 	public static final String CODE_500 = "500";
 	public static final String CODE_1001 = "1001";
-	
+
 	public static final String PROPERTY_DESCRIPTION = "description";
-	
-	
+
+	// application properties constants
+	public static final String JWT_SECRET_KEY = "${security.jwt.secret-key}";
+	public static final String JWT_EXPIRATION_TIME = "${security.jwt.expiration-time}";
+
 	//calculates average success rate in various classes
 	public static double calculateAverageSuccessRate(double wins, double size) {
 		return (wins / size) * 100;
 	}
-	
+
 	//return messages with variables
 	public static String returnNameDoesNotExistMSG(String name) {
 		return PLAYER_NAME + name + DOES_NOT_EXIST;
 	}
-	
+
 	public static String returnPlayerIdDoesNotExistMSG(long id) {
 		return PLAYER_ID + id + DOES_NOT_EXIST;
 	}
-	
+
 	public static String returnDiceGameIdDoesNotExistMSG(long id) {
 		return DICE_GAME_ID + id + DOES_NOT_EXIST;
 	}
-	
+
 	public static HashMap<String, Integer> createPlayerMap() {
 		HashMap<String, Integer> map = new HashMap<>();
 		map.put(CommonConstants.WINS, 0);

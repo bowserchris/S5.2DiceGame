@@ -9,7 +9,5 @@ import itacademy.s5t2.diceGame.securityLayer.domain.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-        
 	Optional<User> findByUsername(String username);
-	
 }
