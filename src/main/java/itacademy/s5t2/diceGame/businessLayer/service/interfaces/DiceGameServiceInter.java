@@ -15,5 +15,4 @@ public interface DiceGameServiceInter extends ServiceInterface {
 	int getDieValue1(long id);
 	int getDieValue2(long id);
 	String getResult(long id);
-	
 }

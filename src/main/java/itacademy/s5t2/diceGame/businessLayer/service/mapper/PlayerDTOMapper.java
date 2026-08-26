@@ -25,7 +25,7 @@ public class PlayerDTOMapper implements Function<Player, PlayerDTO>{
 		dto.setPlayerResultsWinLossMap(player.getPlayerResultsWinLossMap());
 		return dto;
 	}
-	
+
 	public Player applyToEntity(PlayerDTO dto) {
 		Player player = new Player();
 		player.setIdPlayer(dto.getIdPlayer());

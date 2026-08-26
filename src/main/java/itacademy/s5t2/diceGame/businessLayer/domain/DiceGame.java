@@ -1,9 +1,12 @@
 package itacademy.s5t2.diceGame.businessLayer.domain;
 
+import static itacademy.s5t2.diceGame.constants.CommonConstants.LOSSES;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.WINS;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.WIN_CONDITION;
+
 import java.util.Objects;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import itacademy.s5t2.diceGame.constants.CommonConstants;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -62,10 +65,10 @@ public class DiceGame {
 	public void playGame() {
 		this.dieResult1 = Die.roll();
 		this.dieResult2 = Die.roll();
-		if ((this.dieResult1 + this.dieResult2) == CommonConstants.WIN_CONDITION) {
-			this.gameResult = CommonConstants.WINS;
+		if ((this.dieResult1 + this.dieResult2) == WIN_CONDITION) {
+			this.gameResult = WINS;
 		} else {
-			this.gameResult = CommonConstants.LOSSES;
+			this.gameResult = LOSSES;
 		}
 	}
 

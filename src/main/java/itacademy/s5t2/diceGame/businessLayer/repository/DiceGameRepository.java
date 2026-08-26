@@ -9,7 +9,5 @@ import itacademy.s5t2.diceGame.businessLayer.domain.DiceGame;
 
 @Repository
 public interface DiceGameRepository extends JpaRepository<DiceGame, Long> {
-	
 	List<DiceGame> findByGameResult(String result);
-	
 }

@@ -132,11 +132,13 @@ public class CommonConstants {	//perhaps make various classes, one constantstrin
 
 	public static final String PROPERTY_DESCRIPTION = "description";
 
-	// api patterns
+	// app patterns
 	public static final String COMMA_SPACE_STRING = ", ";
 	public static final int INT_401 = 401;
 	public static final int INT_403 = 403;
 	public static final String JSON_FORMAT_TIMESTAMP = "dd-MM-yyyy hh:mm:ss";
+	public static final String SEQ = "seq";
+	public static final String UNDERSCORE_ID = "_id";
 
 	// application properties constants
 	public static final String JWT_SECRET_KEY = "${security.jwt.secret-key}";

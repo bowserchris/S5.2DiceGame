@@ -15,5 +15,4 @@ public interface PlayerInter extends ServiceInterface {
 	PlayerDTO getByName(String name);
 	double getOneSuccessRateByName(String name);
 	double getOneSuccessRateById(long id);
-	
 }

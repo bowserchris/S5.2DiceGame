@@ -1,5 +1,8 @@
 package itacademy.s5t2.diceGame.businessLayer.domain;
 
+import static itacademy.s5t2.diceGame.constants.CommonConstants.LOSSES;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.WINS;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +33,6 @@ public class Player {	//implements userdetails and relevant fields methods here
 
 	@Transient
 	public static final String SEQUENCE_NAME = "players_sequence";
-
 
 	//@Value("${spring.jackson.date-format}")
 	//@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -75,13 +77,14 @@ public class Player {	//implements userdetails and relevant fields methods here
 		this.playerGames.add(game);
 		this.playerResultsWinLossMap.put(game.getGameResult(), this.playerResultsWinLossMap.getOrDefault(game.getGameResult(), 0) + 1); ///here is where sucess rate might not be gettting correctly
 		//if (playerResultsWinLossMap.get(game.getGameResult()) != 0) {
-		this.successRate = CommonConstants.calculateAverageSuccessRate(this.playerResultsWinLossMap.get(CommonConstants.WINS),this.playerGames.size());
+		this.successRate = CommonConstants.calculateAverageSuccessRate(this.playerResultsWinLossMap.get(WINS),
+				this.playerGames.size());
 		//}
 	}
 	public void deleteListOfGames() {
 		this.successRate = 0.0;
-		this.playerResultsWinLossMap.put(CommonConstants.WINS, 0);
-		this.playerResultsWinLossMap.put(CommonConstants.LOSSES, 0);
+		this.playerResultsWinLossMap.put(WINS, 0);
+		this.playerResultsWinLossMap.put(LOSSES, 0);
 		this.playerGames.clear();
 	}
 
