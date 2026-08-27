@@ -18,6 +18,15 @@ import static itacademy.s5t2.diceGame.constants.CommonConstants.PLAYER_NOT_FOUND
 import static itacademy.s5t2.diceGame.constants.CommonConstants.SIGNUP;
 import static itacademy.s5t2.diceGame.constants.CommonConstants.SUCCESSFUL;
 import static itacademy.s5t2.diceGame.constants.CommonConstants.USER_UNAUTHENTICATED;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_AUTHENTICATE;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_AUTH_CONTROLLER;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_SIGNUP;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.PARAMETER_LOGIN_DTO;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.PARAMETER_REGISTER_DTO;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.SECURITY_NAME_JWT;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.SUMMARY_AUTHENTICATE;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.SUMMARY_SIGNUP;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.TAG_NAME_AUTH_CONTROLLER;
 
 import java.util.Optional;
 
@@ -42,8 +51,8 @@ import itacademy.s5t2.diceGame.securityLayer.dto.RegisterUserDTO;
 import itacademy.s5t2.diceGame.securityLayer.response.LoginResponse;
 import itacademy.s5t2.diceGame.securityLayer.service.AuthenticationService;
 
-@Tag(name = "Authentication", description = "This controller allows to register, update or authenticate the player and generates the access token to play the game")
-@SecurityRequirement(name = "jwtopenapi")
+@Tag(name = TAG_NAME_AUTH_CONTROLLER, description = DESCRIPTION_AUTH_CONTROLLER)
+@SecurityRequirement(name = SECURITY_NAME_JWT)
 @RestController
 //@CrossOrigin(origins = CommonConstants.ORIGIN, allowCredentials = "true")	//"http://localhost:8080"
 @RequestMapping(AUTH_INDEX) // "/auth" CommonConstants.AUTH_INDEX
@@ -56,8 +65,7 @@ public class AuthenticatonController {
 		this.authenticationService = authenticationService;
 	}
 
-	@Operation(summary= "Registers a player",
-			description = "Registers a player within the database")
+	@Operation(summary = SUMMARY_SIGNUP, description = DESCRIPTION_SIGNUP)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = SUCCESSFUL, content = {
 					@Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(implementation = LoginResponse.class)) }),
@@ -65,7 +73,7 @@ public class AuthenticatonController {
 			@ApiResponse(responseCode = CODE_500, description = INTERNAL_SERVER_ERR, content = @Content),
 			@ApiResponse(responseCode = CODE_1001, description = APPLICATION_ERROR, content = @Content) })
 	@PostMapping(SIGNUP) // "/signup" as /auth/signup
-	public ResponseEntity<?> signup(@Parameter(description = "Details of user to register 1st time", required = true)
+	public ResponseEntity<?> signup(@Parameter(description = PARAMETER_REGISTER_DTO, required = true)
 	@RequestBody RegisterUserDTO registerDTO) {
 		if (registerDTO == null) {	//here there can be a validator class that takes teh object and checks individually if fields are null with method
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(NAME_PASSWORD_INCORRECT);
@@ -78,8 +86,7 @@ public class AuthenticatonController {
 	}
 
 
-	@Operation(summary= "Checks login credentials",
-			description = "Login section to check input credentials")
+	@Operation(summary = SUMMARY_AUTHENTICATE, description = DESCRIPTION_AUTHENTICATE)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = SUCCESSFUL, content = {
 					@Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(implementation = LoginResponse.class))
@@ -91,7 +98,8 @@ public class AuthenticatonController {
 			@ApiResponse(responseCode = CODE_1001, description = APPLICATION_ERROR, content = @Content)
 	})
 	@PostMapping(LOGIN)
-	public ResponseEntity<?> authenticate(@Parameter(description = "Login details to be inputted", required = true)
+	public ResponseEntity<?> authenticate(
+			@Parameter(description = PARAMETER_LOGIN_DTO, required = true)
 	@RequestBody LoginUserDTO loginDTO) {
 		if (loginDTO == null) {	//here there can be a validator class that takes teh object and checks individually if fields are null with method
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(NAME_PASSWORD_INCORRECT);

@@ -1,5 +1,10 @@
 package itacademy.s5t2.diceGame.securityLayer.dto;
 
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_PASSWORD;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_USERNAME;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.EXAMPLE_PASSWORD;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.EXAMPLE_USERNAME;
+
 import java.util.Objects;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -7,13 +12,11 @@ import jakarta.validation.constraints.NotNull;
 
 public class LoginUserDTO {
 
-	@Schema(description = "This is the username of the player required to login",
-			example = "buckRogers")
+	@Schema(description = DESCRIPTION_USERNAME, example = EXAMPLE_USERNAME)
 	@NotNull
 	private String userName;
 
-	@Schema(description = "This is the password of the player required to login",
-			example = "bucknekked")
+	@Schema(description = DESCRIPTION_PASSWORD, example = EXAMPLE_PASSWORD)
 	@NotNull
 	private String password;
 

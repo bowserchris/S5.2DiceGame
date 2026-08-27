@@ -1,5 +1,17 @@
 package itacademy.s5t2.diceGame.securityLayer.domain;
 
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_ACCOUNT_ON;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_CLASS_USER;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_ROLE;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_USERNAME_PASSWORD;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_USER_ID;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_USER_USERNAME;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.NAME_ACCOUNT_ON;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.NAME_ROLE;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.NAME_USERNAME_PASSWORD;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.NAME_USER_ID;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.NAME_USER_USERNAME;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -21,14 +33,14 @@ import jakarta.persistence.Id;							//this is correct method for id annotation
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
-@Schema(description = "Details of User object")
+@Schema(description = DESCRIPTION_CLASS_USER)
 @Entity(name = "User")
 @Table(name = "_user")
 //uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
 public class User implements UserDetails {
 
 	//@NotNull
-	@Schema(description = "Unique id of the User for Database", name="id")
+	@Schema(description = DESCRIPTION_USER_ID, name = NAME_USER_ID)
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name = "id", updatable = false)
@@ -41,20 +53,20 @@ public class User implements UserDetails {
 	private static final long serialVersionUID = 1L;*/
 
 	@NotNull
-	@Schema(description = "User name", name="username")
+	@Schema(description = DESCRIPTION_USER_USERNAME, name = NAME_USER_USERNAME)
 	@Column(name = "user_name", nullable = false)
 	private String username;
 
 	@NotNull
-	@Schema(description = "User password", name="password")
+	@Schema(description = DESCRIPTION_USERNAME_PASSWORD, name = NAME_USERNAME_PASSWORD)
 	@Hidden
 	@Column(name = "password", nullable = false)
 	private String password;
 
-	@Schema(description = "If account is enabled or not", name="enabled")
+	@Schema(description = DESCRIPTION_ACCOUNT_ON, name = NAME_ACCOUNT_ON)
 	private boolean enabled;
 
-	@Schema(description = "Role given to account", name="enabled")
+	@Schema(description = DESCRIPTION_ROLE, name = NAME_ROLE)
 	@Column(name = "role", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private Role role;

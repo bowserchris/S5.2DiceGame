@@ -1,6 +1,12 @@
 package itacademy.s5t2.diceGame.config;
 
-import static itacademy.s5t2.diceGame.constants.CommonConstants.SOFTWARE_NAME;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.SWAGGER_DESCRIPTION_DEMO;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.SWAGGER_DESCRIPTION_EXTERNAL;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.SWAGGER_LICENSE;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.SWAGGER_SPRINGDOC_URL;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.SWAGGER_TITLE;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.SWAGGER_URL_STRING;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.SWAGGER_VERSION;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,12 +28,10 @@ public class SwaggerConfig {
 	OpenAPI openAPI() {
 		return new OpenAPI()
 				.info(new Info()
-						.title(SOFTWARE_NAME + " API").description(SOFTWARE_NAME + " demo application")
-						.version("v1.0.3")
-						.license(new License().name("Apache 2.0").url("http://springdoc.org")))
+						.title(SWAGGER_TITLE).description(SWAGGER_DESCRIPTION_DEMO).version(SWAGGER_VERSION)
+						.license(new License().name(SWAGGER_LICENSE).url(SWAGGER_SPRINGDOC_URL)))
 				.externalDocs(new ExternalDocumentation()
-						.description(SOFTWARE_NAME + " Wiki Documentation")
-						.url("website"));
+						.description(SWAGGER_DESCRIPTION_EXTERNAL).url(SWAGGER_URL_STRING));
 	}
 
 	/*@Bean

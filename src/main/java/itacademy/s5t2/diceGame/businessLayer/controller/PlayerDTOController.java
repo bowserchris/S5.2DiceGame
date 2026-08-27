@@ -1,6 +1,7 @@
 package itacademy.s5t2.diceGame.businessLayer.controller;
 
 import static itacademy.s5t2.diceGame.constants.CommonConstants.*;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,11 +43,10 @@ import itacademy.s5t2.diceGame.securityLayer.service.AuthenticationService;
 //@CrossOrigin(origins = CommonConstants.ORIGIN, allowCredentials = "true")
 //@Validated
 @RestController
-@CrossOrigin(origins ="http://localhost:27017")
-@SecurityRequirement(name = "Bearer Authentication")
+@CrossOrigin(origins = CROSS_ORIGINS_URL)
+@SecurityRequirement(name = SECURITY_NAME_BEARER)
 @RequestMapping(INDEX)
-@Tag(name = "Player controller options",
-description = "This controller contains the methods to play the game")
+@Tag(name = TAG_NAME_PLAYER_CONTROLLER, description = DESCRIPTION_PLAYER_CONTROLLER)
 public class PlayerDTOController {
 
 	//private static Logger log = LoggerFactory.getLogger(PlayerController.class);
@@ -72,8 +72,7 @@ public class PlayerDTOController {
 
 
 	//Post: /players - creates a player
-	@Operation(summary= "Add a new Player",
-			description = "Checks if name isn´t already taken, then creates new player in the database")
+	@Operation(summary = SUMMARY_ADDPLAYER, description = DESCRIPTION_ADDPLAYER)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = PLAYER_CREATED, content = {
 					@Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(implementation = Player.class))
@@ -85,7 +84,7 @@ public class PlayerDTOController {
 	})
 	@PostMapping(value = SAVE_PLAYER, headers = HEADER_TYPE_OBJECT) //
 	public ResponseEntity<?> addPlayer(		//is generic response entity safe?
-			@Parameter(description = "Player details needed to create Player object", required = true)
+			@Parameter(description = PARAMETER_PLAYER, required = true)
 			@RequestBody Player player, UriComponentsBuilder ucBuilder)
 	{
 		Player newPlayer = null;
@@ -112,8 +111,7 @@ public class PlayerDTOController {
 			return ResponseEntity.created(location).build();*/
 
 
-	@Operation(summary= "Returns player by id",
-			description = "Finds and returns player by their id")
+	@Operation(summary = SUMMARY_GET_1_PLAYER, description = DESCRIPTION_GET_1_PLAYER)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = SUCCESSFUL, content = {
 					@Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(implementation = PlayerDTO.class))
@@ -123,7 +121,7 @@ public class PlayerDTOController {
 			@ApiResponse(responseCode = CODE_1001, description = APPLICATION_ERROR, content = @Content)
 	})
 	@GetMapping(value = PLAYER_ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getOnePlayerById(@Parameter(description = "Player id needed to return player object", required = true)
+	public ResponseEntity<?> getOnePlayerById(@Parameter(description = PARAMETER_PLAYER_ID, required = true)
 	@PathVariable("id") long id) {
 		PlayerDTO player = this.playerService.getById(id);
 		//.orElseThrow(() -> new PlayerNotFoundException(Player with ID :" + id)); custom exception made
@@ -135,8 +133,7 @@ public class PlayerDTOController {
 
 
 	//Post: /players/{id}/games/ - specific player roles the dice
-	@Operation(summary= "ROLL OR DIE!",
-			description = "Selected player rolls a die, then results are saved in DB")
+	@Operation(summary = SUMMARY_PLAY_GAME, description = DESCRIPTION_PLAY_GAME)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = GAME_CREATED, content = {
 					@Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(implementation = DiceGame.class))
@@ -147,7 +144,7 @@ public class PlayerDTOController {
 			@ApiResponse(responseCode = CODE_1001, description = APPLICATION_ERROR, content = @Content)
 	})
 	@PostMapping(value = GAMES_ALL_OR_PLAY, headers = HEADER_TYPE_OBJECT)
-	public ResponseEntity<?> playGame(@Parameter(description = "Id of Player needed in order to play the game",
+	public ResponseEntity<?> playGame(@Parameter(description = PARAMETER_PLAY_GAME,
 	required = true)
 	@PathVariable("id") long playerId) {
 		DiceGame game = this.diceService.playGame();
@@ -161,8 +158,7 @@ public class PlayerDTOController {
 
 
 	//Delete: /players/{id}/games - deletes all players rolls
-	@Operation(summary= "Delete all game rolls",
-			description = "Selected player deletes their game history")
+	@Operation(summary = SUMMARY_DELETE_ROLLS, description = DESCRIPTION_DELETE_ROLLS)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = GAME_DELETED, content = @Content),
 			@ApiResponse(responseCode = CODE_403, description = USER_UNAUTHENTICATED, content = @Content),
@@ -181,8 +177,7 @@ public class PlayerDTOController {
 
 
 	//Get: /players/{id}/games/ - returns list of games for 1 player
-	@Operation(summary= "Returns list of games",
-			description = "Returns the game history of the selected player")
+	@Operation(summary = SUMMARY_GET_ALL_GAMES, description = DESCRIPTION_GET_ALL_GAMES)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = LIST_RETURNED, content = {
 					@Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(implementation = DiceGame.class))
@@ -193,7 +188,7 @@ public class PlayerDTOController {
 			@ApiResponse(responseCode = CODE_1001, description = APPLICATION_ERROR, content = @Content)
 	})
 	@GetMapping(value = GAMES_ALL_OR_PLAY, headers = HEADER_TYPE_OBJECT)
-	public ResponseEntity<?> getAllGames(@Parameter(description = "Id of Player needed in order to retrieve their games",
+	public ResponseEntity<?> getAllGames(@Parameter(description = PARAMETER_PLAYER_ID_ALL_GAMES,
 	required = true)
 	@PathVariable long id) {
 		List<DiceGame> list = this.playerService.getById(id).getPlayerGames();
@@ -209,20 +204,18 @@ public class PlayerDTOController {
 
 
 	//Get: /players/ - returns all players with average success rate
-	@Operation(summary= "Gets a list of players",
-			description = "Gets a list of all players and their respective success rate")
+	@Operation(summary = SUMMARY_GET_ALL_RATIO, description = DESCRIPTION_GET_ALL_RATIO)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = LIST_RETURNED, content = {
 					@Content(mediaType = MEDIA_TYPE_JSON,
-					schema = @Schema(implementation = PlayerDTO.class))}),
+							schema = @Schema(implementation = PlayerDTO.class))}),
 			@ApiResponse(responseCode = CODE_404, description = PLAYER_NOT_FOUND, content = @Content),
 			@ApiResponse(responseCode = CODE_500, description = INTERNAL_SERVER_ERR, content = @Content),
 			@ApiResponse(responseCode = CODE_1001, description = APPLICATION_ERROR, content = @Content)
 	})
 	@GetMapping(value = GET_ALL_PLAYERS) // headers = CommonConstants.HEADER_TYPE_OBJECT
-	public ResponseEntity<?> getAllPlayersAndSuccessRate(@Parameter(description = "Player name as an option, "
-			+ "in case need to search specific player",
-			required = false)
+	public ResponseEntity<?> getAllPlayersAndSuccessRate(@Parameter(description = PARAMETER_PLAYER_NAME_SUCCESS_RATIO,
+	required = false)
 	@RequestParam(required = false) String name) {
 		List<PlayerDTO> list = this.playerService.getAllPlayers();
 		//Map<String, Double> map;
@@ -243,8 +236,7 @@ public class PlayerDTOController {
 
 
 	//Get: /players/ranking - returns the average ranking of all players in the system. That is, the average percentage of successes
-	@Operation(summary= "Returns average ranking of all players",
-			description = "Returns an average success rate of all players in the DB")
+	@Operation(summary = SUMMARY_TOTAL_AVERAGE, description = DESCRIPTION_TOTAL_AVERAGE)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = SUCCESSFUL, content = {
 					@Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(implementation = Double.class))
@@ -264,8 +256,7 @@ public class PlayerDTOController {
 
 
 	//Get: /players/ranking/loser - return player with worst success rate
-	@Operation(summary= "Returns worst ranking",
-			description = "Returns the player with the worst sucess rate")
+	@Operation(summary = SUMMARY_WORSE_SUCCESS, description = DESCRIPTION_WORSE_SUCCESS)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = SUCCESSFUL, content = {
 					@Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(implementation = Player.class))
@@ -286,8 +277,7 @@ public class PlayerDTOController {
 
 
 	//Get: /players/ranking/winner - return player with best success rate
-	@Operation(summary= "Returns best ranking",
-			description = "Returns the player with the best sucess rate")
+	@Operation(summary = SUMMARY_BEST_SUCCESS, description = DESCRIPTION_BEST_SUCCESS)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = SUCCESSFUL, content = {
 					@Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(implementation = Player.class))
@@ -308,8 +298,7 @@ public class PlayerDTOController {
 
 
 	//Put: /players - updates player name
-	@Operation(summary= "Update the Player",
-			description = "Finds player by name and updates them in the DB")
+	@Operation(summary = SUMMARY_UPDATE_PLAYER, description = DESCRIPTION_UPDATE_PLAYER)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = PLAYER_NOT_FOUND, content = @Content),
 			@ApiResponse(responseCode = CODE_201, description = PLAYER_UPDATED, content = {
@@ -321,8 +310,9 @@ public class PlayerDTOController {
 			@ApiResponse(responseCode = CODE_1001, description = APPLICATION_ERROR, content = @Content)
 	})
 	@PutMapping(value = SAVE_PLAYER, headers = HEADER_TYPE_OBJECT)
-	public ResponseEntity<?> updatePlayer(@Parameter(description = "Player details needed to update Player name only", required = true)
-	@RequestBody PlayerDTO player) {	//
+	public ResponseEntity<?> updatePlayer(
+			@Parameter(description = PARAMETER_UPDATE_PLAYER, required = true)
+			@RequestBody PlayerDTO player) {	//
 		Player newP = null;
 		try {
 			newP = this.playerService.updatePlayer(player.getIdPlayer(), player);

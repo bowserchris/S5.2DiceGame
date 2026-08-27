@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-
 public class ApiError {
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_FORMAT_TIMESTAMP)

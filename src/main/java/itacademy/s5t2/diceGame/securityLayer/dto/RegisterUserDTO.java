@@ -1,17 +1,20 @@
 package itacademy.s5t2.diceGame.securityLayer.dto;
 
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_PASSWORD_REGISTRATION;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_USERNAME_REGISTRATION;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.EXAMPLE_PASSWORD_REGISTRATION;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.EXAMPLE_USERNAME_REGISTRATION;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
 public class RegisterUserDTO {
 
-	@Schema(description = "This is the name of the player.",
-			example = "Chris")
+	@Schema(description = DESCRIPTION_USERNAME_REGISTRATION, example = EXAMPLE_USERNAME_REGISTRATION)
 	@NotNull
 	private String userName;
 
-	@Schema(description = "This is the password that will be required to login",
-			example = "rollerderby123")
+	@Schema(description = DESCRIPTION_PASSWORD_REGISTRATION, example = EXAMPLE_PASSWORD_REGISTRATION)
 	@NotNull
 	private String password;
 

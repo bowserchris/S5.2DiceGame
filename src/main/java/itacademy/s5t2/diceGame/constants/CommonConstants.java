@@ -4,12 +4,12 @@ import java.util.HashMap;
 
 public class CommonConstants {	//perhaps make various classes, one constantstring/constantmessages and one with methods, to distinguish what is being called
 
-	private CommonConstants() {
-	}
-
 	//Software INFO
 	public static final String SOFTWARE_NAME = "Roll or Die\u2122";
-
+	public static final String CURRENT_VERSION = "1.3";
+	public static final String PACKAGE_BUSINESS_REPO = "itacademy.s5t2.diceGame.businessLayer.repository";
+	public static final String PACKAGE_SECURITY_REPO = "itacademy.s5t2.diceGame.securityLayer.repository";
+	public static final String CROSS_ORIGINS_URL = "http://localhost:27017";
 	//Die constant sides
 	public static final int SIDES = 6;
 
@@ -104,6 +104,9 @@ public class CommonConstants {	//perhaps make various classes, one constantstrin
 	public static final String APPLICATION_ERROR = "Application specific error, check current operation";
 	public static final String LIST_IS_EMPTY = "The list is empty. There are no games in the Database";
 	public static final String USER_UNAUTHENTICATED = "User is not authenticated";
+	public static final String PLAYER_NAME_EMPTY = "Player name cannot be empty";
+	public static final String DIE_VALUE_EMPTY = "Die value cannot be empty";
+	public static final String GAME_RESULT_EMPTY = "Game Result cannot be empty";
 
 	//response messages
 	public static final String SUCCESSFUL = "Request successfuly made";
@@ -171,4 +174,6 @@ public class CommonConstants {	//perhaps make various classes, one constantstrin
 	/// can annotations be called in as constants?? apireponse is too much and very cluttered
 	// saw a record object/type/class used instead of a dto. is it like lombok without importing? has its own getters and setters
 
+	private CommonConstants() {
+	}
 }

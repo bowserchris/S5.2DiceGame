@@ -1,15 +1,18 @@
 package itacademy.s5t2.diceGame.securityLayer.response;
 
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_EXPIRATION;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_TOKEN;
+
 import java.util.Objects;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class LoginResponse {
 
-	@Schema(description = "This is the token created when user has been authenticated")
+	@Schema(description = DESCRIPTION_TOKEN)
 	private String token;
 
-	@Schema(description = "This is the time value left for the token. Default is 1hr")
+	@Schema(description = DESCRIPTION_EXPIRATION)
 	private long expiresIn;
 
 	public LoginResponse(String token) {

@@ -16,6 +16,11 @@ import static itacademy.s5t2.diceGame.constants.CommonConstants.PLAYER_NOT_FOUND
 import static itacademy.s5t2.diceGame.constants.CommonConstants.SUCCESSFUL;
 import static itacademy.s5t2.diceGame.constants.CommonConstants.USER_INDEX;
 import static itacademy.s5t2.diceGame.constants.CommonConstants.USER_UNAUTHENTICATED;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_ALL_USERS;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_USER_AUTHENTICATED;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.SECURITY_NAME_BEARER;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.SUMMARY_ALL_USERS;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.SUMMARY_USER_AUTHENTICATED;
 
 import java.util.List;
 
@@ -36,7 +41,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import itacademy.s5t2.diceGame.securityLayer.domain.User;
 import itacademy.s5t2.diceGame.securityLayer.service.UserService;
 
-@SecurityRequirement(name = "Bearer Authentication")
+@SecurityRequirement(name = SECURITY_NAME_BEARER)
 //@CrossOrigin(origins = CommonConstants.ORIGIN, allowCredentials = "true")
 @RequestMapping(USER_INDEX) // "/users"
 @RestController
@@ -49,7 +54,7 @@ public class UserController {
 		this.userService = service;
 	}
 
-	@Operation(summary= "Sign in successful", description = "Player signed in successfully and is sent to their homepage")
+	@Operation(summary = SUMMARY_USER_AUTHENTICATED, description = DESCRIPTION_USER_AUTHENTICATED)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = SUCCESSFUL, content = {
 					@Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(implementation = User.class))
@@ -69,8 +74,7 @@ public class UserController {
 		return ResponseEntity.ok(currentUser);
 	}
 
-	@Operation(summary= "Gets all users",
-			description = "Returns all users/players in DB")
+	@Operation(summary = SUMMARY_ALL_USERS, description = DESCRIPTION_ALL_USERS)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = SUCCESSFUL, content = {
 					@Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(implementation = User.class))

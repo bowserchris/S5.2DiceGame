@@ -1,7 +1,25 @@
 package itacademy.s5t2.diceGame.businessLayer.domain;
 
 import static itacademy.s5t2.diceGame.constants.CommonConstants.LOSSES;
+import static itacademy.s5t2.diceGame.constants.CommonConstants.PLAYER_NAME_EMPTY;
 import static itacademy.s5t2.diceGame.constants.CommonConstants.WINS;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_CLASS_PLAYER;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_PLAYER_GAMES;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_PLAYER_ID;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_PLAYER_NAME;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_PLAYER_RATIO;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_PLAYER_REGISTRATION;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_PLAYER_SUCCESS;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.EXAMPLE_PLAYER_GAMES;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.EXAMPLE_PLAYER_ID;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.EXAMPLE_PLAYER_NAME;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.EXAMPLE_PLAYER_RATIO;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.NAME_PLAYER_GAMES;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.NAME_PLAYER_ID;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.NAME_PLAYER_NAME;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.NAME_PLAYER_RATIO;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.NAME_PLAYER_REGISTRATION;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.NAME_PLAYER_SUCCESS;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +37,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 
-@Schema(description = "Details of Player object")
+@Schema(description = DESCRIPTION_CLASS_PLAYER)
 @Document(collection = "players")
 public class Player {	//implements userdetails and relevant fields methods here
 
@@ -27,7 +45,7 @@ public class Player {	//implements userdetails and relevant fields methods here
 	//@MongoId
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Schema(description = "Unique id of the Player", name="idPlayer", example = "1")
+	@Schema(description = DESCRIPTION_PLAYER_ID, name = NAME_PLAYER_ID, example = EXAMPLE_PLAYER_ID)
 	@Indexed(unique = true)
 	private long idPlayer;
 
@@ -36,25 +54,25 @@ public class Player {	//implements userdetails and relevant fields methods here
 
 	//@Value("${spring.jackson.date-format}")
 	//@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	@Schema(description = "Player's registration date", name="registrationDate")
+	@Schema(description = DESCRIPTION_PLAYER_REGISTRATION, name = NAME_PLAYER_REGISTRATION)
 	@Indexed
 	private LocalDateTime registrationDate;
 
-	@Schema(description = "Player name", name="playerName", example = "ANONYMOUS")
-	@NotNull(message = "Player name cannot be empty")
+	@Schema(description = DESCRIPTION_PLAYER_NAME, name = NAME_PLAYER_NAME, example = EXAMPLE_PLAYER_NAME)
+	@NotNull(message = PLAYER_NAME_EMPTY)
 	@Indexed(unique = true)
 	private String playerName;
 
-	@Schema(description = "Player success rate", name="successRate")
+	@Schema(description = DESCRIPTION_PLAYER_SUCCESS, name = NAME_PLAYER_SUCCESS)
 	@Indexed
 	private double successRate;
 
 	//@Builder.Default
-	@Schema(description = "Player win/loss ratio", name="Win/Loss Ratio", example = "{}")
+	@Schema(description = DESCRIPTION_PLAYER_RATIO, name = NAME_PLAYER_RATIO, example = EXAMPLE_PLAYER_RATIO)
 	@Indexed
 	private Map<String, Integer> playerResultsWinLossMap;
 
-	@Schema(description = "List of games a player has played", name="Game List", example = "[]")
+	@Schema(description = DESCRIPTION_PLAYER_GAMES, name = NAME_PLAYER_GAMES, example = EXAMPLE_PLAYER_GAMES)
 	//@Hidden
 	@Indexed
 	private List<DiceGame> playerGames;

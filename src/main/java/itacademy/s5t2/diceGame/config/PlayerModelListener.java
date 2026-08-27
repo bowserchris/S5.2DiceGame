@@ -19,8 +19,7 @@ public class PlayerModelListener extends AbstractMongoEventListener<Player> {
     @Override
     public void onBeforeConvert(BeforeConvertEvent<Player> event) {
         if (event.getSource().getIdPlayer() < 1) {
-            event.getSource().setIdPlayer(sequenceGenerator.generateSequence(Player.SEQUENCE_NAME));
+            event.getSource().setIdPlayer(this.sequenceGenerator.generateSequence(Player.SEQUENCE_NAME));
         }
     }
-    
 }

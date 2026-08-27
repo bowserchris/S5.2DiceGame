@@ -1,5 +1,23 @@
 package itacademy.s5t2.diceGame.businessLayer.dto;
 
+import static itacademy.s5t2.diceGame.constants.CommonConstants.PLAYER_NAME_EMPTY;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_PLAYER_GAMES;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_PLAYER_ID;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_PLAYER_NAME;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_PLAYER_RATIO;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_PLAYER_REGISTRATION;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.DESCRIPTION_PLAYER_SUCCESS;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.EXAMPLE_PLAYER_GAMES;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.EXAMPLE_PLAYER_ID;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.EXAMPLE_PLAYER_NAME;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.EXAMPLE_PLAYER_RATIO;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.NAME_PLAYER_GAMES;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.NAME_PLAYER_ID;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.NAME_PLAYER_NAME;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.NAME_PLAYER_RATIO;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.NAME_PLAYER_REGISTRATION;
+import static itacademy.s5t2.diceGame.constants.SwaggerConstants.NAME_PLAYER_SUCCESS;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -12,33 +30,31 @@ import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import itacademy.s5t2.diceGame.businessLayer.domain.DiceGame;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
 
 public class PlayerDTO {
 
-	@Schema(description = "Unique id of the Player", name="idPlayer", example = "1")
+	@Schema(description = DESCRIPTION_PLAYER_ID, name = NAME_PLAYER_ID, example = EXAMPLE_PLAYER_ID)
 	@Indexed(unique = true)
 	private long idPlayer;
 
-	@Schema(description = "Player's registration date", name="registrationDate")
+	@Schema(description = DESCRIPTION_PLAYER_REGISTRATION, name = NAME_PLAYER_REGISTRATION)
 	@Indexed
 	private LocalDateTime registrationDate;
 
-	@Schema(description = "Player name", name="playerName", example = "ANONYMOUS")
-	@NotNull(message = "Player name cannot be empty")
+	@Schema(description = DESCRIPTION_PLAYER_NAME, name = NAME_PLAYER_NAME, example = EXAMPLE_PLAYER_NAME)
+	@NotNull(message = PLAYER_NAME_EMPTY)
 	@Indexed(unique = true)
 	private String playerName;
 
-	@Schema(description = "Player success rate", name="successRate")
+	@Schema(description = DESCRIPTION_PLAYER_SUCCESS, name = NAME_PLAYER_SUCCESS)
 	@Indexed
 	private double successRate;
 
-	@Builder.Default
-	@Schema(description = "Player win/loss ratio", name="Win/Loss Ratio", example = "{}")
+	@Schema(description = DESCRIPTION_PLAYER_RATIO, name = NAME_PLAYER_RATIO, example = EXAMPLE_PLAYER_RATIO)
 	@Indexed
 	private Map<String, Integer> playerResultsWinLossMap = createPlayerMap;
 
-	@Schema(description = "List of games a player has played", name="Game List", example = "[]")
+	@Schema(description = DESCRIPTION_PLAYER_GAMES, name = NAME_PLAYER_GAMES, example = EXAMPLE_PLAYER_GAMES)
 	//@Hidden
 	@Indexed
 	private List<DiceGame> playerGames;
@@ -104,7 +120,7 @@ public class PlayerDTO {
 	}
 
 	public PlayerDTO(long idPlayer, LocalDateTime registrationDate,
-			@NotNull(message = "Player name cannot be empty") String playerName, double successRate,
+			@NotNull(message = PLAYER_NAME_EMPTY) String playerName, double successRate,
 			Map<String, Integer> playerResultsWinLossMap, List<DiceGame> playerGames) {
 		this.idPlayer = idPlayer;
 		this.registrationDate = registrationDate;
