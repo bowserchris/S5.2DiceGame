@@ -33,6 +33,10 @@ public class ApplicationConfiguration {
 		this.userRepo = userRepo;
 	}
 
+	/**
+	 * @return username username found in the user repository
+	 * @throws UsernameNotFoundException
+	 */
 	@Bean
 	UserDetailsService userDetailsService() {
 		return userName -> this.userRepo.findByUsername(userName)
@@ -57,6 +61,11 @@ public class ApplicationConfiguration {
 		return authProvider;
 	}
 
+	/**
+	 * Creates a hash map of Wins and losses for a new player
+	 *
+	 * @return map the new map
+	 */
 	@Bean
 	Map<String, Integer> createPlayerMap() {
 		HashMap<String, Integer> map = new HashMap<>();

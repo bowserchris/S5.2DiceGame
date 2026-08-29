@@ -25,8 +25,13 @@ import itacademy.s5t2.diceGame.exceptionLayer.business.request.PlayerNotFoundExc
 import itacademy.s5t2.diceGame.exceptionLayer.response.ApiError;
 import jakarta.validation.ConstraintViolationException;
 
+/**
+ * Global exception handler for the Dice Game exceptions
+ * 
+ * @author bowser-chris
+ */
 @RestControllerAdvice
-public class GlobalExceptionHandlerGame extends ResponseEntityExceptionHandler{
+public class GlobalExceptionHandlerGame extends ResponseEntityExceptionHandler {
 
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers,

@@ -7,6 +7,11 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+/**
+ * Class that lists all errors made in the API call
+ * 
+ * @author bowser-chris
+ */
 public class ApiError {
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_FORMAT_TIMESTAMP)
@@ -17,10 +22,14 @@ public class ApiError {
 	public ApiError() {
 	}
 
+	/**
+	 * @param timestamp
+	 * @param message
+	 * @param errors
+	 */
 	public ApiError(LocalDateTime timestamp, String message, List<String> errors) {
 		this.timestamp = timestamp;
 		this.message = message;
 		this.errors = errors;
 	}
-
 }
