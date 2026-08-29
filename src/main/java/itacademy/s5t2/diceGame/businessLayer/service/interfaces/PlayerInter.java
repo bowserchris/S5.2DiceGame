@@ -5,6 +5,11 @@ import java.util.List;
 import itacademy.s5t2.diceGame.businessLayer.domain.Player;
 import itacademy.s5t2.diceGame.businessLayer.dto.PlayerDTO;
 
+/**
+ * Interface for the Player service
+ * 
+ * @author bowser-chris
+ */
 public interface PlayerInter extends ServiceInterface {
 	List<PlayerDTO> getAllPlayers();
 	Player savePlayer(Player p);

@@ -16,95 +16,113 @@ import itacademy.s5t2.diceGame.businessLayer.service.interfaces.DiceGameServiceI
 import itacademy.s5t2.diceGame.businessLayer.service.mapper.DiceGameDTOMapper;
 import itacademy.s5t2.diceGame.constants.CommonConstants;
 
+/**
+ * Service layer for the Dice Game implementation
+ * 
+ * @author bowser-chris
+ */
 @Service
 public class DiceGameServiceImpl implements DiceGameServiceInter {
-	
+
 	@Autowired
 	private final DiceGameRepository diceRepo;
 	@Autowired
 	private final DiceGameDTOMapper dtoMapper;
-	
-	// curious to the logger class private static final Logger log = LoggerFactory.getLogger(PlayerServiceImpl.class);
-	
+
 	public DiceGameServiceImpl(DiceGameRepository repo, DiceGameDTOMapper map) {
-		super();
 		this.diceRepo = repo;
 		this.dtoMapper = map;
 	}
-	
-	@Override	//get all games
+
+	@Override
 	public List<DiceGameDTO> getAllDiceGames() {
-		return diceRepo.findAll()
+		return this.diceRepo.findAll()
 				.stream()
-				.map(d -> mapToDiceGameDTO(d))
+				.map(d -> this.mapToDiceGameDTO(d))
 				.collect(Collectors.toList());
 	}
 
-	@Override	//save dicegame with casting
+	@Override
 	public DiceGame saveDiceGame(DiceGame dg) {
-		return diceRepo.save(dg);
+		return this.diceRepo.save(dg);
 	}
 
-	@Override	//update dicegame
+	@Override
 	public DiceGame updateDiceGame(long id, DiceGameDTO dtoRequest) {
-		//log.info("update player: " + dtoRequest);
-		DiceGameDTO gameInDB = getById(id);		
+		DiceGameDTO gameInDB = this.getById(id);
 		DiceGame gameUpdated = null;
 		if (gameInDB != null) {
-			gameUpdated = mapToDiceGame(dtoRequest);
+			gameUpdated = this.mapToDiceGame(dtoRequest);
 		}
 		return gameUpdated;
 	}
-	
+
+	/**
+	 * Converts from Dice Game to DTO
+	 * 
+	 * @param dg the dice game
+	 * @return dto the dto of the dice game
+	 */
 	public DiceGameDTO mapToDiceGameDTO(DiceGame dg) {
-		return dtoMapper.apply(dg);
-	}
-	
-	public DiceGame mapToDiceGame(DiceGameDTO dg) {
-		return dtoMapper.applyToEntity(dg);
+		return this.dtoMapper.apply(dg);
 	}
 
-	@Override	//get game by id
+	/**
+	 * Converts from DTO to Dice Game
+	 * 
+	 * @param dto the dto of the game
+	 * @return dg the dice game
+	 */
+	public DiceGame mapToDiceGame(DiceGameDTO dto) {
+		return this.dtoMapper.applyToEntity(dto);
+	}
+
+	@Override
 	public DiceGameDTO getById(long id) {
-		//log.info("Find by Id: " + id);
-		Optional<DiceGame> optional = checkOptional(id);
-		DiceGameDTO game = mapToDiceGameDTO(optional.get());
+		Optional<DiceGame> optional = this.checkOptional(id);
+		DiceGameDTO game = this.mapToDiceGameDTO(optional.get());
 		return game;
 	}
 
+	/**
+	 * Checks DB if the dice game is present, if not throws exception
+	 * 
+	 * @param id id of the dice game
+	 * @return optional if the dice game is present
+	 * @throws ResponseStatusException Dice game doesnt exist
+	 */
 	public Optional<DiceGame> checkOptional(long id) {
-		Optional<DiceGame> optional = diceRepo.findById(id);
+		Optional<DiceGame> optional = this.diceRepo.findById(id);
 		if (!optional.isPresent()) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, 
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
 					CommonConstants.returnDiceGameIdDoesNotExistMSG(id));
 		}
 		return optional;
 	}
 
-	@Override	//delete game by id
+	@Override
 	public void deleteById(long id) {
-		diceRepo.deleteById(id);
+		this.diceRepo.deleteById(id);
 	}
 
 	@Override
 	public int getDieValue1(long id) {
-		return diceRepo.findById(id).get().getDieResult1();
+		return this.diceRepo.findById(id).get().getDieResult1();
 	}
-	
+
 	@Override
 	public int getDieValue2(long id) {
-		return diceRepo.findById(id).get().getDieResult2();
+		return this.diceRepo.findById(id).get().getDieResult2();
 	}
 
 	@Override
 	public String getResult(long id) {
-		return diceRepo.findById(id).get().getGameResult();
+		return this.diceRepo.findById(id).get().getGameResult();
 	}
 
 	public DiceGame playGame() {
-		DiceGame game = new DiceGame();		//id is not being returned but rest is;
+		DiceGame game = new DiceGame();
 		game.playGame();
 		return game;
 	}
-
 }

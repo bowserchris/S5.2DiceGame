@@ -41,15 +41,17 @@ import itacademy.s5t2.diceGame.businessLayer.service.PlayerServiceImpl;
 import itacademy.s5t2.diceGame.securityLayer.service.AuthenticationService;
 
 //@CrossOrigin(origins = CommonConstants.ORIGIN, allowCredentials = "true")
-//@Validated
+/**
+ * Controller Class for the player and main interaction with the Dice Game
+ * 
+ * @author bowser-chris
+ */
 @RestController
 @CrossOrigin(origins = CROSS_ORIGINS_URL)
 @SecurityRequirement(name = SECURITY_NAME_BEARER)
 @RequestMapping(INDEX)
 @Tag(name = TAG_NAME_PLAYER_CONTROLLER, description = DESCRIPTION_PLAYER_CONTROLLER)
 public class PlayerDTOController {
-
-	//private static Logger log = LoggerFactory.getLogger(PlayerController.class);
 
 	//probably best to implement a parent service that will autowire both playerservice and diceservice, then the controller here would call it
 	//this would reduce the clutter in this controller and leave it as a modular space between this controller and the 2 separate services
@@ -70,8 +72,13 @@ public class PlayerDTOController {
 		this.authService = authService;
 	}
 
-
-	//Post: /players - creates a player
+	/**
+	 * Adds player to the DB thru endpoint Post .../players
+	 * 
+	 * @param player    details to be created
+	 * @param ucBuilder uri component builder
+	 * @return responseEntity player
+	 */
 	@Operation(summary = SUMMARY_ADDPLAYER, description = DESCRIPTION_ADDPLAYER)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = PLAYER_CREATED, content = {
@@ -82,8 +89,8 @@ public class PlayerDTOController {
 			@ApiResponse(responseCode = CODE_500, description = INTERNAL_SERVER_ERR, content = @Content),
 			@ApiResponse(responseCode = CODE_1001, description = APPLICATION_ERROR, content = @Content)
 	})
-	@PostMapping(value = SAVE_PLAYER, headers = HEADER_TYPE_OBJECT) //
-	public ResponseEntity<?> addPlayer(		//is generic response entity safe?
+	@PostMapping(value = SAVE_PLAYER, headers = HEADER_TYPE_OBJECT)
+	public ResponseEntity<?> addPlayer(
 			@Parameter(description = PARAMETER_PLAYER, required = true)
 			@RequestBody Player player, UriComponentsBuilder ucBuilder)
 	{
@@ -98,24 +105,21 @@ public class PlayerDTOController {
 			}
 		} catch (ResponseStatusException rse) {
 			return new ResponseEntity<>(PLAYER_EXISTS, HttpStatus.INTERNAL_SERVER_ERROR);
-		} //ResponseStatusException is implemented here with a return of return new ResponseEntity<Map<String,Object>>(error, HttpStatus.NOT_FOUND);
+		}
 		return ResponseEntity.ok(newPlayer);
 	}
 
-	/* this method was used within creating a new player.
-	 * URI location = ServletUriComponentsBuilder
-			.fromCurrentRequest()
-			.path("/{id}")
-			.buildAndExpand(savedPlayer.getId())
-			.toUri();
-			return ResponseEntity.created(location).build();*/
-
-
+	/**
+	 * Returns one player thru endpoint GET .../players/{id}
+	 *
+	 * @param id of the player
+	 * @return responseEntity playerDTO
+	 */
 	@Operation(summary = SUMMARY_GET_1_PLAYER, description = DESCRIPTION_GET_1_PLAYER)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = SUCCESSFUL, content = {
 					@Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(implementation = PlayerDTO.class))
-			}),//implementation might be a double here
+			}),
 			@ApiResponse(responseCode = CODE_404, description = PLAYER_NOT_FOUND, content = @Content),
 			@ApiResponse(responseCode = CODE_500, description = INTERNAL_SERVER_ERR, content = @Content),
 			@ApiResponse(responseCode = CODE_1001, description = APPLICATION_ERROR, content = @Content)
@@ -124,20 +128,24 @@ public class PlayerDTOController {
 	public ResponseEntity<?> getOnePlayerById(@Parameter(description = PARAMETER_PLAYER_ID, required = true)
 	@PathVariable("id") long id) {
 		PlayerDTO player = this.playerService.getById(id);
-		//.orElseThrow(() -> new PlayerNotFoundException(Player with ID :" + id)); custom exception made
 		if (player == null) {
 			return new ResponseEntity<>(PLAYER_NOT_FOUND, HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<PlayerDTO> (player, HttpStatus.OK);
-	} //ResponseStatusException is implemented here with a return of return new ResponseEntity<Map<String,Object>>(error, HttpStatus.NOT_FOUND);
+	}
 
-
-	//Post: /players/{id}/games/ - specific player roles the dice
+	/**
+	 * Plays a game with the specific id of the player thru endpoint Post:
+	 * .../players/{id}/games/
+	 *
+	 * @param playerId
+	 * @return responseEntity the game
+	 */
 	@Operation(summary = SUMMARY_PLAY_GAME, description = DESCRIPTION_PLAY_GAME)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = GAME_CREATED, content = {
 					@Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(implementation = DiceGame.class))
-			}),//implementation might be a double here
+			}),
 			@ApiResponse(responseCode = CODE_403, description = USER_UNAUTHENTICATED, content = @Content),
 			@ApiResponse(responseCode = CODE_404, description = PLAYER_NOT_FOUND, content = @Content),
 			@ApiResponse(responseCode = CODE_500, description = INTERNAL_SERVER_ERR, content = @Content),
@@ -154,10 +162,14 @@ public class PlayerDTOController {
 		this.playerService.addGameToPlayerList(game, playerId);
 		this.diceService.saveDiceGame(game);
 		return ResponseEntity.ok(game);
-	} //ResponseStatusException is implemented here with a return of return new ResponseEntity<Map<String,Object>>(error, HttpStatus.NOT_FOUND);
+	}
 
-
-	//Delete: /players/{id}/games - deletes all players rolls
+	/**
+	 * Delete all games for a player thru endpoint Delete: .../players/{id}/games
+	 * 
+	 * @param id of player to delete their games
+	 * @return responseEntity string for confirmation
+	 */
 	@Operation(summary = SUMMARY_DELETE_ROLLS, description = DESCRIPTION_DELETE_ROLLS)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = GAME_DELETED, content = @Content),
@@ -173,10 +185,14 @@ public class PlayerDTOController {
 			resultString = GAME_DELETED;
 		}
 		return ResponseEntity.ok(resultString);
-	} //ResponseStatusException is implemented here with a return of return new ResponseEntity<Map<String,Object>>(error, HttpStatus.NOT_FOUND);
+	}
 
-
-	//Get: /players/{id}/games/ - returns list of games for 1 player
+	/**
+	 * Get all games of a player thru endpoint Get: .../players/{id}/games/
+	 * 
+	 * @param id of the player
+	 * @return list of the players games
+	 */
 	@Operation(summary = SUMMARY_GET_ALL_GAMES, description = DESCRIPTION_GET_ALL_GAMES)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = LIST_RETURNED, content = {
@@ -200,10 +216,14 @@ public class PlayerDTOController {
 			return ResponseEntity.ok(LIST_IS_EMPTY);
 		}
 		return ResponseEntity.ok(list);
-	} //ResponseStatusException is implemented here with a return of return new ResponseEntity<Map<String,Object>>(error, HttpStatus.NOT_FOUND);
+	}
 
-
-	//Get: /players/ - returns all players with average success rate
+	/**
+	 * Get all players and the average success rate thru endpoint Get: .../players/
+	 * 
+	 * @param name for specific player if needed
+	 * @return list of all games
+	 */
 	@Operation(summary = SUMMARY_GET_ALL_RATIO, description = DESCRIPTION_GET_ALL_RATIO)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = LIST_RETURNED, content = {
@@ -213,7 +233,7 @@ public class PlayerDTOController {
 			@ApiResponse(responseCode = CODE_500, description = INTERNAL_SERVER_ERR, content = @Content),
 			@ApiResponse(responseCode = CODE_1001, description = APPLICATION_ERROR, content = @Content)
 	})
-	@GetMapping(value = GET_ALL_PLAYERS) // headers = CommonConstants.HEADER_TYPE_OBJECT
+	@GetMapping(value = GET_ALL_PLAYERS)
 	public ResponseEntity<?> getAllPlayersAndSuccessRate(@Parameter(description = PARAMETER_PLAYER_NAME_SUCCESS_RATIO,
 	required = false)
 	@RequestParam(required = false) String name) {
@@ -229,18 +249,22 @@ public class PlayerDTOController {
 			List<String> emptyList = new ArrayList<>();
 			emptyList.add(EMPTY_PLAYER_DB);
 			return ResponseEntity.ok(emptyList);
-
 		}
 		return ResponseEntity.ok(list);
 	}
 
-
-	//Get: /players/ranking - returns the average ranking of all players in the system. That is, the average percentage of successes
+	//
+	/**
+	 * Returns the average ranking of all players in the system thru endpoint Get:
+	 * .../players/ranking
+	 * 
+	 * @return successRate
+	 */
 	@Operation(summary = SUMMARY_TOTAL_AVERAGE, description = DESCRIPTION_TOTAL_AVERAGE)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = SUCCESSFUL, content = {
 					@Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(implementation = Double.class))
-			}),//implementation might be a double here
+			}),
 			@ApiResponse(responseCode = CODE_404, description = PLAYER_NOT_FOUND, content = @Content),
 			@ApiResponse(responseCode = CODE_500, description = INTERNAL_SERVER_ERR, content = @Content),
 			@ApiResponse(responseCode = CODE_1001, description = APPLICATION_ERROR, content = @Content)
@@ -254,13 +278,17 @@ public class PlayerDTOController {
 		}
 	}
 
-
-	//Get: /players/ranking/loser - return player with worst success rate
+	/**
+	 * Gets the worst players success rate thru endpoint Get:
+	 * .../players/ranking/loser
+	 *
+	 * @return worse successRate
+	 */
 	@Operation(summary = SUMMARY_WORSE_SUCCESS, description = DESCRIPTION_WORSE_SUCCESS)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = SUCCESSFUL, content = {
 					@Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(implementation = Player.class))
-			}),//implementation might be a double here
+			}),
 			@ApiResponse(responseCode = CODE_204, description = LIST_IS_EMPTY, content = @Content),
 			@ApiResponse(responseCode = CODE_404, description = PLAYER_NOT_FOUND, content = @Content),
 			@ApiResponse(responseCode = CODE_500, description = INTERNAL_SERVER_ERR, content = @Content),
@@ -273,15 +301,19 @@ public class PlayerDTOController {
 		} else {
 			return ResponseEntity.ok(this.playerService.getWorstSuccessRate());
 		}
-	}		//has try catch around search with responsestatusexception
+	}
 
-
-	//Get: /players/ranking/winner - return player with best success rate
+	/**
+	 * Returnn player with best success rate thru endpoint Get:
+	 * .../players/ranking/winner
+	 * 
+	 * @return best success rate
+	 */
 	@Operation(summary = SUMMARY_BEST_SUCCESS, description = DESCRIPTION_BEST_SUCCESS)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = SUCCESSFUL, content = {
 					@Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(implementation = Player.class))
-			}),//implementation might be a double here
+			}),
 			@ApiResponse(responseCode = CODE_204, description = LIST_IS_EMPTY, content = @Content),
 			@ApiResponse(responseCode = CODE_404, description = PLAYER_NOT_FOUND, content = @Content),
 			@ApiResponse(responseCode = CODE_500, description = INTERNAL_SERVER_ERR, content = @Content),
@@ -294,10 +326,14 @@ public class PlayerDTOController {
 		} else {
 			return ResponseEntity.ok(this.playerService.getBestSuccessRate());
 		}
-	}		//has try catch around search with responsestatusexception
+	}
 
-
-	//Put: /players - updates player name
+	/**
+	 * Updates players data thru endpoint Put: .../players
+	 *
+	 * @param player details to be udpated
+	 * @return newP the new player details updated
+	 */
 	@Operation(summary = SUMMARY_UPDATE_PLAYER, description = DESCRIPTION_UPDATE_PLAYER)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = PLAYER_NOT_FOUND, content = @Content),
@@ -312,7 +348,7 @@ public class PlayerDTOController {
 	@PutMapping(value = SAVE_PLAYER, headers = HEADER_TYPE_OBJECT)
 	public ResponseEntity<?> updatePlayer(
 			@Parameter(description = PARAMETER_UPDATE_PLAYER, required = true)
-			@RequestBody PlayerDTO player) {	//
+			@RequestBody PlayerDTO player) {
 		Player newP = null;
 		try {
 			newP = this.playerService.updatePlayer(player.getIdPlayer(), player);
@@ -320,6 +356,5 @@ public class PlayerDTOController {
 			rse.printStackTrace();
 		}
 		return ResponseEntity.ok(newP);
-	} //ResponseStatusException is implemented here with a return of return new ResponseEntity<Map<String,Object>>(error, HttpStatus.NOT_FOUND);
-
+	}
 }

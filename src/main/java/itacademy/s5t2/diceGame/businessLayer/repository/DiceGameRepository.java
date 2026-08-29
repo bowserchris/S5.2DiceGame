@@ -7,6 +7,11 @@ import org.springframework.stereotype.Repository;
 
 import itacademy.s5t2.diceGame.businessLayer.domain.DiceGame;
 
+/**
+ * Repository for the Dice Games within MySQL
+ * 
+ * @author bowser-chris
+ */
 @Repository
 public interface DiceGameRepository extends JpaRepository<DiceGame, Long> {
 	List<DiceGame> findByGameResult(String result);

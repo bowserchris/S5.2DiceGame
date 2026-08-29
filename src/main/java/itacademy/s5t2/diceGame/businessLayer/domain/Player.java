@@ -37,12 +37,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * Entity representing a Player and his statistics in the Dice Game app
+ * 
+ * @author bowser-chris
+ */
 @Schema(description = DESCRIPTION_CLASS_PLAYER)
 @Document(collection = "players")
-public class Player {	//implements userdetails and relevant fields methods here
+public class Player {
 
-	//private static final long serialVersionUID = 1L; with implements Serializable on class as well as in dto class
-	//@MongoId
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Schema(description = DESCRIPTION_PLAYER_ID, name = NAME_PLAYER_ID, example = EXAMPLE_PLAYER_ID)
@@ -52,8 +55,6 @@ public class Player {	//implements userdetails and relevant fields methods here
 	@Transient
 	public static final String SEQUENCE_NAME = "players_sequence";
 
-	//@Value("${spring.jackson.date-format}")
-	//@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Schema(description = DESCRIPTION_PLAYER_REGISTRATION, name = NAME_PLAYER_REGISTRATION)
 	@Indexed
 	private LocalDateTime registrationDate;
@@ -67,22 +68,27 @@ public class Player {	//implements userdetails and relevant fields methods here
 	@Indexed
 	private double successRate;
 
-	//@Builder.Default
 	@Schema(description = DESCRIPTION_PLAYER_RATIO, name = NAME_PLAYER_RATIO, example = EXAMPLE_PLAYER_RATIO)
 	@Indexed
 	private Map<String, Integer> playerResultsWinLossMap;
 
 	@Schema(description = DESCRIPTION_PLAYER_GAMES, name = NAME_PLAYER_GAMES, example = EXAMPLE_PLAYER_GAMES)
-	//@Hidden
 	@Indexed
 	private List<DiceGame> playerGames;
-
 
 	public Player() {
 	}
 
+	/**
+	 * @param idPlayer
+	 * @param registrationDate
+	 * @param playerName              cant be empty
+	 * @param successRate
+	 * @param playerResultsWinLossMap
+	 * @param playerGames
+	 */
 	public Player(long idPlayer, LocalDateTime registrationDate,
-			@NotNull(message = "Player name cannot be empty") String playerName, double successRate,
+			@NotNull(message = PLAYER_NAME_EMPTY) String playerName, double successRate,
 			Map<String, Integer> playerResultsWinLossMap, List<DiceGame> playerGames) {
 		this.idPlayer = idPlayer;
 		this.registrationDate = registrationDate;
@@ -91,14 +97,24 @@ public class Player {	//implements userdetails and relevant fields methods here
 		this.playerResultsWinLossMap = playerResultsWinLossMap;
 		this.playerGames = playerGames;
 	}
+
+	/**
+	 * Adds game to the players statistics
+	 * 
+	 * @param game current finished game
+	 */
 	public void addGameToList(DiceGame game) {
 		this.playerGames.add(game);
-		this.playerResultsWinLossMap.put(game.getGameResult(), this.playerResultsWinLossMap.getOrDefault(game.getGameResult(), 0) + 1); ///here is where sucess rate might not be gettting correctly
-		//if (playerResultsWinLossMap.get(game.getGameResult()) != 0) {
+		/// here is where sucess rate might not be gettting correctly
+		this.playerResultsWinLossMap.put(game.getGameResult(),
+				this.playerResultsWinLossMap.getOrDefault(game.getGameResult(), 0) + 1);
 		this.successRate = CommonConstants.calculateAverageSuccessRate(this.playerResultsWinLossMap.get(WINS),
 				this.playerGames.size());
-		//}
 	}
+
+	/**
+	 * Resets the players statistics to 0
+	 */
 	public void deleteListOfGames() {
 		this.successRate = 0.0;
 		this.playerResultsWinLossMap.put(WINS, 0);
@@ -162,14 +178,14 @@ public class Player {	//implements userdetails and relevant fields methods here
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
 		if (obj == null) {
 			return false;
 		}
 		if (this.getClass() != obj.getClass()) {
 			return false;
+		}
+		if (this == obj) {
+			return true;
 		}
 		Player other = (Player) obj;
 		return this.idPlayer == other.idPlayer && Objects.equals(this.playerGames, other.playerGames)
@@ -178,5 +194,4 @@ public class Player {	//implements userdetails and relevant fields methods here
 				&& Objects.equals(this.registrationDate, other.registrationDate)
 				&& Double.doubleToLongBits(this.successRate) == Double.doubleToLongBits(other.successRate);
 	}
-
 }

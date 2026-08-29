@@ -2,6 +2,11 @@ package itacademy.s5t2.diceGame.businessLayer.dto;
 
 import java.util.Objects;
 
+/**
+ * The Data Transfer Object of a Dice Game
+ * 
+ * @author bowser-chris
+ */
 public class DiceGameDTO {
 
 	private long gameId;
@@ -9,6 +14,12 @@ public class DiceGameDTO {
 	private int dieResult2;
 	private String gameResult;
 
+	/**
+	 * @param gameId
+	 * @param dieResult1
+	 * @param dieResult2
+	 * @param gameResult
+	 */
 	public DiceGameDTO(long gameId, int dieResult1, int dieResult2, String gameResult) {
 		this.gameId = gameId;
 		this.dieResult1 = dieResult1;
@@ -59,14 +70,14 @@ public class DiceGameDTO {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
 		if (obj == null) {
 			return false;
 		}
 		if (this.getClass() != obj.getClass()) {
 			return false;
+		}
+		if (this == obj) {
+			return true;
 		}
 		DiceGameDTO other = (DiceGameDTO) obj;
 		return this.dieResult1 == other.dieResult1 && this.dieResult2 == other.dieResult2 && this.gameId == other.gameId
@@ -78,12 +89,4 @@ public class DiceGameDTO {
 		return "DiceGameDTO [gameId=" + this.gameId + ", dieResult1=" + this.dieResult1 + ", dieResult2="
 				+ this.dieResult2 + ", gameResult=" + this.gameResult + "]";
 	}
-
-	/*for mysql only tables
-	 * @Schema(description = "The id of the player")
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    //@JoinColumn(name="playerId")
-    private Userdto userdto;
-	 */
-
 }

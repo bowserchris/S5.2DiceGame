@@ -15,17 +15,26 @@ import org.springframework.stereotype.Service;
 
 import itacademy.s5t2.diceGame.config.MongoSequenceConfig;
 
+/**
+ * Service class for the MongoDB ID sequence generator to fit to conformity and
+ * not be randomized
+ * 
+ * @author bowser-chris
+ */
 @Service
 public class SequenceGeneratorService {
 
 	@Autowired
 	private MongoOperations mongoOperations;
 
+	/**
+	 * @param seqName the string from the player or game object
+	 * @return mongoId new generated sequence for the object id in MongoDB
+	 */
 	public long generateSequence(String seqName) {
 		MongoSequenceConfig counter = this.mongoOperations.findAndModify(query(where(UNDERSCORE_ID).is(seqName)),
 				new Update().inc(SEQ, 1), options().returnNew(true).upsert(true),
 				MongoSequenceConfig.class);
 		return !Objects.isNull(counter) ? counter.getSeq() : 1;
 	}
-
 }

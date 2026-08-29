@@ -27,13 +27,13 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * Entity that represents an individual dice game
+ * 
+ * @author bowser-chris
+ */
 @Schema(description = DESCRIPTION_CLASS_DICEGAME)
 @Entity(name = "DiceGame")
-/*@JsonIgnoreProperties({
-"hibernateLazyInitializer",
-"handler"
-})
- */
 @Table(name = "games")
 public class DiceGame {
 
@@ -64,6 +64,12 @@ public class DiceGame {
 	public DiceGame() {
 	}
 
+	/**
+	 * @param gameId
+	 * @param dieResult1
+	 * @param dieResult2
+	 * @param gameResult
+	 */
 	public DiceGame(long gameId, @NotNull(message = DIE_VALUE_EMPTY) int dieResult1,
 			@NotNull(message = DIE_VALUE_EMPTY) int dieResult2,
 			@NotNull(message = GAME_RESULT_EMPTY) String gameResult) {
@@ -73,6 +79,9 @@ public class DiceGame {
 		this.gameResult = gameResult;
 	}
 
+	/**
+	 * Play the Game!
+	 */
 	public void playGame() {
 		this.dieResult1 = Die.roll();
 		this.dieResult2 = Die.roll();
@@ -123,23 +132,17 @@ public class DiceGame {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
 		if (obj == null) {
 			return false;
 		}
 		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
+		if (this == obj) {
+			return true;
+		}
 		DiceGame other = (DiceGame) obj;
 		return this.dieResult1 == other.dieResult1 && this.dieResult2 == other.dieResult2 && this.gameId == other.gameId
 				&& Objects.equals(this.gameResult, other.gameResult);
 	}
-
-	/*//linking multiple tables, only on this object and not on player
-	 * @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private User user; */
-
-
 }

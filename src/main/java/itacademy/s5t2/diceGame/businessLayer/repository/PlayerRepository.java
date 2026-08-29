@@ -9,6 +9,11 @@ import org.springframework.stereotype.Repository;
 
 import itacademy.s5t2.diceGame.businessLayer.domain.Player;
 
+/**
+ * Repository for the Players statistics within MongoDB
+ * 
+ * @author bowser-chris
+ */
 @Repository
 public interface PlayerRepository extends MongoRepository<Player, Long>{
 	Optional<Player> findByPlayerName(String name);

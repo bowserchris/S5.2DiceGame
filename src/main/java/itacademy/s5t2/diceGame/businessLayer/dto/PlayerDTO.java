@@ -31,6 +31,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import itacademy.s5t2.diceGame.businessLayer.domain.DiceGame;
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * Data Transfer Object of a Player
+ * 
+ * @author bowser-chris
+ */
 public class PlayerDTO {
 
 	@Schema(description = DESCRIPTION_PLAYER_ID, name = NAME_PLAYER_ID, example = EXAMPLE_PLAYER_ID)
@@ -55,13 +60,34 @@ public class PlayerDTO {
 	private Map<String, Integer> playerResultsWinLossMap = createPlayerMap;
 
 	@Schema(description = DESCRIPTION_PLAYER_GAMES, name = NAME_PLAYER_GAMES, example = EXAMPLE_PLAYER_GAMES)
-	//@Hidden
 	@Indexed
 	private List<DiceGame> playerGames;
 
 	@Autowired		//function bean from app configuration to inject the hashmap on creation of the player object.
 	@Hidden
 	private static Map<String, Integer> createPlayerMap;
+
+	/**
+	 * @param idPlayer
+	 * @param registrationDate
+	 * @param playerName
+	 * @param successRate
+	 * @param playerResultsWinLossMap
+	 * @param playerGames
+	 */
+	public PlayerDTO(long idPlayer, LocalDateTime registrationDate,
+			@NotNull(message = PLAYER_NAME_EMPTY) String playerName, double successRate,
+			Map<String, Integer> playerResultsWinLossMap, List<DiceGame> playerGames) {
+		this.idPlayer = idPlayer;
+		this.registrationDate = registrationDate;
+		this.playerName = playerName;
+		this.successRate = successRate;
+		this.playerResultsWinLossMap = playerResultsWinLossMap;
+		this.playerGames = playerGames;
+	}
+
+	public PlayerDTO() {
+	}
 
 	public long getIdPlayer() {
 		return this.idPlayer;
@@ -119,20 +145,6 @@ public class PlayerDTO {
 		PlayerDTO.createPlayerMap = createPlayerMap;
 	}
 
-	public PlayerDTO(long idPlayer, LocalDateTime registrationDate,
-			@NotNull(message = PLAYER_NAME_EMPTY) String playerName, double successRate,
-			Map<String, Integer> playerResultsWinLossMap, List<DiceGame> playerGames) {
-		this.idPlayer = idPlayer;
-		this.registrationDate = registrationDate;
-		this.playerName = playerName;
-		this.successRate = successRate;
-		this.playerResultsWinLossMap = playerResultsWinLossMap;
-		this.playerGames = playerGames;
-	}
-
-	public PlayerDTO() {
-	}
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(Long.valueOf(this.idPlayer), this.playerGames, this.playerName,
@@ -141,14 +153,14 @@ public class PlayerDTO {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
 		if (obj == null) {
 			return false;
 		}
 		if (this.getClass() != obj.getClass()) {
 			return false;
+		}
+		if (this == obj) {
+			return true;
 		}
 		PlayerDTO other = (PlayerDTO) obj;
 		return this.idPlayer == other.idPlayer && Objects.equals(this.playerGames, other.playerGames)
@@ -157,5 +169,4 @@ public class PlayerDTO {
 				&& Objects.equals(this.registrationDate, other.registrationDate)
 				&& Double.doubleToLongBits(this.successRate) == Double.doubleToLongBits(other.successRate);
 	}
-
 }

@@ -23,6 +23,11 @@ import itacademy.s5t2.diceGame.businessLayer.service.interfaces.PlayerInter;
 import itacademy.s5t2.diceGame.businessLayer.service.mapper.PlayerDTOMapper;
 import itacademy.s5t2.diceGame.constants.CommonConstants;
 
+/**
+ * Service layer implementation for the player entity
+ * 
+ * @author bowser-chris
+ */
 @Service
 //@Transactional
 public class PlayerServiceImpl implements PlayerInter {
@@ -36,16 +41,13 @@ public class PlayerServiceImpl implements PlayerInter {
 	@Autowired
 	private final SequenceGeneratorService sequenceService;
 
-	// curious to the logger class private static final Logger log = LoggerFactory.getLogger(PlayerServiceImpl.class);
-
 	public PlayerServiceImpl(PlayerRepository repo, PlayerDTOMapper map, SequenceGeneratorService sequence) {
-		super();
 		this.playerRepo = repo;
 		this.dtoMapper = map;
 		this.sequenceService = sequence;
 	}
 
-	@Override	//get list of players
+	@Override
 	public List<PlayerDTO> getAllPlayers() {
 		return this.playerRepo.findAll()
 				.stream()
@@ -53,7 +55,7 @@ public class PlayerServiceImpl implements PlayerInter {
 				.collect(Collectors.toList());
 	}
 
-	@Override	//save player with casting
+	@Override
 	public Player savePlayer(Player p) {
 		p.setPlayerGames(new ArrayList<DiceGame>());
 		p.setPlayerResultsWinLossMap(CommonConstants.createPlayerMap());
@@ -61,6 +63,14 @@ public class PlayerServiceImpl implements PlayerInter {
 		return this.playerRepo.save(p);
 	}
 
+	/**
+	 * Checks if player name exists or not, ignoring ANONYMOUS x amount of those can
+	 * exist
+	 * 
+	 * @param p the player
+	 * @return boolean whether player exists or not
+	 * @throws ResponseStatusException if player already exists
+	 */
 	public boolean checkIfPlayerNameExists(Player p) {
 		boolean exists = true;
 		if (!p.getPlayerName().equalsIgnoreCase(ANONYMOUS)) {
@@ -75,11 +85,17 @@ public class PlayerServiceImpl implements PlayerInter {
 		return exists;
 	}
 
-	public boolean checkForUniqueName(Player p) {
+	/**
+	 * Checks if the player name is truly unique
+	 * 
+	 * @param p the player
+	 * @return boolean if truly unique or not
+	 */
+	private boolean checkForUniqueName(Player p) {
 		boolean uniqueName = true;
 		PlayerDTO player = this.getByName(p.getPlayerName());
 		if (player == null) {
-			return uniqueName; //leave blank that its true so it skips
+			return uniqueName;
 		} else if (p.getPlayerName().equalsIgnoreCase(player.getPlayerName())) {
 			uniqueName = false;
 		}
@@ -94,9 +110,8 @@ public class PlayerServiceImpl implements PlayerInter {
 		return this.dtoMapper.apply(p);
 	}
 
-	@Override	// update player
+	@Override
 	public Player updatePlayer(long id, PlayerDTO dtoRequest) {
-		//log.info("update player: " + dtoRequest);
 		PlayerDTO playerInDB = this.getById(id);		//need to fix exception if not found
 		Player playerUpdated = null;
 		if (playerInDB != null) {
@@ -107,22 +122,20 @@ public class PlayerServiceImpl implements PlayerInter {
 		return playerUpdated;
 	}
 
-	@Override	//get player by id
+	@Override
 	public PlayerDTO getById(long id) {
-		//log.info("Find by Id: " + id);
 		Optional<Player> optional = this.checkOptional(id);
 		PlayerDTO player = this.mapToPlayerDto(optional.get());
 		return player;
 	}
 
-	@Override	//delete player by id
+	@Override
 	public void deleteById(long id) {
 		this.playerRepo.deleteById(id);
 	}
 
-	@Override	//get player by name
+	@Override
 	public PlayerDTO getByName(String name) {
-		//log.info("Find by Id: " + id);
 		Optional<Player> optional = this.playerRepo.findByPlayerName(name);
 		PlayerDTO player = null;
 		if (optional.isPresent()) {
@@ -131,6 +144,13 @@ public class PlayerServiceImpl implements PlayerInter {
 		return player;
 	}
 
+	/**
+	 * Checks whether the player is present or not in the DB
+	 * 
+	 * @param id id of the player
+	 * @return optional the player
+	 * @throws ResponseStatusException if player doesnt exist
+	 */
 	public Optional<Player> checkOptional(long id) {
 		Optional<Player> optional = this.playerRepo.findById(id);
 		if (!optional.isPresent()) {
@@ -155,13 +175,10 @@ public class PlayerServiceImpl implements PlayerInter {
 		int totalWins = 0;
 		int totalGames = 0;
 		for (int i = 0; i < list.size(); i++) {
-			totalWins += list.get(i).getPlayerResultsWinLossMap().get(WINS); // (list.get(i).getSuccessRate()/100) *
-			// list.get(i).getPlayerGames().size();
+			totalWins += list.get(i).getPlayerResultsWinLossMap().get(WINS);
 			totalGames += list.get(i).getPlayerGames().size();
 		}
 		return Math.round(CommonConstants.calculateAverageSuccessRate(totalWins, totalGames));
-		//above code is a reverse engineerd formula to get the new total value, below should call directly from repo
-		//return Math.round(software.getTotalResultsWinLossMap().get("Win") / playerRepo.findAll().size() * 100);
 	}
 
 	public Player getBestSuccessRate() {
@@ -204,5 +221,4 @@ public class PlayerServiceImpl implements PlayerInter {
 		this.playerRepo.save(player);
 		return true;
 	}
-
 }

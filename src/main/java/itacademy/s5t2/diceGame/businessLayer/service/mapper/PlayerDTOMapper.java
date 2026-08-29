@@ -9,10 +9,21 @@ import itacademy.s5t2.diceGame.businessLayer.domain.Player;
 import itacademy.s5t2.diceGame.businessLayer.dto.PlayerDTO;
 import itacademy.s5t2.diceGame.constants.CommonConstants;
 
+/**
+ * Mapper class for Player and PlayerDTO objects
+ * 
+ * @author bowser-chris
+ */
 @Service
 @Component
 public class PlayerDTOMapper implements Function<Player, PlayerDTO>{
 
+	/**
+	 * Maps a Player to a PlayerDTO
+	 *
+	 * @param player
+	 * @return playerDTO the transformed player to DTO
+	 */
 	@Override
 	public PlayerDTO apply(Player player) {
 		PlayerDTO dto = new PlayerDTO();
@@ -26,6 +37,12 @@ public class PlayerDTOMapper implements Function<Player, PlayerDTO>{
 		return dto;
 	}
 
+	/**
+	 * Maps a PlayerDTO to a Player
+	 * 
+	 * @param dto the player dto
+	 * @return player the transformed DTO to player
+	 */
 	public Player applyToEntity(PlayerDTO dto) {
 		Player player = new Player();
 		player.setIdPlayer(dto.getIdPlayer());
@@ -37,5 +54,4 @@ public class PlayerDTOMapper implements Function<Player, PlayerDTO>{
 		player.setPlayerResultsWinLossMap(dto.getPlayerResultsWinLossMap());
 		return player;
 	}
-
 }

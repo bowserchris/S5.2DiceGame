@@ -5,6 +5,11 @@ import java.util.List;
 import itacademy.s5t2.diceGame.businessLayer.domain.DiceGame;
 import itacademy.s5t2.diceGame.businessLayer.dto.DiceGameDTO;
 
+/**
+ * Interface for the Dice Game Service
+ * 
+ * @author bowser-chris
+ */
 public interface DiceGameServiceInter extends ServiceInterface {
 	List<DiceGameDTO> getAllDiceGames();
 	DiceGame saveDiceGame(DiceGame dg);
