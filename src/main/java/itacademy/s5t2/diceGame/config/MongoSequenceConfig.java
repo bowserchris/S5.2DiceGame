@@ -6,12 +6,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import jakarta.persistence.Id;
 
+/**
+ * Configuratoin class for the Mongo Id Sequence generator
+ *
+ * @author bowser-chris
+ */
 @Document(collection = "database_sequences")
 public class MongoSequenceConfig {
 
 	@Id
 	private String id;
-
 	private long seq;
 
 	public MongoSequenceConfig() {
@@ -40,17 +44,16 @@ public class MongoSequenceConfig {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
 		if (obj == null) {
 			return false;
 		}
 		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
+		if (this == obj) {
+			return true;
+		}
 		MongoSequenceConfig other = (MongoSequenceConfig) obj;
 		return Objects.equals(this.id, other.id) && this.seq == other.seq;
 	}
-
 }

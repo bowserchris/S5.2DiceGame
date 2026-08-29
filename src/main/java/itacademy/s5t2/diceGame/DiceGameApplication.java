@@ -35,15 +35,14 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 //@EntityScan(basePackages = {"itacademy.s5t2.diceGame"})
 //@ComponentScan
 
-//swagger annotations below, as well as any @Opertion, apiresponses, apiresponse are also swagger annotations
 @OpenAPIDefinition(info = @Info(title = SWAGGER_TITLE, version = CURRENT_VERSION, description = SWAGGER_DESCRIPTION, termsOfService = TERMS_SERVICE, contact = @Contact(name = CONTACT_NAME, email = CONTACT_EMAIL), license = @License(name = LICENSE_NAME, url = LICENSE_URL))
 		) //servers = {@Server(url = "http://localhost:9003"), @Server(url = "http://localhost:8080")}
 @SecurityScheme(name = SECURITY_NAME_JWT, scheme = SECURITY_SCHEME_BASIC,
 type = SecuritySchemeType.HTTP,
-in = SecuritySchemeIn.HEADER) //type = )
+		in = SecuritySchemeIn.HEADER)
 @SecurityScheme(name = SECURITY_NAME_BEARER, scheme = SECURITY_SCHEME_BEARER,
 type = SecuritySchemeType.HTTP,
-		bearerFormat = SECURITY_FORMAT,
+bearerFormat = SECURITY_FORMAT,
 in = SecuritySchemeIn.HEADER)
 @EnableJpaRepositories(basePackages = { PACKAGE_BUSINESS_REPO, PACKAGE_SECURITY_REPO })
 @EnableAutoConfiguration

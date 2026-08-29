@@ -7,19 +7,24 @@ import org.springframework.stereotype.Component;
 import itacademy.s5t2.diceGame.businessLayer.domain.DiceGame;
 import itacademy.s5t2.diceGame.businessLayer.service.SequenceGeneratorService;
 
+/**
+ * Listener class for Dice Game id sequence generator
+ * 
+ * @author bowser-chris
+ */
 @Component
 public class DiceGameModelListener extends AbstractMongoEventListener<DiceGame> {
 
-    private SequenceGeneratorService sequenceGenerator;
+	private SequenceGeneratorService sequenceGenerator;
 
-    public DiceGameModelListener(SequenceGeneratorService sequenceGenerator) {
-        this.sequenceGenerator = sequenceGenerator;
-    }
+	public DiceGameModelListener(SequenceGeneratorService sequenceGenerator) {
+		this.sequenceGenerator = sequenceGenerator;
+	}
 
-    @Override
-    public void onBeforeConvert(BeforeConvertEvent<DiceGame> event) {
-        if (event.getSource().getGameId() < 1) {
-            event.getSource().setGameId(sequenceGenerator.generateSequence(DiceGame.SEQUENCE_NAME));
-        }
-    }
+	@Override
+	public void onBeforeConvert(BeforeConvertEvent<DiceGame> event) {
+		if (event.getSource().getGameId() < 1) {
+			event.getSource().setGameId(this.sequenceGenerator.generateSequence(DiceGame.SEQUENCE_NAME));
+		}
+	}
 }

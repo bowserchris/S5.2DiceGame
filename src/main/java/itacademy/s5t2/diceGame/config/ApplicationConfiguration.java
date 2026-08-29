@@ -19,6 +19,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import itacademy.s5t2.diceGame.securityLayer.repository.UserRepository;
 
+/**
+ * Configuration class for authenticating Users
+ * 
+ * @author bowser-chris
+ */
 @Configuration
 public class ApplicationConfiguration {
 
@@ -52,12 +57,11 @@ public class ApplicationConfiguration {
 		return authProvider;
 	}
 
-	@Bean		//this creates the player map on initializing the player, otherwise its empty and gives null pointer error
+	@Bean
 	Map<String, Integer> createPlayerMap() {
 		HashMap<String, Integer> map = new HashMap<>();
 		map.put(WINS, 0);
 		map.put(LOSSES, 0);
 		return map;
 	}
-
 }

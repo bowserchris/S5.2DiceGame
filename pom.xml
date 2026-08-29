@@ -37,7 +37,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -108,7 +107,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-authorization-server</artifactId>
 		</dependency> -->
-		
 		<!-- <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-client</artifactId>
@@ -159,15 +157,6 @@
             <version>4.0.1</version>
             <scope>provided</scope>
         </dependency> -->
-		<!-- <dependency> 		WHEN THE FUCK DID THIS GET IN!? dont know how is was added when its not even related
-			<groupId>
-				cat.itacademy.barcelonactiva.cognoms.nom.s04.t02.n01
-			</groupId>
-			<artifactId>S04T02N01GognomsNom</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency> -->
-	
-
 	<build>
 		<plugins>
 			<plugin>
@@ -176,5 +165,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
