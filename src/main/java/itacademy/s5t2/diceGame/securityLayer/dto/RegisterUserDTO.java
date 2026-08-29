@@ -8,6 +8,11 @@ import static itacademy.s5t2.diceGame.constants.SwaggerConstants.EXAMPLE_USERNAM
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * DTO class to register a User
+ * 
+ * @author bowser-chris
+ */
 public class RegisterUserDTO {
 
 	@Schema(description = DESCRIPTION_USERNAME_REGISTRATION, example = EXAMPLE_USERNAME_REGISTRATION)
@@ -18,6 +23,12 @@ public class RegisterUserDTO {
 	@NotNull
 	private String password;
 
+	/**
+	 * Constructor class to register a user, parameters cant be null
+	 * 
+	 * @param userName
+	 * @param password
+	 */
 	public RegisterUserDTO(@NotNull String userName, @NotNull String password) {
 		this.userName = userName;
 		this.password = password;
@@ -41,5 +52,4 @@ public class RegisterUserDTO {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
 }

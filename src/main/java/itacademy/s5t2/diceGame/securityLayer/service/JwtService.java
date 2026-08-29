@@ -20,15 +20,20 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+/**
+ * Service layer in charge of the JWT
+ * 
+ * @author bowser-chris
+ */
 @Service
 public class JwtService {
 
-	@Autowired	//from application.properties
-	@Value(JWT_SECRET_KEY)
+	@Autowired
+	@Value(JWT_SECRET_KEY) // from application.properties
 	private String secretKey;
 
-	@Autowired		//from application.properties
-	@Value(JWT_EXPIRATION_TIME)
+	@Autowired
+	@Value(JWT_EXPIRATION_TIME) // from application.properties
 	private long jwtExpiration;
 
 	public String extractUsername(String token) {
@@ -45,7 +50,7 @@ public class JwtService {
 				.setClaims(extraClaims)
 				.setSubject(userDetails.getUsername())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + this.jwtExpiration)) //even putting numbers here i see expires in class empty
+				.setExpiration(new Date(System.currentTimeMillis() + this.jwtExpiration))
 				.signWith(this.getSignInKey(), SignatureAlgorithm.HS256)
 				.compact();
 	}
@@ -80,5 +85,4 @@ public class JwtService {
 		byte[] keyBytes = Decoders.BASE64.decode(this.secretKey);
 		return Keys.hmacShaKeyFor(keyBytes);
 	}
-
 }

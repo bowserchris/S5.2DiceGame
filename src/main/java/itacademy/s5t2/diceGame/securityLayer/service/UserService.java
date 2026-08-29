@@ -20,8 +20,14 @@ import itacademy.s5t2.diceGame.securityLayer.domain.User;
 import itacademy.s5t2.diceGame.securityLayer.dto.LoginUserDTO;
 import itacademy.s5t2.diceGame.securityLayer.dto.RegisterUserDTO;
 import itacademy.s5t2.diceGame.securityLayer.repository.UserRepository;
+
+/**
+ * Service layer for the User
+ * 
+ * @author bowser-chris
+ */
 @Service
-public class UserService implements UserDetailsService {	//implements UserDetailsService if implemented override method is needed, with below code implementing a custom map class and user principal class with userdetails
+public class UserService implements UserDetailsService {
 
 	@Autowired
 	private UserRepository userRepo;
@@ -44,12 +50,21 @@ public class UserService implements UserDetailsService {	//implements UserDetail
 		return this.passwordEncoder;
 	}
 
+	/**
+	 * @return list of all users
+	 */
 	public List<User> allUsers() {
 		return this.userRepo.findAll();
 	}
 
+	/**
+	 * Returns the user, found by username, if present in the DB & password is
+	 * correct
+	 * 
+	 * @param request the login user dto
+	 * @return user the registered user
+	 */
 	public Optional<User> getUser(LoginUserDTO request) {
-		//manager.authenticate(new UsernamePasswordAuthenticationToken(request.getUserName(), request.getPassword())); //from ivana video, but not sure if needed as no check is made UPDATE indeed error calls a loop as authentication is provided in appconfig class
 		Optional<User> user = Optional.of(this.loadUserByUsername(request.getUserName()));
 		if (user.isEmpty()) {
 			return Optional.empty();
@@ -60,6 +75,13 @@ public class UserService implements UserDetailsService {	//implements UserDetail
 		return user;
 	}
 
+	/**
+	 * Checks name isnt already used in DB, then creates User
+	 *
+	 * @param input the registration details from the User
+	 * @return user the newly created User
+	 * @throws ResponseStatusException when User already exists in DB
+	 */
 	public Optional<User> createUser(RegisterUserDTO input) {
 		if (!input.getUserName().equals(StringUtils.EMPTY)) {
 			Optional<User> dbName = this.userRepo.findByUsername(input.getUserName());
@@ -72,23 +94,29 @@ public class UserService implements UserDetailsService {	//implements UserDetail
 		user.setPassword(this.passwordEncoder.encode(input.getPassword()));
 		user.setRole(Role.USER);
 		user.setEnabled(true);
-		//		User user = this.saveUser(User.builder()
-		//				.enabled(true)
-		//				.password(this.passwordEncoder.encode(input.getPassword()))
-		//				.role(Role.USER)
-		//				.username(input.getUserName())
-		//				.build());
 		return Optional.of(user);
 	}
 
+	/**
+	 * Saves the User to the DB
+	 * 
+	 * @param user the user to be saved
+	 * @return user the user that was saved in DB
+	 */
 	public User saveUser(User user) {
 		return this.userRepo.save(user);
 	}
 
+	/**
+	 * Loads the user thru their user name
+	 * 
+	 * @param username the users registered name
+	 * @return user the found user
+	 * @throws UsernameNotFoundException
+	 */
 	@Override
 	public User loadUserByUsername(String username) throws UsernameNotFoundException {
 		return this.userRepo.findByUsername(username)
 				.orElseThrow(() -> new UsernameNotFoundException(PLAYER_NOT_FOUND));
 	}
-
 }

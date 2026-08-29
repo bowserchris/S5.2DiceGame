@@ -7,6 +7,11 @@ import org.springframework.stereotype.Repository;
 
 import itacademy.s5t2.diceGame.securityLayer.domain.User;
 
+/**
+ * Repository for a User thru MySQL
+ * 
+ * @author bowser-chris
+ */
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 	Optional<User> findByUsername(String username);

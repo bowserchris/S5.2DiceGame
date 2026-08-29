@@ -25,6 +25,11 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Filter class for the JWT authentication
+ * 
+ * @author bowser-chris
+ */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -72,23 +77,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		filterChain.doFilter(request, response);
 	}
 
-	//gettokenfromrequest method in ivana video
 	public Optional<String> getJwtHeader(HttpServletRequest request) {
-		final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION); 		//CommonConstants.AUTHORIZATION
 
-		//pau sansa method below
+		final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+
 		if (authHeader == null || !authHeader.startsWith(BEARER)) {
 			return Optional.empty();
 		}
-
-		/*if (StringUtils.hasText(authHeader) && authHeader.startsWith(CommonConstants.BEARER)) {		//ivana video method here
-			return Optional.empty();
-		}*/
-
-		return Optional.of(authHeader.substring(7));		//if pau sansa method is used, swap around to empty here
+		return Optional.of(authHeader.substring(7));
 	}
 
 	public Optional<String> getJwtCookie(HttpServletRequest request){
+
 		Cookie[] cookies = request.getCookies();
 		if (cookies == null){
 			return Optional.empty();
@@ -101,5 +101,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		}
 		return Optional.empty();
 	}
-
 }

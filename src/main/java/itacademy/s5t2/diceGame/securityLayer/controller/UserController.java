@@ -41,6 +41,11 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import itacademy.s5t2.diceGame.securityLayer.domain.User;
 import itacademy.s5t2.diceGame.securityLayer.service.UserService;
 
+/**
+ * Controller layer for the User
+ * 
+ * @author bowser-chris
+ */
 @SecurityRequirement(name = SECURITY_NAME_BEARER)
 //@CrossOrigin(origins = CommonConstants.ORIGIN, allowCredentials = "true")
 @RequestMapping(USER_INDEX) // "/users"
@@ -54,6 +59,12 @@ public class UserController {
 		this.userService = service;
 	}
 
+	/**
+	 * User is redirected here to their homepage after authentication in
+	 * AuthenticationController
+	 * 
+	 * @return user ResponseEntity of the authenticated user
+	 */
 	@Operation(summary = SUMMARY_USER_AUTHENTICATED, description = DESCRIPTION_USER_AUTHENTICATED)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = SUCCESSFUL, content = {
@@ -74,6 +85,9 @@ public class UserController {
 		return ResponseEntity.ok(currentUser);
 	}
 
+	/**
+	 * @return users list of all users registered in the DB
+	 */
 	@Operation(summary = SUMMARY_ALL_USERS, description = DESCRIPTION_ALL_USERS)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = SUCCESSFUL, content = {
@@ -89,5 +103,4 @@ public class UserController {
 		List <User> users = this.userService.allUsers();
 		return ResponseEntity.ok(users);
 	}
-
 }

@@ -10,6 +10,11 @@ import java.util.Objects;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * DTO of a user to login
+ * 
+ * @author bowser-chris
+ */
 public class LoginUserDTO {
 
 	@Schema(description = DESCRIPTION_USERNAME, example = EXAMPLE_USERNAME)
@@ -20,6 +25,12 @@ public class LoginUserDTO {
 	@NotNull
 	private String password;
 
+	/**
+	 * Constructor class for User login DTO, parameters cant be null
+	 * 
+	 * @param userName
+	 * @param password
+	 */
 	public LoginUserDTO(@NotNull String userName, @NotNull String password) {
 		this.userName = userName;
 		this.password = password;
@@ -51,17 +62,16 @@ public class LoginUserDTO {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
 		if (obj == null) {
 			return false;
 		}
 		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
+		if (this == obj) {
+			return true;
+		}
 		LoginUserDTO other = (LoginUserDTO) obj;
 		return Objects.equals(this.password, other.password) && Objects.equals(this.userName, other.userName);
 	}
-
 }

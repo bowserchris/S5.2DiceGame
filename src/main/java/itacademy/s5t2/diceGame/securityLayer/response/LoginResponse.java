@@ -7,6 +7,11 @@ import java.util.Objects;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * The login reponse object after receiving the authenticated JWT
+ * 
+ * @author bowser-chris
+ */
 public class LoginResponse {
 
 	@Schema(description = DESCRIPTION_TOKEN)
@@ -15,6 +20,11 @@ public class LoginResponse {
 	@Schema(description = DESCRIPTION_EXPIRATION)
 	private long expiresIn;
 
+	/**
+	 * Constructor for the login reponse with the JWT token
+	 * 
+	 * @param token the jwt token
+	 */
 	public LoginResponse(String token) {
 		this.token = token;
 	}
@@ -42,14 +52,14 @@ public class LoginResponse {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
 		if (obj == null) {
 			return false;
 		}
 		if (this.getClass() != obj.getClass()) {
 			return false;
+		}
+		if (this == obj) {
+			return true;
 		}
 		LoginResponse other = (LoginResponse) obj;
 		return this.expiresIn == other.expiresIn && Objects.equals(this.token, other.token);
@@ -59,5 +69,4 @@ public class LoginResponse {
 	public String toString() {
 		return "LoginResponse [token=" + this.token + ", expiresIn=" + this.expiresIn + "]";
 	}
-
 }

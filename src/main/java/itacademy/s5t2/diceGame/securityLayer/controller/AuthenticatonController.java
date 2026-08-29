@@ -51,11 +51,16 @@ import itacademy.s5t2.diceGame.securityLayer.dto.RegisterUserDTO;
 import itacademy.s5t2.diceGame.securityLayer.response.LoginResponse;
 import itacademy.s5t2.diceGame.securityLayer.service.AuthenticationService;
 
+/**
+ * Controller layer for the authentication of Users
+ * 
+ * @author bowser-chris
+ */
 @Tag(name = TAG_NAME_AUTH_CONTROLLER, description = DESCRIPTION_AUTH_CONTROLLER)
 @SecurityRequirement(name = SECURITY_NAME_JWT)
 @RestController
 //@CrossOrigin(origins = CommonConstants.ORIGIN, allowCredentials = "true")	//"http://localhost:8080"
-@RequestMapping(AUTH_INDEX) // "/auth" CommonConstants.AUTH_INDEX
+@RequestMapping(AUTH_INDEX)
 public class AuthenticatonController {
 
 	@Autowired
@@ -65,6 +70,13 @@ public class AuthenticatonController {
 		this.authenticationService = authenticationService;
 	}
 
+	/**
+	 * Register new users. 400 error is details are empty. 409 if a user already
+	 * exists
+	 * 
+	 * @param registerDTO details of new user
+	 * @return loginResponse new login response with new token
+	 */
 	@Operation(summary = SUMMARY_SIGNUP, description = DESCRIPTION_SIGNUP)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = SUCCESSFUL, content = {
@@ -72,10 +84,10 @@ public class AuthenticatonController {
 			@ApiResponse(responseCode = CODE_403, description = USER_UNAUTHENTICATED, content = @Content),
 			@ApiResponse(responseCode = CODE_500, description = INTERNAL_SERVER_ERR, content = @Content),
 			@ApiResponse(responseCode = CODE_1001, description = APPLICATION_ERROR, content = @Content) })
-	@PostMapping(SIGNUP) // "/signup" as /auth/signup
+	@PostMapping(SIGNUP) // .../auth/signup
 	public ResponseEntity<?> signup(@Parameter(description = PARAMETER_REGISTER_DTO, required = true)
 	@RequestBody RegisterUserDTO registerDTO) {
-		if (registerDTO == null) {	//here there can be a validator class that takes teh object and checks individually if fields are null with method
+		if (registerDTO == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(NAME_PASSWORD_INCORRECT);
 		}
 		Optional<String> token = this.authenticationService.signup(registerDTO);
@@ -86,6 +98,13 @@ public class AuthenticatonController {
 	}
 
 
+	/**
+	 * The login process for registered Users. 400 error if details are incorrect.
+	 * 401 if user is unauthorized
+	 * 
+	 * @param loginDTO users login details
+	 * @return loginResponse the login response with the jwt token
+	 */
 	@Operation(summary = SUMMARY_AUTHENTICATE, description = DESCRIPTION_AUTHENTICATE)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = CODE_200, description = SUCCESSFUL, content = {
@@ -100,8 +119,8 @@ public class AuthenticatonController {
 	@PostMapping(LOGIN)
 	public ResponseEntity<?> authenticate(
 			@Parameter(description = PARAMETER_LOGIN_DTO, required = true)
-	@RequestBody LoginUserDTO loginDTO) {
-		if (loginDTO == null) {	//here there can be a validator class that takes teh object and checks individually if fields are null with method
+			@RequestBody LoginUserDTO loginDTO) {
+		if (loginDTO == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(NAME_PASSWORD_INCORRECT);
 		}
 		Optional<String> token = this.authenticationService.authenticate(loginDTO);
@@ -110,5 +129,4 @@ public class AuthenticatonController {
 		}
 		return ResponseEntity.ok(new LoginResponse(token.get()));
 	}
-
 }

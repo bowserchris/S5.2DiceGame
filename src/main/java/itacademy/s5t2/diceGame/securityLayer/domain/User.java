@@ -33,24 +33,22 @@ import jakarta.persistence.Id;							//this is correct method for id annotation
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * The User class necessary to login and access the Dice Game app
+ * 
+ * @author bowser-chris
+ */
 @Schema(description = DESCRIPTION_CLASS_USER)
 @Entity(name = "User")
 @Table(name = "_user")
 //uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
 public class User implements UserDetails {
 
-	//@NotNull
 	@Schema(description = DESCRIPTION_USER_ID, name = NAME_USER_ID)
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name = "id", updatable = false)
 	private int userId;
-
-	/*@NotNull
-	@Schema(description = "Unique id of the User for Security implementation", name="serialVersionUID")
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private static final long serialVersionUID = 1L;*/
 
 	@NotNull
 	@Schema(description = DESCRIPTION_USER_USERNAME, name = NAME_USER_USERNAME)
@@ -71,6 +69,24 @@ public class User implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
+	/**
+	 * @param userId
+	 * @param username
+	 * @param password
+	 * @param enabled
+	 * @param role
+	 */
+	public User(int userId, @NotNull String username, @NotNull String password, boolean enabled, Role role) {
+		this.userId = userId;
+		this.username = username;
+		this.password = password;
+		this.enabled = enabled;
+		this.role = role;
+	}
+
+	public User() {
+	}
+
 	/* @ManyToMany(fetch=FetchType.LAZY) if re implement, create role class
     @JoinTable(
         name="users_roles",
@@ -78,7 +94,7 @@ public class User implements UserDetails {
         inverseJoinColumns = {@JoinColumn(name="role_id")}
     )*/
 
-	@Override //if implment userdetails interace on this class
+	@Override // if implment userdetails interface on this class
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return List.of(new SimpleGrantedAuthority((this.role.name())));
 	}
@@ -141,17 +157,6 @@ public class User implements UserDetails {
 		this.role = role;
 	}
 
-	public User(int userId, @NotNull String username, @NotNull String password, boolean enabled, Role role) {
-		this.userId = userId;
-		this.username = username;
-		this.password = password;
-		this.enabled = enabled;
-		this.role = role;
-	}
-
-	public User() {
-	}
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(Boolean.valueOf(this.enabled), this.password, this.role, Integer.valueOf(this.userId),
@@ -160,18 +165,17 @@ public class User implements UserDetails {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
 		if (obj == null) {
 			return false;
 		}
 		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
+		if (this == obj) {
+			return true;
+		}
 		User other = (User) obj;
 		return this.enabled == other.enabled && Objects.equals(this.password, other.password) && this.role == other.role
 				&& this.userId == other.userId && Objects.equals(this.username, other.username);
 	}
-
 }
